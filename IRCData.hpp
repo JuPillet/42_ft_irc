@@ -16,7 +16,7 @@ class IRCData
     int					_opt;
 	struct sockaddr_in	_address;
 	int					_addrlen;
-	char				_clients[1024];
+	std::string			_buffer;
 							IRCData( IRCData &src );
 							IRCData	&operator=( IRCData &src );
     public:
@@ -40,7 +40,7 @@ class IRCData
 		void				setNewSock( void )
 		{ _new_sock = accept( _sockfd, ( struct sockaddr * )&_address, ( socklen_t * )&_addrlen); }
 		void				readAndPrint( void ) {
-			std::cout << _clients << std::endl;
+			std::cout << _buffer << std::endl;
 			read( _new_sock, _clients, 1024);
 			send( _new_sock, msg, strlen(msg), 0);
 		}
