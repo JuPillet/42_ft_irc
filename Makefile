@@ -1,5 +1,5 @@
 NAME = ircserv
-SRCS =	
+SRCS =	main.cpp
 CLFAGS = -Wall -Wextra -Werror -std=c++98
 OBJS = $(SRCS:.cpp=.o)
 

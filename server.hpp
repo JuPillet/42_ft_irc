@@ -10,6 +10,22 @@
 #include <sys/time.h> //FD_SET, FD_ISSET, FD_ZERO macros
 #include <string>
 #include <iostream>
+#include <vector>
+
+typedef struct t_user {
+
+    bool pass;
+    char *nick;
+    char *channel;
+
+} user;
+
+typedef struct t_params {
+
+    std::vector<std::string> channels;
+    std::vector<user> users;
+
+} params;
 
 class server {
     public :
@@ -17,7 +33,7 @@ class server {
         server() {
             max_clients = 30;
             opt = 1;
-            message = (char *)"Bienvenue sur le serveur IRC de Quentin \r\n";
+            message = (char *)"Bienvenue sur le serveur IRC de Quentin. \r\nVeuillez saisir votre mot de passe.\r\n";
         }
 
         ~server() {}
@@ -32,6 +48,7 @@ class server {
         char buffer[1025];
         fd_set readfds; //stock les file descriptors
         char *message;   // simple message
+        params p;
 
 
         int checkArgs (int ac, char **args){
@@ -42,14 +59,14 @@ class server {
                 return (0);
             for (int i = 0; tmp[i]; i++)
             {
-                if (!isdigit(tmp[i]))
+                if (!std::isdigit(tmp[i]))
                     return (0);
             }
-            if (strlen(tmp2) <= 0 || strlen(tmp) <= 0)
+            if (std::strlen(tmp2) <= 0 || std::strlen(tmp) <= 0)
                 return (0);
             password = tmp2;
-            port = atoi(tmp);
-            if (port < 1 || port > 65535)
+            port = std::atoi(tmp);
+            if (port < 0 || port > 65535)
                 return (0);
             return (1);
         }
@@ -102,7 +119,7 @@ class server {
                     new_socket = accept(master_socket, (struct sockaddr *)&address, (socklen_t*)&addrlen); // accepte la nouvelle socket
 
                     send(new_socket, message, strlen(message), 0); // envoie le message de bienvenue.
-
+                    
                     for (i = 0; i < max_clients; i++)  // Ajoute la nouvelle socket a la liste.
                     {  
                         // si la position est vide.
@@ -113,7 +130,6 @@ class server {
                         }  
                     }  
                 }
-
                 for (i = 0; i < max_clients; i++)
                 {
                     sd = client_socket[i];
@@ -122,8 +138,8 @@ class server {
                     {
                         if ((valread = read( sd , buffer, 1024)) == 0) // Verifie si il s agit d une deconnexion et lit le message recu.
                         {
-                            close( sd );  
-                            client_socket[i] = 0;  
+                            close( sd );
+                            client_socket[i] = 0;
                         }
                      /*   else // termine par NULL le string et le renvoie.
                         {
