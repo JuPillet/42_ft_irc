@@ -104,7 +104,11 @@ class IRCData
 	public:
 							IRCData( void ):_port(), _pass(), _opt(), _master_socket(), _addrlen(), _new_socket(), _activity(), _valread(),
 							_sd(), _max_sd(), _users(), _address(), _buffer(), _readfds() { return ; }
-							~IRCData( void ) { _users.erase( _users.begin(), _users.end() ); }
+							~IRCData( void ) {
+								for ( userIterator userIt = _users.begin(); userIt != _users.end(); ++userIt )
+									(*userIt)->~User();
+								_users.erase( _users.begin(), _users.end() );
+							}
 		struct sockaddr_in const &getAddress( void ) const { return _address; }
 		void				init( const int av, std::string port, const std::string &password )
 		{

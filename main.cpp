@@ -14,6 +14,7 @@ int main(int ac, char **av)
 		std::cerr << err.getError() << std::endl;
 		std::exit( EXIT_FAILURE ) ;
 	}
+
 	while ( true )
 	{
 		server.addClearedMasterSocket();
