@@ -68,7 +68,7 @@ class IRCData
 		}
 
 		void				socketAcceptator( void ){
-			if ( _new_socket = accept( _master_socket, reinterpret_cast<struct sockaddr *>(&_address), reinterpret_cast<socklen_t *>( &_addrlen ) ) < 0 )
+			if ( ( _new_socket = accept( _master_socket, reinterpret_cast<struct sockaddr *>(&_address), reinterpret_cast<socklen_t *>( &_addrlen ) ) ) < 0 )
 				throw IRCErr( "accept" );
 			else
 			{
@@ -110,14 +110,17 @@ class IRCData
 								_users.erase( _users.begin(), _users.end() );
 							}
 		struct sockaddr_in const &getAddress( void ) const { return _address; }
-		void				init( const int av, std::string port, const std::string &password )
+		void				nbArgs( const int ac )
 		{
-			if( av != 3 )
-				throw( IRCErr( "server need 2 arguments : port and password." ) );
-
-			size_t *lastchar;
-			_port = std::stoi( port, lastchar );
-			if ( *lastchar || _port < 0 || _port > 65535 )
+			if( ac != 3 )
+				throw( IRCErr( "Server need 2 arguments : port and password." ) );
+		}
+		void				init( std::string port, std::string password )
+		{
+			size_t lastchar;
+			_port = std::stoi( port, &lastchar );
+			std::cout << port[lastchar] << std::endl;
+			if ( port[lastchar] || _port < 0 || _port > 65535 )
 				throw( IRCErr( "Bad port value : enter port to 0 at 65 535" ) );
 
 			_pass = password;
@@ -125,7 +128,7 @@ class IRCData
 			if ( ( _master_socket = socket(AF_INET , SOCK_STREAM , 0) ) == 0 )
 				throw( IRCErr( "socket failed" ) );
 
-			if ( setsockopt( _master_socket, SOL_SOCKET, SO_REUSEADDR, (char *)&_opt, sizeof(_opt) ) < 0 );
+			if ( setsockopt( _master_socket, SOL_SOCKET, SO_REUSEADDR, (char *)&_opt, sizeof(_opt) ) < 0 )
 				throw( IRCErr( "setsock_opt" ) );
 
 			setAddress();
@@ -194,8 +197,10 @@ class IRCData
 						closeEraseDeleteUser( userIt );
 					else if( (*userIt)->getPass() != _pass )
 					{
-						if ( _buffer.compare( 0, 6, "/pass " ) || _buffer.compare( 0, 6, "/PASS " ) )
+						if ( _buffer.compare( 0, 5, "pass " ) || _buffer.compare( 0, 5, "PASS " ) )
 							send( _sd, "Identify yourself with the password before do other things", 55, 0 );
+						else ( _buffer )
+
 					}
 					//Echo back the message that came in
 					else 

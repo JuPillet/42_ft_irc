@@ -8,7 +8,9 @@ int main(int ac, char **av)
 	IRCData server;
 
 	try
-	{ server.init( ac, av[1], av[2] ); }
+	{
+		server.nbArgs( ac );
+		server.init( av[1], av[2] ); }
 	catch ( IRCErr const &err )
 	{
 		std::cerr << err.getError() << std::endl;

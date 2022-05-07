@@ -1,13 +1,10 @@
 NAME = ircserv
-SRCS =	
-CLFAGS = -Wall -Wextra -Werror -std=c++98
-OBJS = $(SRCS:.cpp=.o)
 
-$(NAME): $(OBJS)
-	c++ $(CFLAGS) $(OBJS) -o $(NAME)
-
-%.o: %.cpp
-	c++ -o $@ -c $< $(CFLAGS)
+$(NAME):
+#	clang++ $(CFLAGS) $(OBJS) -o $(NAME)
+	clang++ -g *.cpp -o $(NAME)
+#%.o: %.cpp
+#	clang++  -g *.cpp -o $@ -c $< $(CFLAGS)
 
 all: $(NAME)
 
