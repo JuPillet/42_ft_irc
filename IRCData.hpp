@@ -33,7 +33,7 @@ class User
 		void				setPass( std::string const &pass ) { _pass = pass; }
 		std::string const	&getPass( void ) const { return _pass; }
 		void				setClientSocket( int new_socket ) { _client_socket = new_socket; }
-		int					getClientSocket( void ) { return _client_socket; }
+		int					getClientSocket( void ) const { return _client_socket; }
 
 };
 
@@ -63,14 +63,14 @@ class IRCData
 
 		void				buffBuffer( void ) {
 			_buffer.clear();
-			while ( ( _valread = read( _sd , _buff, 1024) ) > 0)
+			while ( ( _valread = recv( _sd , _buff, 1024, 0) ) > 0)
 				_buffer.append( reinterpret_cast<char *>(_buff), _valread );
 		}
 
 		void				socketAcceptator( void ){
-			if ( ( _new_socket = accept( _master_socket, reinterpret_cast<struct sockaddr *>(&_address), reinterpret_cast<socklen_t *>( &_addrlen ) ) ) < 0 )
+			if ( ( _new_socket = accept( _master_socket, reinterpret_cast<struct sockaddr *>( &_address ), reinterpret_cast<socklen_t *>( &_addrlen ) ) ) < 0 )
 				throw IRCErr( "accept" );
-			else
+			else 
 			{
 				std::cout << "New connection , socket fd is " << _new_socket << ", ip is : " << inet_ntoa( _address.sin_addr ) << ", port : " << ntohs( _address.sin_port ) << std::endl;
 				try
@@ -153,8 +153,7 @@ class IRCData
 				_sd = (*userIt)->getClientSocket();
 
 				//if valid socket descriptor then add to read list 
-				if( _sd > 0 )
-					FD_SET( _sd, &_readfds );
+				FD_SET( _sd, &_readfds );
 				 
 				//highest file descriptor number, need it for the select function 
 				if( _sd > _max_sd)  
@@ -197,18 +196,15 @@ class IRCData
 						closeEraseDeleteUser( userIt );
 					else if( (*userIt)->getPass() != _pass )
 					{
-						if ( _buffer.compare( 0, 5, "pass " ) || _buffer.compare( 0, 5, "PASS " ) )
-							send( _sd, "Identify yourself with the password before do other things", 55, 0 );
-						else ( _buffer )
-
+						if ( _buffer.compare( 0, 6, "/pass " ) || _buffer.compare( 0, 6, "/PASS " ) )
+							send( _sd, "Identify yourself with the password before do other things\r\n", 61, 0 );
+						else if ( _buffer.compare( 6, _buffer.length() - 6, _pass ) )
+							send( _sd, "Bad password\r\n", 15, 0 );
+						else
+							( *userIt )->setPass( _buffer );
 					}
-					//Echo back the message that came in
 					else 
-					{
-						//set the string terminating NULL byte on the end 
-						//of the data read 
-						send( _sd, _buffer.c_str(), _buffer.length(), 0 );  
-					}  
+						{ send( _sd, reinterpret_cast<const char *>( _buffer.c_str() ), _buffer.length(), 0 ); }  
 				}  
 			}
 		}
