@@ -6,5 +6,5 @@ class IRCErr {
     public :
         IRCErr( const std::string &err ):_err( "Error: " + err ){}
         ~IRCErr() {}
-        const std::string getMessage() const { return _err; }
+        const std::string getError() const { return _err; }
 };
