@@ -21,7 +21,7 @@ int main(int ac, char **av)
 	{
 		server.addClearedMasterSocket();
 		try
-		{ server.activityListener();	}
+		{ server.activityListener(); }
 		catch ( IRCErr const &err )
 		{ std::cerr << err.getError() << std::endl; }
 		server.connectionListener();

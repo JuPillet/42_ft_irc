@@ -9,33 +9,7 @@
 #include <sys/time.h>
 #include <list>
 #include "IRCErr.hpp"
-
-class User
-{
-	std::string		_pass;
-	int				_client_socket;
-	std::string		_nick;
-	std::string		_channel;
-	User( User const &src );
-	User	&operator=( User const &src ) {
-		_pass = src._pass;
-		_client_socket = src._client_socket;
-		_nick = src._nick;
-		_channel = src._channel;
-		return *this;
-	}
-	public:
-							User( void ):_pass(), _client_socket(0), _nick(), _channel() {};
-							User( int _new_socket ):_pass(), _client_socket( _new_socket ), _nick(), _channel() {};
-							~User( void ) {
-								delete this;
-							}
-		void				setPass( std::string const &pass ) { _pass = pass; }
-		std::string const	&getPass( void ) const { return _pass; }
-		void				setClientSocket( int new_socket ) { _client_socket = new_socket; }
-		int					getClientSocket( void ) const { return _client_socket; }
-
-};
+#include "User.hpp"
 
 class IRCData
 {
@@ -43,13 +17,14 @@ class IRCData
 	std::string							_pass;
 	int									_opt;
 	int									_master_socket, _addrlen, _new_socket,
-										_activity, _valread, _sd, _index;
+										_activity, _sd, _index;
 	int									_max_sd;
 	std::list<User*>					_users;
 	typedef	std::list<User*>::iterator	userIterator;
 	struct sockaddr_in					_address;
 	std::string							_buffer;
-	char*								_buff[1024];
+	std::string							_welcome;
+	char								_buff[10];
 	fd_set								_readfds;
 
 							IRCData( IRCData &src );
@@ -61,13 +36,44 @@ class IRCData
 			_address.sin_port = htons( _port );
 		}
 
-		void				buffBuffer( void ) {
-			_buffer.clear();
-			while ( ( _valread = recv( _sd , _buff, 1024, 0) ) > 0)
-				_buffer.append( reinterpret_cast<char *>(_buff), _valread );
+		void				receveMessage( void ) {
+			std::cout << "message start" << std::endl;
+			int readvalue;
+			do
+			{
+				std::cout << _buffer.length() << " : " << std::endl << _buffer << std::endl;
+				readvalue = recv( _sd , _buff, 10, 0 );
+				_buffer.append( reinterpret_cast<char *>( _buff ), readvalue );
+			} while ( readvalue == 10 );
+			_buffer.pop_back();
+			std::cout << _buffer.length() << " : " << _buffer << std::endl;
+			std::cout << "message exit" << std::endl;
 		}
 
-		void				socketAcceptator( void ){
+		void				addNewUser( void )
+		{
+			receveMessage();
+			_buffer.erase( 0 , _buffer.find( '\n' ) + 1 );
+			std::string pass( _buffer, 5, _buffer.find( "\r\n" ) - 5 );
+			_buffer.erase( 0 , _buffer.find( '\n' ) + 1 );
+			std::string nick( _buffer, 5, _buffer.find( "\r\n" ) - 5 );
+			_buffer.erase( 0 , _buffer.find( '\n' ) + 1 );
+			std::string user( _buffer, 5, _buffer.find( "\r\n" ) - 5 );
+			std::cout << "buffer: " << std::endl << _buffer << std::endl;
+			std::cout << "pwd: " << pass << std::endl;
+			std::cout << "nick: " << nick << std::endl;
+			std::cout << "user: " << user << std::endl;
+			if ( pass != _pass )
+			{
+				send( _sd, "Bad password\r\n", 15, 0 );
+				throw IRCErr( "bad password" );
+			}
+			else
+				_users.push_back( new User( _new_socket, pass, nick, user ) );
+			std::cout << "Adding to list of sockets as " << _index << std::endl;
+		}
+
+		void				ConnectionAcceptator( void ){
 			if ( ( _new_socket = accept( _master_socket, reinterpret_cast<struct sockaddr *>( &_address ), reinterpret_cast<socklen_t *>( &_addrlen ) ) ) < 0 )
 				throw IRCErr( "accept" );
 			else 
@@ -75,19 +81,21 @@ class IRCData
 				std::cout << "New connection , socket fd is " << _new_socket << ", ip is : " << inet_ntoa( _address.sin_addr ) << ", port : " << ntohs( _address.sin_port ) << std::endl;
 				try
 				{
+					//_welcome = 
+					//if( send( _new_socket, ":bar.example.com ")
+					_sd = _new_socket;
+					addNewUser();
 					if( send( _new_socket, "ECHO Daemon v1.0 \r\n", strlen( "ECHO Daemon v1.0 \r\n" ), 0) != strlen( "ECHO Daemon v1.0 \r\n" ) )
 						throw IRCErr( "send" );
+					std::cerr << "Welcome message sent successfully" << std::endl;
 				}
 				catch ( IRCErr const &err )
-				{ std::cout << err.getError() << std::endl; }
-				std::cerr << "Welcome message sent successfully" << std::endl;
+				{ 
+					std::cerr << err.getError() << std::endl;
+					close( _new_socket );
+				}
+				_buffer.clear();
 			}
-		}
-
-		void				addNewSocket( void )
-		{
-			_users.push_back( new User( _new_socket ) );
-			std::cout << "Adding to list of sockets as " << _index << std::endl;
 		}
 
 		void				closeEraseDeleteUser( userIterator userIt )
@@ -96,17 +104,20 @@ class IRCData
 			getpeername( _sd , (struct sockaddr*)&_address, (socklen_t*)&_addrlen ); 
 			std::cout << "Host disconnected , ip " << inet_ntoa( _address.sin_addr ) << ", port " << ntohs( _address.sin_port ) << std::endl;
 	
-			//Close the socket and mark as 0 in list for reuse 
+			//Close the socket and mark as 0 in list for reuse
 			close( _sd );
-			(*userIt)->~User();
+			delete *userIt;
+			std::cout << _users.size() << std::endl;
 			_users.erase( userIt );
+			std::cout << _users.size() << std::endl;
 		}
 	public:
-							IRCData( void ):_port(), _pass(), _opt(), _master_socket(), _addrlen(), _new_socket(), _activity(), _valread(),
-							_sd(), _max_sd(), _users(), _address(), _buffer(), _readfds() { return ; }
+							IRCData( void ):_port(), _pass(), _opt(), _master_socket(), _addrlen(), _new_socket(), _activity(),
+							_sd(), _max_sd(), _users(), _address(), _buffer(), _readfds()
+							{ _users.clear(); }
 							~IRCData( void ) {
 								for ( userIterator userIt = _users.begin(); userIt != _users.end(); ++userIt )
-									(*userIt)->~User();
+									delete (*userIt);
 								_users.erase( _users.begin(), _users.end() );
 							}
 		struct sockaddr_in const &getAddress( void ) const { return _address; }
@@ -119,7 +130,7 @@ class IRCData
 		{
 			size_t lastchar;
 			_port = std::stoi( port, &lastchar );
-			std::cout << port[lastchar] << std::endl;
+			std::cout << port[lastchar - 1] << std::endl;
 			if ( port[lastchar] || _port < 0 || _port > 65535 )
 				throw( IRCErr( "Bad port value : enter port to 0 at 65 535" ) );
 
@@ -171,13 +182,12 @@ class IRCData
 		void				connectionListener( void ){
 			if ( FD_ISSET( _master_socket, &_readfds ) )
 			{
-				try { socketAcceptator(); }
+				try { ConnectionAcceptator(); }
 				catch( IRCErr const &err )
 				{
 					std::cerr << err.getError() << std::endl;
 					exit( EXIT_FAILURE );
 				}
-				addNewSocket();
 			}
 		}
 
@@ -191,18 +201,9 @@ class IRCData
 				{
 					//Check if it was for closing , and also read the 
 					//incoming message
-					buffBuffer();
+					receveMessage();
 					if ( _buffer.length() == 0 )
 						closeEraseDeleteUser( userIt );
-					else if( (*userIt)->getPass() != _pass )
-					{
-						if ( _buffer.compare( 0, 6, "/pass " ) || _buffer.compare( 0, 6, "/PASS " ) )
-							send( _sd, "Identify yourself with the password before do other things\r\n", 61, 0 );
-						else if ( _buffer.compare( 6, _buffer.length() - 6, _pass ) )
-							send( _sd, "Bad password\r\n", 15, 0 );
-						else
-							( *userIt )->setPass( _buffer );
-					}
 					else 
 						{ send( _sd, reinterpret_cast<const char *>( _buffer.c_str() ), _buffer.length(), 0 ); }  
 				}  
