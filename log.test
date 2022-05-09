@@ -1,5 +1,0 @@
-<< CAP LS
-<< PASS test
-<< NICK jpillet
-<< USER jpillet jpillet 10.12.5.5 :Julien Pillet
->> ECHO Daemon v1.0
