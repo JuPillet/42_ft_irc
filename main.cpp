@@ -1,6 +1,3 @@
-#include <sys/select.h>
-#include <unistd.h>
-#include <sys/select.h>
 #include "IRCData.hpp"
 
 int main(int ac, char **av)
@@ -21,11 +18,16 @@ int main(int ac, char **av)
 	{
 		server.addClearedMasterSocket();
 		try
-		{ server.activityListener(); }
+		{
+			server.activityListener();
+			if ( FD_ISSET( server.getMasterSocket(), const_cast<fd_set*>( server.getPTReadFds() ) ) )
+				server.connectionListener();
+			else
+				server.IOListener();
+		}
 		catch ( IRCErr const &err )
 		{ std::cerr << err.getError() << std::endl; }
-		server.connectionListener();
-		server.IOListener();
+		
 	}
 
 	return 0;
