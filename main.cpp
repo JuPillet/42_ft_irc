@@ -27,7 +27,6 @@ int main(int ac, char **av)
 		}
 		catch ( IRCErr const &err )
 		{ std::cerr << err.getError() << std::endl; }
-		
 	}
 
 	return 0;

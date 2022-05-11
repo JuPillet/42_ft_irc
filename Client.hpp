@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <unistd.h>
+#include "IRCerr.hpp"
 
 class Client
 {
@@ -19,6 +20,8 @@ class Client
 		return *this;
 	}
 	public:
+							Client( int const _new_socket ): _client_socket( _new_socket ), _pass(), _nick(), _user(), _channel()
+							{ return ; }
 							Client( int const _new_socket, std::string const &pass, std::string const &nick, std::string const &user ):
 							_client_socket( _new_socket ), _pass( pass ), _nick( nick ), _user( user ), _channel()
 							{ return ; }
