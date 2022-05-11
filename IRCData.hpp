@@ -49,19 +49,17 @@ class IRCData
 			std::cout << "message start" << std::endl;
 			int readvalue;
 			_request.clear();
-
-//			while ( ( readvalue = select( _sd + 1, reinterpret_cast<fd_set *>( &_address ) , NULL, NULL, NULL ) ) )
+			for ( int index = 0; index != 1024; ++index )
+				_buff[index] = 0;
 //			do
 //			{
-//				std::cout << readvalue << " : " << _request.length() << " : " << std::endl << _request << std::endl;
 //				std::cout << "prev recv" << std::endl;
-				readvalue = recv( _new_socket , _buff, 1024, 0 );
+				readvalue = recv( _sd , _buff, 1024, 0 );
 //				std::cout << "next recv" << std::endl;
 				_request.append( reinterpret_cast<char *>( _buff ), readvalue );
-//			}while ( readvalue == 10 );
-
+//			} while ( readvalue == 1024 );
+				std::cout << readvalue << " : " << _request.length() << " : " << std::endl << _request << std::endl;
 //			_request.pop_back();
-			std::cout << _request.length() << " : " << _request;
 			std::cout << "message exit" << std::endl;
 		}
 
@@ -71,12 +69,16 @@ class IRCData
 			receveMessage();
 			std::cout << _request << std::endl;
 			_request.erase( 0 , _request.find( '\n' ) + 1 );
+			if ( !_request.size() )
+				receveMessage();
 			std::string pass( _request, 5, _request.find( "\r\n" ) - 5 );
-			std::cout << std::endl << pass << std::endl << std::endl;
 			_request.erase( 0 , _request.find( '\n' ) + 1 );
+//			receveMessage();
 			std::string nick( _request, 5, _request.find( "\r\n" ) - 5 );
 			_request.erase( 0 , _request.find( '\n' ) + 1 );
-			std::string user( _request, 5, _request.find( "\r" ) - 5 );
+//			receveMessage();
+			std::string user( _request, 5, _request.find( "\r\n" ) - 5 );
+			_request.erase( 0 , _request.find( '\n' ) + 1 );
 			std::cout << "buffer: " << std::endl << _request;
 			std::cout << "pwd: " << pass << std::endl;
 			std::cout << "nick: " << nick << std::endl;
@@ -95,6 +97,7 @@ class IRCData
 		{
 			if ( ( _new_socket = accept( _master_socket, reinterpret_cast<struct sockaddr *>( &_address ), reinterpret_cast<socklen_t *>( &_addrlen ) ) ) < 0 )
 				throw IRCErr( "accept" );
+			_sd = _new_socket;
 			std::cout << "New connection , socket fd is " << _new_socket << ", ip is : " << inet_ntoa( _address.sin_addr ) << ", port : " << ntohs( _address.sin_port ) << std::endl;
 			newClient();
 			_answer = welcome();
@@ -113,9 +116,7 @@ class IRCData
 			//Close the socket and mark as 0 in list for reuse
 			close( _sd );
 			delete *clientIt;
-			std::cout << _clients.size() << std::endl;
 			_clients.erase( clientIt );
-			std::cout << _clients.size() << std::endl;
 		}
 	public:
 							IRCData( void ):_port(), _pass(), _opt(), _master_socket(), _addrlen(), _new_socket(), _activity(),
@@ -220,11 +221,11 @@ class IRCData
 					receveMessage();
 					if ( _request.length() == 0 )
 						closeEraseDeleteClient( clientIt );
-					else
-					{
-						_answer = pong();
-						send( _sd, reinterpret_cast<const char *>( _answer.c_str() ), _answer.length(), 0 );
-					}
+//					else
+//					{
+//						_answer = pong();
+//						send( _sd, reinterpret_cast<const char *>( _answer.c_str() ), _answer.length(), 0 );
+//					}
 				}  
 			}
 		}
