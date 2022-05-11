@@ -8,7 +8,7 @@
 #include <netinet/in.h>
 #include <sys/time.h>
 #include <list>
-#include "IRCerr.hpp"
+#include "IRCErr.hpp"
 #include "Client.hpp"
 
 class IRCData
@@ -22,14 +22,20 @@ class IRCData
 	Client*									_clientTmp;
 	std::list<Client*>						_clients;
 	typedef	std::list<Client*>::iterator	clientIterator;
+	clientIterator							_clientIt;
 	struct sockaddr_in						_address;
 	std::string								_buffer;
-	std::string								_welcome;
+	std::string								_pong;
 	char									_buff[1024];
 	fd_set									_readfds;
 
 							IRCData( IRCData &src );
 							IRCData	&operator=( IRCData &src );
+
+
+		std::string			RPL_WELCOME( std::string nick, std::string user, std::string addr ) // formatage des strings pour pong.
+        { return ":ft_irc.qj42.fr 001 " + nick + " :Welcome to the freenode IRC Network " + nick + "!" + user + "@" + addr + "\r\n"; }
+
 		void				setAddress( void )
 		{
 			_address.sin_family = AF_INET;
@@ -79,6 +85,16 @@ class IRCData
 			}
 			else
 				_clientTmp = new Client( _new_socket, pass, nick, user );
+			for ( _clientIt = _clients.begin(); _clientIt != _clients.end(); ++_clientIt )
+			{
+				if ( ( *_clientIt )->getNick() == nick )
+				{
+					_pong = ":ft_irc.qj42.fr 443 * " + nick + " :Nickname already in use.\r\n";
+					if( send( _new_socket, _pong.c_str(), _pong.size(), 0) != _pong.length() )
+						throw IRCErr( "send" );
+					throw ( IRCErr( "Nick already in use" ) );
+				}
+			}
 			std::cout << "Adding to list of sockets as " << _index << std::endl;
 		}
 
@@ -88,14 +104,14 @@ class IRCData
 				throw IRCErr( "accept" );
 			std::cout << "New connection , socket fd is " << _new_socket << ", ip is : " << inet_ntoa( _address.sin_addr ) << ", port : " << ntohs( _address.sin_port ) << std::endl;
 			newClient();
-			_welcome = ":ft_irc.qj42.fr 001 " + _clientTmp->getNick() + " :Welcome to the freenode IRC Network " + _clientTmp->getNick() + "!" + _clientTmp->getUser() + "@" + inet_ntoa( _address.sin_addr ) + "\r\n";
-			if( send( _new_socket, _welcome.c_str(), _welcome.size(), 0) != _welcome.length() )
+			_pong = ":ft_irc.qj42.fr 001 " + _clientTmp->getNick() + " :Welcome to IRC_QJ_server" + _clientTmp->getNick() + "!" + _clientTmp->getUser() + "@" + inet_ntoa( _address.sin_addr ) + "\r\n";
+			if( send( _new_socket, _pong.c_str(), _pong.size(), 0) != _pong.length() )
 				throw IRCErr( "send" );
 			_clients.push_back( _clientTmp );
 			std::cout << "Welcome message sent successfully" << std::endl;
 		}
 
-		void				closeEraseDeleteClient( clientIterator clientIt )
+		void				closeEraseDeleteClient( clientIterator _clientIt )
 		{
 			//Somebody disconnected , get his details and print
 			getpeername( _sd , reinterpret_cast<struct sockaddr *>(&_address), reinterpret_cast<socklen_t *>( &_addrlen ) ); 
@@ -103,18 +119,25 @@ class IRCData
 	
 			//Close the socket and mark as 0 in list for reuse
 			close( _sd );
-			delete *clientIt;
+			delete *_clientIt;
 			std::cout << _clients.size() << std::endl;
-			_clients.erase( clientIt );
+			_clients.erase( _clientIt );
 			std::cout << _clients.size() << std::endl;
 		}
+
+		void				join(void)
+		{
+			(*_clientIt)->setChannel(_buffer); 
+			std::cout << (*_clientIt)->getChannel() << std::endl;
+		}
+
 	public:
 							IRCData( void ):_port(), _pass(), _opt(), _master_socket(), _addrlen(), _new_socket(), _activity(),
 							_sd(), _max_sd(), _clients(), _address(), _buffer(), _readfds()
 							{ _clients.clear(); }
 							~IRCData( void ) {
-								for ( clientIterator userIt = _clients.begin(); userIt != _clients.end(); ++userIt )
-									delete (*userIt);
+								for ( _clientIt = _clients.begin(); _clientIt != _clients.end(); ++_clientIt )
+									delete (*_clientIt);
 								_clients.erase( _clients.begin(), _clients.end() );
 							}
 		int	const			getMasterSocket( void ) const { return _master_socket; }
@@ -159,9 +182,9 @@ class IRCData
 			FD_ZERO(&_readfds);
 			FD_SET( _master_socket, &_readfds);
 			_max_sd = _master_socket;
-			for ( clientIterator clientIt = _clients.begin(); clientIt != _clients.end(); ++clientIt )
+			for ( _clientIt = _clients.begin(); _clientIt != _clients.end(); ++_clientIt )
 			{
-				_sd = (*clientIt)->getSocket();
+				_sd = (*_clientIt)->getSocket();
 
 				//if valid socket descriptor then add to read list 
 				FD_SET( _sd, &_readfds );
@@ -194,18 +217,28 @@ class IRCData
 
 		void				IOListener( void )
 		{
-			for ( clientIterator clientIt = _clients.begin(); clientIt != _clients.end(); ++clientIt )
+			for ( _clientIt = _clients.begin(); _clientIt != _clients.end(); ++_clientIt )
 			{  
-				_sd = ( *clientIt )->getSocket();
+				_sd = ( *_clientIt )->getSocket();
 				if ( FD_ISSET( _sd , &_readfds ) )  
 				{
 					//Check if it was for closing , and also read the 
 					//incoming message
 					receveMessage();
 					if ( _buffer.length() == 0 )
-						closeEraseDeleteClient( clientIt );
+						closeEraseDeleteClient( _clientIt );
 					else
-						{ send( _sd, reinterpret_cast<const char *>( _buffer.c_str() ), _buffer.length(), 0 ); }  
+					{	
+						if ( _buffer.find( ' ' , 0) > _buffer.size() ) {}
+
+						else
+						{
+							std::string cmd( _buffer, 0, _buffer.find( ' ' , 0) );
+							_buffer.erase( 0 , _buffer.find( ' ' ) + 1 );
+							this->join();
+						}
+						send( _sd, reinterpret_cast<const char *>( _buffer.c_str() ), _buffer.length(), 0 ); 
+					}
 				}  
 			}
 		}
