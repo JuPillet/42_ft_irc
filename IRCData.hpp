@@ -38,13 +38,15 @@ class IRCData
 	std::list<Client>						_clients;
 	typedef	std::list<Client>::iterator	clientIterator;
 	clientIterator							_clientIt;
-	std::string								_passTmp, _nickTmp, _userTmp;
+	std::string								_passTmp, _nickTmp, _userTmp, _channelTmp;
 
 	
 							IRCData( IRCData &src );
 							IRCData	&operator=( IRCData &src );
+
 		void				CAPLS( void )
 		{ _request.erase( 0 , _request.find( '\n' ) + 1 ); }
+
 		void				checkPass( void )
 		{
 			try
@@ -56,24 +58,116 @@ class IRCData
 					throw IRCErr( "bad password" );
 				}
 			}
-			catch
+			catch( IRCErr const &err )
 			{
-				
+				std::cerr << err.getError() << std::endl;
 			}
 		}
+
+		void				changeNick( void )
+		{
+			try
+			{
+				clientIterator							tmpIt = _clients.begin();
+
+				if (_clientIt->getPass() != _pass)
+					return ;
+				while (tmpIt != _clients.end())
+				{
+					if ( tmpIt->getNick() == _nickTmp )
+					{
+						send( _sd, "Nick already in use\r\n", 22, 0 ); // A verifier a deux, si j essaie de prendre le nick d un autre
+						throw IRCErr( "Nick already in use" );
+					}
+					tmpIt++;
+				}
+				_clientIt->setNick(_nickTmp);
+			}
+			catch( IRCErr const &err )
+			{
+				std::cerr << err.getError() << std::endl;
+			}
+		}
+
+		void				changeUser( void )
+		{
+			try
+			{
+				clientIterator							tmpIt = _clients.begin();
+
+				if (_clientIt->getPass() != _pass)
+					return ;
+				while (tmpIt != _clients.end())
+				{
+					if ( tmpIt->getUser() == _userTmp )
+					{
+						send( _sd, "User name already in use\r\n",27 ,0);
+						throw IRCErr( "User name already in use" );
+					}
+					tmpIt++;
+				}
+				_clientIt->setUser(_userTmp);
+			}
+			catch( IRCErr const &err )
+			{
+				std::cerr << err.getError() << std::endl;
+			}
+		}
+
+		void				changeChannel( void )
+		{
+				if (_clientIt->getPass() != _pass)
+					return ;
+				_clientIt->setChannel(_channelTmp);
+		}
+
+		void				sendMsg( void )
+		{
+			clientIterator							tmpIt = _clients.begin();
+
+			if (_clientIt->getPass() != _pass)
+				return ;
+			while (tmpIt != _clients.end())
+			{
+				if ( tmpIt->getChannel() == _clientIt->getChannel() )
+					send( tmpIt->getSocket(), reinterpret_cast<const char *>( _buff ), std::strlen(_buff), 0 );
+				tmpIt++;
+			}
+		}
+
+		void				sendPrivMsg( void )
+		{
+			clientIterator							tmpIt = _clients.begin();
+
+			if (_clientIt->getPass() != _pass)
+				return ;
+			while (tmpIt != _clients.end())
+			{
+				if ( tmpIt->getNick() == _nickTmp )
+				{
+					send( tmpIt->getSocket(), reinterpret_cast<const char *>( _buff ), std::strlen(_buff), 0 );
+					break;
+				}
+				tmpIt++;
+			}
+		}
+
 		void				setAddress( void )
 		{
 			_address.sin_family = AF_INET;
 			_address.sin_addr.s_addr = INADDR_ANY;
 			_address.sin_port = htons( _port );
 		}
+
 		std::string welcome( void )
 		{
 			return ":" + _selfIP + " 001 " + _clientIt->getNick() + " :Welcome to the IRC_QJ_Server "
 			+ _clientIt->getNick() + "!" + _clientIt->getUser() + "@" + inet_ntoa( _address.sin_addr ) + "\r\n";
 		}
+
 		std::string pong( void )
 		{ return ":" + _selfIP + " PONG " + _selfIP + " :" + inet_ntoa( _address.sin_addr ) + "\r\n"; }
+
 		void				receveMessage( void ) {
 			std::cout << "message start" << std::endl;
 			int readvalue;

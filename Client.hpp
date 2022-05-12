@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <unistd.h>
-#include "IRCerr.hpp"
+#include "IRCErr.hpp"
 
 class Client
 {
