@@ -10,6 +10,7 @@
 #include <netdb.h>
 #include <list>
 #include <map>
+#include <algorithm>
 #include "Client.hpp"
 
 class IRCData
@@ -30,6 +31,7 @@ class IRCData
 	struct sockaddr_in						_address;
 /////	Request Operation /////
 	std::string								_request;
+	std::string								_cmd;
 	std::string								_answer;
 	char									_buff[1024];
 	fd_set									_readfds;
@@ -49,18 +51,11 @@ class IRCData
 
 		void				checkPass( void )
 		{
-			try
-			{	
-				if ( _clientIt->getPass() != _pass )
-				{
-					static_cast<std::string>( _clientIt->getPass() ).clear();
-					send( _new_socket, "Bad password\r\n", 15, 0 );
-					throw IRCErr( "bad password" );
-				}
-			}
-			catch( IRCErr const &err )
+			if ( _clientIt->getPass() != _pass )
 			{
-				std::cerr << err.getError() << std::endl;
+				static_cast<std::string>( _clientIt->getPass() ).clear();
+				send( _new_socket, "Bad password\r\n", 15, 0 );
+				throw IRCErr( "bad password" );
 			}
 		}
 
@@ -68,18 +63,17 @@ class IRCData
 		{
 			try
 			{
-				clientIterator							tmpIt = _clients.begin();
+				clientIterator	tmpIt = _clients.begin();
 
 				if (_clientIt->getPass() != _pass)
 					return ;
-				while (tmpIt != _clients.end())
+				for ( ; tmpIt != _clients.end(); ++tmpIt)
 				{
 					if ( tmpIt->getNick() == _nickTmp )
 					{
 						send( _sd, "Nick already in use\r\n", 22, 0 ); // A verifier a deux, si j essaie de prendre le nick d un autre
 						throw IRCErr( "Nick already in use" );
 					}
-					tmpIt++;
 				}
 				_clientIt->setNick(_nickTmp);
 			}
@@ -184,6 +178,22 @@ class IRCData
 				std::cout << readvalue << " : " << _request.length() << " : " << std::endl << _request << std::endl;
 //			_request.pop_back();
 			std::cout << "message exit" << std::endl;
+		}
+
+		void				formatRequest( void )
+		{
+			if ( *_request.c_str() == '/' )
+			{
+				std::string::iterator _requestIt;
+				int index = _request.find( ' ' );
+				_request.erase( _request.begin() );
+				if ( index >= _request.length() )
+					index = _request.length();
+				for ( _requestIt = _request.begin(); _requestIt != _request.begin() + index; ++_requestIt );
+					( *_requestIt ) = std::toupper( *_requestIt );
+				_cmd = _request.substr( 0, index );
+				_request.erase( 0, index );
+			}
 		}
 
 		void				newClient( void )
@@ -329,14 +339,21 @@ class IRCData
 				{
 					//Check if it was for closing , and also read the 
 					//incoming message
-					receveMessage();
-					if ( _request.length() == 0 )
-						closeEraseDeleteClient();
-//					else
-//					{
-//						_answer = pong();
-//						send( _sd, reinterpret_cast<const char *>( _answer.c_str() ), _answer.length(), 0 );
-//					}
+					try
+					{
+						receveMessage();
+						if ( _request.length() == 0 )
+							closeEraseDeleteClient();
+						else
+						{
+							
+							if ( _clientIt->getPass() )
+							_answer = pong();
+							send( _sd, reinterpret_cast<const char *>( _answer.c_str() ), _answer.length(), 0 );
+						}
+					}
+					catch ( IRCErr const &err)
+					{ std::cout << err.getError() << std::endl; }
 				}  
 			}
 		}
