@@ -9,7 +9,6 @@
 #include <sys/time.h>
 #include <netdb.h>
 #include <list>
-#include <map>
 #include <algorithm>
 #include "Client.hpp"
 
@@ -20,9 +19,10 @@ class IRCData
 	int										_port;
 	std::string								_pass;
 /////	PtrFctn /////
-	typedef									void ( *ptrfct )( void );
-	typedef std::pair<std::string, ptrfct>	pairKV;
-	std::map<std::string, pairKV>			mapFctn;
+	typedef									void ( IRCData::*ptrfct )( void );
+	typedef std::pair<std::string, IRCData::ptrfct>	pairKV;
+	typedef std::list<pairKV>				listPair;
+	listPair								_listFctn;
 /////	Socket Info /////
 	int										_opt;
 	int										_master_socket, _addrlen, _new_socket,
@@ -35,12 +35,14 @@ class IRCData
 	std::string								_answer;
 	char									_buff[1024];
 	fd_set									_readfds;
+	std::string 							_dest;
 /////	Client Info /////
 //	Client									_clientTmp;
 	std::list<Client>						_clients;
 	typedef	std::list<Client>::iterator	clientIterator;
 	clientIterator							_clientIt;
 	std::string								_passTmp, _nickTmp, _userTmp, _channelTmp;
+	std::string 							_rejectChar;
 
 	
 							IRCData( IRCData &src );
@@ -51,18 +53,27 @@ class IRCData
 
 		void				checkPass( void )
 		{
-
 			if ( _clientIt->getPass() != _pass )
 			{
-				static_cast<std::string>( _clientIt->getPass() ).clear();
 				send( _new_socket, "Bad password\r\n", 15, 0 );
 				throw IRCErr( "bad password" );
 			}
 		}
 
-		void				changeNick( void )
+		void				PASS( void )
+		{
+			_clientIt->setPass( _passTmp );
+			checkPass();
+		}
+		void				NICK( void )
 		{
 			clientIterator	tmpIt = _clients.begin();
+			for ( std::string::iterator rejectIt = _rejectChar.begin(); rejectIt != _rejectChar.end(); ++rejectIt ){
+				for ( std::string::iterator nickIt = _nickTmp.begin(); nickIt != _nickTmp.end(); ++nickIt ){
+					if ( *nickIt == *rejectIt ){
+						send( _sd, "Nickerror\r\n", 12, 0 );
+						throw IRCErr( "Nick format" );
+			}	}	}
 			for ( ; tmpIt != _clients.end(); ++tmpIt)
 			{
 				if ( tmpIt->getNick() == _nickTmp )
@@ -74,43 +85,42 @@ class IRCData
 			_clientIt->setNick(_nickTmp);
 		}
 
-		void				changeUser( void )
+		void				USER( void )
 		{
 			clientIterator							tmpIt = _clients.begin();
-			while (tmpIt != _clients.end())
-			{
-				if ( tmpIt->getUser() == _userTmp )
-				{
-					send( _sd, "User name already in use\r\n",27 ,0);
-					throw IRCErr( "User name already in use" );
-				}
-				tmpIt++;
-			}
+			for ( std::string::iterator rejectIt = _rejectChar.begin(); rejectIt != _rejectChar.end(); ++rejectIt ){
+				for ( std::string::iterator userIt = _userTmp.begin(); userIt != _userTmp.end(); ++userIt ){
+					if ( *userIt == *rejectIt ){
+						send( _sd, "Usererror\r\n", 12, 0 );
+						throw IRCErr( "User format" );
+			}	}	}
 			_clientIt->setUser(_userTmp);
 		}
 
-		void				changeChannel( void )
+		void				JOIN( void )
 		{
-			if (_clientIt->getPass() != _pass)
-				return ;
+			std::list<std::string>::const_iterator chanIt;
+			for ( chanIt = _clientIt->getChannels().begin(); *chanIt != _channelTmp && chanIt != _clientIt->getChannels().end(); ++chanIt );
+			if ( chanIt != _clientIt->getChannels().end() )
+			{
+				send( _sd, "a voir!!!", 10, 0 ); // A VOIR!!!
+				throw( IRCErr( "Is already in the channel" ) );
+			}
 			_clientIt->setChannel( _channelTmp );
 		}
 
-		void				sendMsg( void )
+		void				OPENMSG( void )
 		{
 			clientIterator							tmpIt = _clients.begin();
-
-			if (_clientIt->getPass() != _pass)
-				return ;
 			while (tmpIt != _clients.end())
 			{
-				if ( tmpIt->getChannel() == _clientIt->getChannel() )
-					send( tmpIt->getSocket(), reinterpret_cast<const char *>( _buff ), std::strlen(_buff), 0 );
+		//		if ( tmpIt->getChannel() == _clientIt->getChannel() )
+		//			send( tmpIt->getSocket(), reinterpret_cast<const char *>( _buff ), std::strlen(_buff), 0 );
 				tmpIt++;
 			}
 		}
 
-		void				sendPrivMsg( void )
+		void				PRIVMSG( void )
 		{
 			clientIterator							tmpIt = _clients.begin();
 
@@ -127,6 +137,19 @@ class IRCData
 			}
 		}
 
+		void				MSG( void )
+		{
+			std::string::iterator strIt;
+			for (strIt = _request.begin(); strIt != _request.end() && *strIt != ' '; strIt++);
+			_dest = _request.substr( 0, _request.begin() - strIt );
+
+			_request.erase(_request.begin(), strIt + 1);
+			if (_dest[0] == '#')
+				OPENMSG();
+			else
+				PRIVMSG();
+		}
+
 		void				setAddress( void )
 		{
 			_address.sin_family = AF_INET;
@@ -134,14 +157,28 @@ class IRCData
 			_address.sin_port = htons( _port );
 		}
 
-		std::string welcome( void )
+		void sender ( void )
 		{
-			return ":" + _selfIP + " 001 " + _clientIt->getNick() + " :Welcome to the IRC_QJ_Server "
-			+ _clientIt->getNick() + "!" + _clientIt->getUser() + "@" + inet_ntoa( _address.sin_addr ) + "\r\n";
+			if ( send(_sd, _answer.c_str(), _answer.length(), 0) )
+			{
+				_answer.clear();
+				throw( IRCErr( "send" ) );
+			}
+			_answer.clear();
 		}
 
-		std::string pong( void )
-		{ return ":" + _selfIP + " PONG " + _selfIP + " :" + inet_ntoa( _address.sin_addr ) + "\r\n"; }
+		std::string WELCOME( void )
+		{
+			_answer = ":" + _selfIP + " 001 " + _clientIt->getNick() + " :Welcome to the IRC_QJ_Server "
+			+ _clientIt->getNick() + "!" + _clientIt->getUser() + "@" + inet_ntoa( _address.sin_addr ) + "\r\n";
+			sender();
+		}
+
+		std::string PONG( void )
+		{
+			_answer = ":" + _selfIP + " PONG " + _selfIP + " :" + inet_ntoa( _address.sin_addr ) + "\r\n"; 
+			sender();
+		}
 
 		void				receveMessage( void ) {
 			std::cout << "message start" << std::endl;
@@ -200,13 +237,12 @@ class IRCData
 		{
 			if ( ( _new_socket = accept( _master_socket, reinterpret_cast<struct sockaddr *>( &_address ), reinterpret_cast<socklen_t *>( &_addrlen ) ) ) < 0 )
 				throw IRCErr( "accept" );
+			_sd = _new_socket;
 			_clients.push_back( Client( _new_socket ) );
 			_clientIt = ( _clients.end()-- );
 			std::cout << "New connection , socket fd is " << _new_socket << ", ip is : " << inet_ntoa( _address.sin_addr ) << ", port : " << ntohs( _address.sin_port ) << std::endl;
 			newClient();
-			_answer = welcome();
-			if( send( _new_socket, _answer.c_str(), _answer.size(), 0 ) != _answer.length() )
-				throw IRCErr( "send" );
+			WELCOME();
 			std::cout << "Welcome message sent successfully" << std::endl;
 		}
 
@@ -238,12 +274,23 @@ class IRCData
 			if( ac != 3 )
 				throw( IRCErr( "Server need 2 arguments : port and password." ) );
 		}
+
+		void initFct ()
+		{
+			_listFctn.push_back( pairKV( "NICK", NICK ) );
+			_listFctn.push_back( pairKV( "USER", USER ) );
+			_listFctn.push_back( pairKV( "JOIN", JOIN ) );
+			_listFctn.push_back( pairKV( "MSG", MSG ) );
+		}
+
+
 		void				init( std::string port, std::string password )
 		{
 			size_t			lastchar;
 			char			selfhost[256];
 			struct hostent	*host_entry;
-
+	
+			_rejectChar = "~!@#$%&*()+=:;\"\',<.>?/";
 			_port = std::stoi( port, &lastchar );
 			std::cout << port[lastchar] << std::endl;
 			if ( port[lastchar] || _port < 0 || _port > 65535 )
@@ -311,6 +358,17 @@ class IRCData
 		}
 
 
+		void				findFct( void )
+		{
+			listPair::iterator	listPairIt;
+
+			for (listPairIt = _listFctn.begin(); listPairIt->first != _cmd && listPairIt != _listFctn.end(); ++listPairIt);
+			if ( listPairIt != _listFctn.end() )
+				listPairIt->second;
+			else
+				MSG();
+		}
+
 		void				IOListener( void )
 		{
 			for ( _clientIt = _clients.begin(); _clientIt != _clients.end(); ++_clientIt )
@@ -327,9 +385,13 @@ class IRCData
 							closeEraseDeleteClient();
 						else
 						{
-							if ( !_clientIt->getPass() )
-							_answer = pong();
-							send( _sd, reinterpret_cast<const char *>( _answer.c_str() ), _answer.length(), 0 );
+							if ( _cmd == "PASS" )
+								PASS();
+							else
+							{
+								checkPass();
+								findFct();
+							}
 						}
 					}
 					catch ( IRCErr const &err)

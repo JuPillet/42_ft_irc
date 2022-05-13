@@ -36,7 +36,7 @@ class Client
 		std::string const	&getNick( void ) { return _nick; }
 		void				setUser( std::string const &user ) { _user = user; }
 		std::string const	&getUser( void ) { return _user; }
-		void setChannel( std::string channel ) { _channels.push_back( channel ); }
+		void				setChannel( std::string channel ) { _channels.push_back( channel ); }
 		std::list<std::string> const &getChannels( void ) const { return _channels; }
 		//void removeChannel
 };
