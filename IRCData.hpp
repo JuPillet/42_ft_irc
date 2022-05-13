@@ -51,6 +51,7 @@ class IRCData
 
 		void				checkPass( void )
 		{
+
 			if ( _clientIt->getPass() != _pass )
 			{
 				static_cast<std::string>( _clientIt->getPass() ).clear();
@@ -61,58 +62,38 @@ class IRCData
 
 		void				changeNick( void )
 		{
-			try
+			clientIterator	tmpIt = _clients.begin();
+			for ( ; tmpIt != _clients.end(); ++tmpIt)
 			{
-				clientIterator	tmpIt = _clients.begin();
-
-				if (_clientIt->getPass() != _pass)
-					return ;
-				for ( ; tmpIt != _clients.end(); ++tmpIt)
+				if ( tmpIt->getNick() == _nickTmp )
 				{
-					if ( tmpIt->getNick() == _nickTmp )
-					{
-						send( _sd, "Nick already in use\r\n", 22, 0 ); // A verifier a deux, si j essaie de prendre le nick d un autre
-						throw IRCErr( "Nick already in use" );
-					}
+					send( _sd, "Nick already in use\r\n", 22, 0 ); // A verifier a deux, si j essaie de prendre le nick d un autre
+					throw IRCErr( "Nick already in use" );
 				}
-				_clientIt->setNick(_nickTmp);
 			}
-			catch( IRCErr const &err )
-			{
-				std::cerr << err.getError() << std::endl;
-			}
+			_clientIt->setNick(_nickTmp);
 		}
 
 		void				changeUser( void )
 		{
-			try
+			clientIterator							tmpIt = _clients.begin();
+			while (tmpIt != _clients.end())
 			{
-				clientIterator							tmpIt = _clients.begin();
-
-				if (_clientIt->getPass() != _pass)
-					return ;
-				while (tmpIt != _clients.end())
+				if ( tmpIt->getUser() == _userTmp )
 				{
-					if ( tmpIt->getUser() == _userTmp )
-					{
-						send( _sd, "User name already in use\r\n",27 ,0);
-						throw IRCErr( "User name already in use" );
-					}
-					tmpIt++;
+					send( _sd, "User name already in use\r\n",27 ,0);
+					throw IRCErr( "User name already in use" );
 				}
-				_clientIt->setUser(_userTmp);
+				tmpIt++;
 			}
-			catch( IRCErr const &err )
-			{
-				std::cerr << err.getError() << std::endl;
-			}
+			_clientIt->setUser(_userTmp);
 		}
 
 		void				changeChannel( void )
 		{
-				if (_clientIt->getPass() != _pass)
-					return ;
-				_clientIt->setChannel(_channelTmp);
+			if (_clientIt->getPass() != _pass)
+				return ;
+			_clientIt->setChannel( _channelTmp );
 		}
 
 		void				sendMsg( void )
@@ -346,8 +327,7 @@ class IRCData
 							closeEraseDeleteClient();
 						else
 						{
-							
-							if ( _clientIt->getPass() )
+							if ( !_clientIt->getPass() )
 							_answer = pong();
 							send( _sd, reinterpret_cast<const char *>( _answer.c_str() ), _answer.length(), 0 );
 						}

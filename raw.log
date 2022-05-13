@@ -6,27 +6,27 @@
 >> :*.freenode.net NOTICE * :*** Could not resolve your hostname: Domain not found; using your IP address (62.129.8.171) instead.
 >> :*.freenode.net CAP * LS :account-notify account-tag away-notify batch cap-notify chghost draft/relaymsg echo-message extended-join inspircd.org/poison inspircd.org/standard-replies invite-notify labeled-response message-tags multi-prefix sasl server-time setname userhost-in-names 
 << CAP REQ :multi-prefix
->> PING :JT^m^?QAke
-<< PONG :JT^m^?QAke
+>> PING :kIQkw_[RgJ
+<< PONG :kIQkw_[RgJ
 >> :*.freenode.net CAP jpillet ACK :multi-prefix
 << CAP END
 >> :*.freenode.net NOTICE jpillet :*** Ident lookup timed out, using ~jpillet instead.
 >> :*.freenode.net 001 jpillet :Welcome to the freenode IRC Network jpillet!~jpillet@62.129.8.171
 << MODE jpillet +i
 >> :*.freenode.net 002 jpillet :Your host is *.freenode.net, running version InspIRCd-3
->> :*.freenode.net 003 jpillet :This server was created 00:20:08 Apr 21 2022
+>> :*.freenode.net 003 jpillet :This server was created 00:17:59 Apr 21 2022
 >> :*.freenode.net 004 jpillet *.freenode.net InspIRCd-3 BDHILRSTWcdghikorswxz ABCDEFIJKLMNOPQRSTUWXYZbcdefhijklmnoprstuvwz :BEFIJLWXYZbdefhjklovw
 >> :*.freenode.net 005 jpillet ACCEPT=30 AWAYLEN=200 BOT=B CALLERID=g CASEMAPPING=ascii CHANLIMIT=#:20 CHANMODES=IXZbew,k,BEFJLWdfjl,ACDKMNOPQRSTUcimnprstuz CHANNELLEN=64 CHANTYPES=# ELIST=CMNTU ESILENCE=CcdiNnPpTtx EXCEPTS=e :are supported by this server
 >> :*.freenode.net 005 jpillet EXTBAN=,ACNOQRSTUacjmnpruwz HOSTLEN=64 INVEX=I KEYLEN=32 KICKLEN=255 LINELEN=512 MAXLIST=I:100,X:100,b:100,e:100,w:100 MAXTARGETS=20 MODES=20 MONITOR=30 NAMELEN=128 NAMESX NETWORK=freenode :are supported by this server
 >> :*.freenode.net 005 jpillet NICKLEN=30 PREFIX=(Yohv)!@%+ REMOVE SAFELIST SECURELIST=60 SILENCE=32 STATUSMSG=!@%+ TOPICLEN=390 UHNAMES USERIP USERLEN=10 USERMODES=,,s,BDHILRSTWcdghikorwxz VBANLIST :are supported by this server
 >> :*.freenode.net 005 jpillet VLIST=b WATCH=32 WHOX :are supported by this server
->> :*.freenode.net 251 jpillet :There are 19 users and 10711 invisible on 9 servers
+>> :*.freenode.net 251 jpillet :There are 20 users and 10680 invisible on 9 servers
 >> :*.freenode.net 252 jpillet 11 :operator(s) online
 >> :*.freenode.net 253 jpillet 16 :unknown connections
->> :*.freenode.net 254 jpillet 14214 :channels formed
->> :*.freenode.net 255 jpillet :I have 3402 clients and 1 servers
->> :*.freenode.net 265 jpillet :Current local users: 3402  Max: 3478
->> :*.freenode.net 266 jpillet :Current global users: 10730  Max: 10805
+>> :*.freenode.net 254 jpillet 14240 :channels formed
+>> :*.freenode.net 255 jpillet :I have 3817 clients and 1 servers
+>> :*.freenode.net 265 jpillet :Current local users: 3817  Max: 6046
+>> :*.freenode.net 266 jpillet :Current global users: 10700  Max: 10805
 >> :*.freenode.net 375 jpillet :*.freenode.net message of the day
 >> :*.freenode.net 372 jpillet :  Hello, World!
 >> :*.freenode.net 372 jpillet : 
@@ -70,6 +70,51 @@
 >> :*.freenode.net 396 jpillet freenode-a99.759.j1faas.IP :is now your displayed host
 >> :jpillet!~jpillet@freenode-a99.759.j1faas.IP MODE jpillet :+wRix
 >> :*.freenode.net NOTICE jpillet :*** You are connected to chat.freenode.net using TLS (SSL) cipher 'TLSv1.3-TLS_AES_256_GCM_SHA384'
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< NICK yaya
+>> :jpillet!~jpillet@freenode-a99.759.j1faas.IP NICK :yaya
+<< JOIN #test2
+>> :yaya!~jpillet@freenode-a99.759.j1faas.IP JOIN :#test2
+>> :*.freenode.net 353 yaya = #test2 :yaya
+>> :*.freenode.net 366 yaya #test2 :End of /NAMES list.
+<< MODE #test2
+>> :*.freenode.net 324 yaya #test2 :+Pnt
+--> chanquery mode
+<< WHO #test2
+>> :*.freenode.net 329 yaya #test2 :1623640232
+--> event 329
+>> :*.freenode.net 352 yaya #test2 ~jpillet freenode-a99.759.j1faas.IP *.freenode.net yaya Hs :0 Julien Pillet
+--> silent event who
+>> :*.freenode.net 315 yaya #test2 :End of /WHO list.
+--> chanquery who end
+<< MODE #test2 b
+>> :*.freenode.net 368 yaya #test2 :End of channel ban list
+--> chanquery ban end
+<< PRIVMSG #test2 :test
+<< PRIVMSG yaya :test
+>> :*.freenode.net 477 yaya yaya :You need to be identified to a registered account to message this user
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PRIVMSG yaya :/Users/jpillet/Documents/42-cursus/42_ft_irc/raw.log
+>> :*.freenode.net 477 yaya yaya :You need to be identified to a registered account to message this user
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+>> :qbrillai!~qbrillai@freenode-a99.759.j1faas.IP JOIN :#test2
+>> :qbrillai!~qbrillai@freenode-a99.759.j1faas.IP PRIVMSG #test2 :tesd
+>> :qbrillai!~qbrillai@freenode-a99.759.j1faas.IP PRIVMSG #test2 :fadf
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
