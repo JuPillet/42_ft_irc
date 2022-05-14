@@ -214,7 +214,7 @@ class IRCData
 			}	}	}
 			_clientIt->setUser( _userTmp );
 			if ( !_clientIt->getAutentification() )
-				checkAutentification();
+				WELCOME();
 		}
 
 		void				JOIN( void )
