@@ -6,27 +6,27 @@
 >> :*.freenode.net NOTICE * :*** Could not resolve your hostname: Domain not found; using your IP address (62.129.8.171) instead.
 >> :*.freenode.net CAP * LS :account-notify account-tag away-notify batch cap-notify chghost draft/relaymsg echo-message extended-join inspircd.org/poison inspircd.org/standard-replies invite-notify labeled-response message-tags multi-prefix sasl server-time setname userhost-in-names 
 << CAP REQ :multi-prefix
->> PING :kIQkw_[RgJ
-<< PONG :kIQkw_[RgJ
+>> PING :YTewsYa\SJ
+<< PONG :YTewsYa\SJ
 >> :*.freenode.net CAP jpillet ACK :multi-prefix
 << CAP END
 >> :*.freenode.net NOTICE jpillet :*** Ident lookup timed out, using ~jpillet instead.
 >> :*.freenode.net 001 jpillet :Welcome to the freenode IRC Network jpillet!~jpillet@62.129.8.171
 << MODE jpillet +i
 >> :*.freenode.net 002 jpillet :Your host is *.freenode.net, running version InspIRCd-3
->> :*.freenode.net 003 jpillet :This server was created 00:17:59 Apr 21 2022
+>> :*.freenode.net 003 jpillet :This server was created 00:20:08 Apr 21 2022
 >> :*.freenode.net 004 jpillet *.freenode.net InspIRCd-3 BDHILRSTWcdghikorswxz ABCDEFIJKLMNOPQRSTUWXYZbcdefhijklmnoprstuvwz :BEFIJLWXYZbdefhjklovw
 >> :*.freenode.net 005 jpillet ACCEPT=30 AWAYLEN=200 BOT=B CALLERID=g CASEMAPPING=ascii CHANLIMIT=#:20 CHANMODES=IXZbew,k,BEFJLWdfjl,ACDKMNOPQRSTUcimnprstuz CHANNELLEN=64 CHANTYPES=# ELIST=CMNTU ESILENCE=CcdiNnPpTtx EXCEPTS=e :are supported by this server
 >> :*.freenode.net 005 jpillet EXTBAN=,ACNOQRSTUacjmnpruwz HOSTLEN=64 INVEX=I KEYLEN=32 KICKLEN=255 LINELEN=512 MAXLIST=I:100,X:100,b:100,e:100,w:100 MAXTARGETS=20 MODES=20 MONITOR=30 NAMELEN=128 NAMESX NETWORK=freenode :are supported by this server
 >> :*.freenode.net 005 jpillet NICKLEN=30 PREFIX=(Yohv)!@%+ REMOVE SAFELIST SECURELIST=60 SILENCE=32 STATUSMSG=!@%+ TOPICLEN=390 UHNAMES USERIP USERLEN=10 USERMODES=,,s,BDHILRSTWcdghikorwxz VBANLIST :are supported by this server
 >> :*.freenode.net 005 jpillet VLIST=b WATCH=32 WHOX :are supported by this server
->> :*.freenode.net 251 jpillet :There are 20 users and 10680 invisible on 9 servers
->> :*.freenode.net 252 jpillet 11 :operator(s) online
->> :*.freenode.net 253 jpillet 16 :unknown connections
->> :*.freenode.net 254 jpillet 14240 :channels formed
->> :*.freenode.net 255 jpillet :I have 3817 clients and 1 servers
->> :*.freenode.net 265 jpillet :Current local users: 3817  Max: 6046
->> :*.freenode.net 266 jpillet :Current global users: 10700  Max: 10805
+>> :*.freenode.net 251 jpillet :There are 20 users and 9893 invisible on 9 servers
+>> :*.freenode.net 252 jpillet 10 :operator(s) online
+>> :*.freenode.net 253 jpillet 13 :unknown connections
+>> :*.freenode.net 254 jpillet 14116 :channels formed
+>> :*.freenode.net 255 jpillet :I have 3137 clients and 1 servers
+>> :*.freenode.net 265 jpillet :Current local users: 3137  Max: 3478
+>> :*.freenode.net 266 jpillet :Current global users: 9913  Max: 10805
 >> :*.freenode.net 375 jpillet :*.freenode.net message of the day
 >> :*.freenode.net 372 jpillet :  Hello, World!
 >> :*.freenode.net 372 jpillet : 
@@ -73,36 +73,207 @@
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
-<< NICK yaya
->> :jpillet!~jpillet@freenode-a99.759.j1faas.IP NICK :yaya
-<< JOIN #test2
->> :yaya!~jpillet@freenode-a99.759.j1faas.IP JOIN :#test2
->> :*.freenode.net 353 yaya = #test2 :yaya
->> :*.freenode.net 366 yaya #test2 :End of /NAMES list.
-<< MODE #test2
->> :*.freenode.net 324 yaya #test2 :+Pnt
---> chanquery mode
-<< WHO #test2
->> :*.freenode.net 329 yaya #test2 :1623640232
---> event 329
->> :*.freenode.net 352 yaya #test2 ~jpillet freenode-a99.759.j1faas.IP *.freenode.net yaya Hs :0 Julien Pillet
---> silent event who
->> :*.freenode.net 315 yaya #test2 :End of /WHO list.
---> chanquery who end
-<< MODE #test2 b
->> :*.freenode.net 368 yaya #test2 :End of channel ban list
---> chanquery ban end
-<< PRIVMSG #test2 :test
-<< PRIVMSG yaya :test
->> :*.freenode.net 477 yaya yaya :You need to be identified to a registered account to message this user
+<< WHOIS jpillet
+>> :*.freenode.net 311 jpillet jpillet ~jpillet freenode-a99.759.j1faas.IP * :Julien Pillet
+--> whois event
+>> :*.freenode.net 378 jpillet jpillet :is connecting from ~jpillet@62.129.8.171 62.129.8.171
+--> whois default event
+>> :*.freenode.net 312 jpillet jpillet karma.freenode.net :freenode IRC Server
+--> whois default event
+>> :*.freenode.net 379 jpillet jpillet :is using modes +Riwx
+--> whois default event
+>> :*.freenode.net 671 jpillet jpillet :is using a secure connection
+--> whois default event
+>> :*.freenode.net 318 jpillet jpillet :End of /WHOIS list.
+--> whois end
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
-<< PRIVMSG yaya :/Users/jpillet/Documents/42-cursus/42_ft_irc/raw.log
->> :*.freenode.net 477 yaya yaya :You need to be identified to a registered account to message this user
+<< CAP LS
+<< NICK jpillet
+<< USER jpillet jpillet chat.freenode.net :Julien Pillet
+>> :*.freenode.net NOTICE * :*** Looking up your ident...
+>> :*.freenode.net NOTICE * :*** Looking up your hostname...
+>> :*.freenode.net NOTICE * :*** Could not resolve your hostname: Domain not found; using your IP address (62.129.8.171) instead.
+>> :*.freenode.net CAP * LS :account-notify account-tag away-notify batch cap-notify chghost draft/relaymsg echo-message extended-join inspircd.org/poison inspircd.org/standard-replies invite-notify labeled-response message-tags multi-prefix sasl server-time setname userhost-in-names 
+<< CAP REQ :multi-prefix
+>> PING :YTewsYa\SJ
+<< PONG :YTewsYa\SJ
+>> :*.freenode.net CAP jpillet ACK :multi-prefix
+<< CAP END
+>> :*.freenode.net NOTICE jpillet :*** Ident lookup timed out, using ~jpillet instead.
+>> :*.freenode.net 001 jpillet :Welcome to the freenode IRC Network jpillet!~jpillet@62.129.8.171
+<< MODE jpillet +i
+>> :*.freenode.net 002 jpillet :Your host is *.freenode.net, running version InspIRCd-3
+>> :*.freenode.net 003 jpillet :This server was created 00:20:08 Apr 21 2022
+>> :*.freenode.net 004 jpillet *.freenode.net InspIRCd-3 BDHILRSTWcdghikorswxz ABCDEFIJKLMNOPQRSTUWXYZbcdefhijklmnoprstuvwz :BEFIJLWXYZbdefhjklovw
+>> :*.freenode.net 005 jpillet ACCEPT=30 AWAYLEN=200 BOT=B CALLERID=g CASEMAPPING=ascii CHANLIMIT=#:20 CHANMODES=IXZbew,k,BEFJLWdfjl,ACDKMNOPQRSTUcimnprstuz CHANNELLEN=64 CHANTYPES=# ELIST=CMNTU ESILENCE=CcdiNnPpTtx EXCEPTS=e :are supported by this server
+>> :*.freenode.net 005 jpillet EXTBAN=,ACNOQRSTUacjmnpruwz HOSTLEN=64 INVEX=I KEYLEN=32 KICKLEN=255 LINELEN=512 MAXLIST=I:100,X:100,b:100,e:100,w:100 MAXTARGETS=20 MODES=20 MONITOR=30 NAMELEN=128 NAMESX NETWORK=freenode :are supported by this server
+>> :*.freenode.net 005 jpillet NICKLEN=30 PREFIX=(Yohv)!@%+ REMOVE SAFELIST SECURELIST=60 SILENCE=32 STATUSMSG=!@%+ TOPICLEN=390 UHNAMES USERIP USERLEN=10 USERMODES=,,s,BDHILRSTWcdghikorwxz VBANLIST :are supported by this server
+>> :*.freenode.net 005 jpillet VLIST=b WATCH=32 WHOX :are supported by this server
+>> :*.freenode.net 251 jpillet :There are 20 users and 9893 invisible on 9 servers
+>> :*.freenode.net 252 jpillet 10 :operator(s) online
+>> :*.freenode.net 253 jpillet 13 :unknown connections
+>> :*.freenode.net 254 jpillet 14116 :channels formed
+>> :*.freenode.net 255 jpillet :I have 3137 clients and 1 servers
+>> :*.freenode.net 265 jpillet :Current local users: 3137  Max: 3478
+>> :*.freenode.net 266 jpillet :Current global users: 9913  Max: 10805
+>> :*.freenode.net 375 jpillet :*.freenode.net message of the day
+>> :*.freenode.net 372 jpillet :  Hello, World!
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Welcome to the
+>> :*.freenode.net 372 jpillet :          __                               _
+>> :*.freenode.net 372 jpillet :         / _|_ __ ___  ___ _ __   ___   __| | ___
+>> :*.freenode.net 372 jpillet :        | |_| '__/ _ \/ _ \ '_ \ / _ \ / _` |/ _ \
+>> :*.freenode.net 372 jpillet :        |  _| | |  __/  __/ | | | (_) | (_| |  __/
+>> :*.freenode.net 372 jpillet :        |_| |_|  \___|\___|_| |_|\___/ \__,_|\___|
+>> :*.freenode.net 372 jpillet :                                   AUTONOMOUS ZONE
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Connect to us on:
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Hostname: irc.freenode.net / chat.freenode.net
+>> :*.freenode.net 372 jpillet :  Plaintext: 6660-6669
+>> :*.freenode.net 372 jpillet :  TLS/SSL: 6697,7000,7070
+>> :*.freenode.net 372 jpillet :  Webchat: https://webchat.freenode.net
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  By connecting to freenode you indicate that you have read and accept our
+>> :*.freenode.net 372 jpillet :  policies and guidelines as set out on https://freenode.net and agree to
+>> :*.freenode.net 372 jpillet :  be scanned for an open proxy.
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  If you are looking for assistance, please try:
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  #help                    - Help with general IRC and Services.
+>> :*.freenode.net 372 jpillet :  #chanhelp                - Help with channels and channel services.
+>> :*.freenode.net 372 jpillet :  #IRC                     - Help with the IRC.com by freenode app.
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Checkout some of our communities and services:
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  #freenode-bbs            - BBS [https://bbs.freenode.net/]
+>> :*.freenode.net 372 jpillet :  #freenode-bbs-discussion - BBS Discussion
+>> :*.freenode.net 372 jpillet :  #freenode-jobs           - Jobs [https://jobs.freenode.net/]
+>> :*.freenode.net 372 jpillet :  #freenode                - Chat about freenode.
+>> :*.freenode.net 372 jpillet :  #anonchan                - Chat anonymously.
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Type /join #<channel>
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Thank you for using freenode!
+>> :*.freenode.net 376 jpillet :End of message of the day.
+>> :*.freenode.net 396 jpillet freenode-a99.759.j1faas.IP :is now your displayed host
+>> :jpillet!~jpillet@freenode-a99.759.j1faas.IP MODE jpillet :+wRix
+>> :*.freenode.net NOTICE jpillet :*** You are connected to chat.freenode.net using TLS (SSL) cipher 'TLSv1.3-TLS_AES_256_GCM_SHA384'
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< WHOIS jpillet
+>> :*.freenode.net 311 jpillet jpillet ~jpillet freenode-a99.759.j1faas.IP * :Julien Pillet
+--> whois event
+>> :*.freenode.net 378 jpillet jpillet :is connecting from ~jpillet@62.129.8.171 62.129.8.171
+--> whois default event
+>> :*.freenode.net 312 jpillet jpillet karma.freenode.net :freenode IRC Server
+--> whois default event
+>> :*.freenode.net 379 jpillet jpillet :is using modes +Riwx
+--> whois default event
+>> :*.freenode.net 671 jpillet jpillet :is using a secure connection
+--> whois default event
+>> :*.freenode.net 318 jpillet jpillet :End of /WHOIS list.
+--> whois end
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< CAP LS
+<< NICK jpillet
+<< USER jpillet jpillet chat.freenode.net :Julien Pillet
+>> :*.freenode.net NOTICE * :*** Looking up your ident...
+>> :*.freenode.net NOTICE * :*** Looking up your hostname...
+>> :*.freenode.net NOTICE * :*** Could not resolve your hostname: Domain not found; using your IP address (62.129.8.171) instead.
+>> :*.freenode.net CAP * LS :account-notify account-tag away-notify batch cap-notify chghost draft/relaymsg echo-message extended-join inspircd.org/poison inspircd.org/standard-replies invite-notify labeled-response message-tags multi-prefix sasl server-time setname userhost-in-names 
+<< CAP REQ :multi-prefix
+>> PING :YTewsYa\SJ
+<< PONG :YTewsYa\SJ
+>> :*.freenode.net CAP jpillet ACK :multi-prefix
+<< CAP END
+>> :*.freenode.net NOTICE jpillet :*** Ident lookup timed out, using ~jpillet instead.
+>> :*.freenode.net 001 jpillet :Welcome to the freenode IRC Network jpillet!~jpillet@62.129.8.171
+<< MODE jpillet +i
+>> :*.freenode.net 002 jpillet :Your host is *.freenode.net, running version InspIRCd-3
+>> :*.freenode.net 003 jpillet :This server was created 00:20:08 Apr 21 2022
+>> :*.freenode.net 004 jpillet *.freenode.net InspIRCd-3 BDHILRSTWcdghikorswxz ABCDEFIJKLMNOPQRSTUWXYZbcdefhijklmnoprstuvwz :BEFIJLWXYZbdefhjklovw
+>> :*.freenode.net 005 jpillet ACCEPT=30 AWAYLEN=200 BOT=B CALLERID=g CASEMAPPING=ascii CHANLIMIT=#:20 CHANMODES=IXZbew,k,BEFJLWdfjl,ACDKMNOPQRSTUcimnprstuz CHANNELLEN=64 CHANTYPES=# ELIST=CMNTU ESILENCE=CcdiNnPpTtx EXCEPTS=e :are supported by this server
+>> :*.freenode.net 005 jpillet EXTBAN=,ACNOQRSTUacjmnpruwz HOSTLEN=64 INVEX=I KEYLEN=32 KICKLEN=255 LINELEN=512 MAXLIST=I:100,X:100,b:100,e:100,w:100 MAXTARGETS=20 MODES=20 MONITOR=30 NAMELEN=128 NAMESX NETWORK=freenode :are supported by this server
+>> :*.freenode.net 005 jpillet NICKLEN=30 PREFIX=(Yohv)!@%+ REMOVE SAFELIST SECURELIST=60 SILENCE=32 STATUSMSG=!@%+ TOPICLEN=390 UHNAMES USERIP USERLEN=10 USERMODES=,,s,BDHILRSTWcdghikorwxz VBANLIST :are supported by this server
+>> :*.freenode.net 005 jpillet VLIST=b WATCH=32 WHOX :are supported by this server
+>> :*.freenode.net 251 jpillet :There are 20 users and 9893 invisible on 9 servers
+>> :*.freenode.net 252 jpillet 10 :operator(s) online
+>> :*.freenode.net 253 jpillet 13 :unknown connections
+>> :*.freenode.net 254 jpillet 14116 :channels formed
+>> :*.freenode.net 255 jpillet :I have 3137 clients and 1 servers
+>> :*.freenode.net 265 jpillet :Current local users: 3137  Max: 3478
+>> :*.freenode.net 266 jpillet :Current global users: 9913  Max: 10805
+>> :*.freenode.net 375 jpillet :*.freenode.net message of the day
+>> :*.freenode.net 372 jpillet :  Hello, World!
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Welcome to the
+>> :*.freenode.net 372 jpillet :          __                               _
+>> :*.freenode.net 372 jpillet :         / _|_ __ ___  ___ _ __   ___   __| | ___
+>> :*.freenode.net 372 jpillet :        | |_| '__/ _ \/ _ \ '_ \ / _ \ / _` |/ _ \
+>> :*.freenode.net 372 jpillet :        |  _| | |  __/  __/ | | | (_) | (_| |  __/
+>> :*.freenode.net 372 jpillet :        |_| |_|  \___|\___|_| |_|\___/ \__,_|\___|
+>> :*.freenode.net 372 jpillet :                                   AUTONOMOUS ZONE
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Connect to us on:
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Hostname: irc.freenode.net / chat.freenode.net
+>> :*.freenode.net 372 jpillet :  Plaintext: 6660-6669
+>> :*.freenode.net 372 jpillet :  TLS/SSL: 6697,7000,7070
+>> :*.freenode.net 372 jpillet :  Webchat: https://webchat.freenode.net
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  By connecting to freenode you indicate that you have read and accept our
+>> :*.freenode.net 372 jpillet :  policies and guidelines as set out on https://freenode.net and agree to
+>> :*.freenode.net 372 jpillet :  be scanned for an open proxy.
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  If you are looking for assistance, please try:
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  #help                    - Help with general IRC and Services.
+>> :*.freenode.net 372 jpillet :  #chanhelp                - Help with channels and channel services.
+>> :*.freenode.net 372 jpillet :  #IRC                     - Help with the IRC.com by freenode app.
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Checkout some of our communities and services:
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  #freenode-bbs            - BBS [https://bbs.freenode.net/]
+>> :*.freenode.net 372 jpillet :  #freenode-bbs-discussion - BBS Discussion
+>> :*.freenode.net 372 jpillet :  #freenode-jobs           - Jobs [https://jobs.freenode.net/]
+>> :*.freenode.net 372 jpillet :  #freenode                - Chat about freenode.
+>> :*.freenode.net 372 jpillet :  #anonchan                - Chat anonymously.
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Type /join #<channel>
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Thank you for using freenode!
+>> :*.freenode.net 376 jpillet :End of message of the day.
+>> :*.freenode.net 396 jpillet freenode-a99.759.j1faas.IP :is now your displayed host
+>> :jpillet!~jpillet@freenode-a99.759.j1faas.IP MODE jpillet :+wRix
+>> :*.freenode.net NOTICE jpillet :*** You are connected to chat.freenode.net using TLS (SSL) cipher 'TLSv1.3-TLS_AES_256_GCM_SHA384'
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< WHOIS jpillet
+>> :*.freenode.net 311 jpillet jpillet ~jpillet freenode-a99.759.j1faas.IP * :Julien Pillet
+--> whois event
+>> :*.freenode.net 378 jpillet jpillet :is connecting from ~jpillet@62.129.8.171 62.129.8.171
+--> whois default event
+>> :*.freenode.net 312 jpillet jpillet karma.freenode.net :freenode IRC Server
+--> whois default event
+>> :*.freenode.net 379 jpillet jpillet :is using modes +Riwx
+--> whois default event
+>> :*.freenode.net 671 jpillet jpillet :is using a secure connection
+--> whois default event
+>> :*.freenode.net 318 jpillet jpillet :End of /WHOIS list.
+--> whois end
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
@@ -112,9 +283,7 @@
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
->> :qbrillai!~qbrillai@freenode-a99.759.j1faas.IP JOIN :#test2
->> :qbrillai!~qbrillai@freenode-a99.759.j1faas.IP PRIVMSG #test2 :tesd
->> :qbrillai!~qbrillai@freenode-a99.759.j1faas.IP PRIVMSG #test2 :fadf
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
+<< NICK ju ya
+>> :jpillet!~jpillet@freenode-a99.759.j1faas.IP NICK :ju
+>> :*.freenode.net 477 ju ju :You need to be identified to a registered account to message this user
+>> :NickServ!services@services.freenode.net NOTICE ju :Nick ju isn't registered.

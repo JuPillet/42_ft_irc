@@ -14,6 +14,7 @@
 
 class IRCData
 {
+	typedef std::string::iterator			strIt;
 /////	Server Info /////
 	std::string								_selfIP;
 	int										_port;
@@ -49,14 +50,62 @@ class IRCData
 							IRCData( IRCData &src );
 							IRCData	&operator=( IRCData &src );
 
+		void				spaceTrimer( void )
+		{
+			strIt	trimIt;
+			for ( trimIt = _request.begin(); trimIt != _request.end() && *trimIt == ' '; ++trimIt );
+			_request.erase( 0, trimIt - _request.begin() );
+		}
+
+		void				receveRequest( void ) {
+			std::cout << "message start" << std::endl;
+			int readvalue;
+			_request.clear();
+			for ( int index = 0; index != 1024; ++index )
+				_buff[index] = 0;
+
+			readvalue = recv( _sd , _buff, 1024, 0 );
+			_request.append( reinterpret_cast<char *>( _buff ), readvalue );
+			std::cout << readvalue << " : " << _request.length() << " : " << std::endl << _request << std::endl;
+			std::cout << "message exit" << std::endl;
+			spaceTrimer();
+		}
+
+		void				getCmd( void )
+		{
+			strIt	cmdIt;
+			for ( cmdIt = _request.begin(); cmdIt != _request.end()
+				&& *cmdIt != '\n' && *cmdIt != '\r' && *cmdIt != ' '; ++cmdIt );
+			_cmd = std::string( _request, 0, cmdIt - _request.begin() );
+			_request.erase( 0, cmdIt - _request.begin() );
+			if ( _cmd != "PRIVMSG" )
+				spaceTrimer();
+			else if( _request.size() > 1 && _request[0] == ' ' )
+				_request.erase( 0, 1 );
+		}
+
 		void sender ( void )
 		{
-			if ( send(_destSD, _answer.c_str(), _answer.length(), 0) )
+			if ( send( _destSD, _answer.c_str(), _answer.length(), 0 ) )
 			{
 				_answer.clear();
 				throw( IRCErr( "send" ) );
 			}
 			_answer.clear();
+		}
+
+		void	WELCOME( void )
+		{
+			if ( _clientIt->getPass() == _pass
+				&& _clientIt->getNick().size() && _clientIt->getUser().size() )
+			{
+				_destSD = _sd;
+				_answer = ":" + _selfIP + " 001 " + _clientIt->getNick() + " :Welcome to the IRC_QJ_Server "
+				+ _clientIt->getNick() + "!" + _clientIt->getUser() + "@" + inet_ntoa( _address.sin_addr ) + "\r\n";
+				sender();
+				std::cout << "Welcome message sent successfully" << std::endl;
+				_clientIt->setAutentification();
+			}
 		}
 
 		void				CAPLS( void )
@@ -66,31 +115,60 @@ class IRCData
 		{
 			if ( _clientIt->getPass() != _pass )
 			{
-				_answer = "Bad password\r\n";
+				_answer = ":Bad password\r\n";
 				sender();
-				throw IRCErr( "bad password" );
+				throw IRCErr( "Bad password" );
 			}
 		}
 
 		void				PASS( void )
 		{
 			_destSD = _sd;
+			if ( _clientIt->getAutentification() )
+			{
+				_answer = ":" + _selfIP + " 462 " + " " + _clientIt->getNick() + " " + ":You may not reregister";
+				sender();
+				throw IRCErr( _clientIt->getUser() + " try a double registration" );
+			}
+
+			strIt	passIt;
+			for ( passIt = _request.begin(); passIt != _request.end()
+				&& *passIt != '\n' && *passIt != '\r' && *passIt != ' '; ++passIt );
+			_passTmp = std::string( _request, 0, passIt - _request.begin() );
+			for ( ; passIt != _request.end() && *passIt != '\n'; ++passIt );
+			_request.erase( _request.begin(), passIt + 1 );
+			spaceTrimer();
+
 			_clientIt->setPass( _passTmp );
 			checkPass();
+			if ( !_clientIt->getAutentification() )
+				WELCOME();
 		}
 
 		void				NICK( void )
 		{
+			checkPass();
+
+			strIt	nickIt;
+			_nickTmp.clear();
+			for ( nickIt = _request.begin(); nickIt != _request.end()
+				&& *nickIt != '\n' && *nickIt != '\r' && *nickIt != ' '; ++nickIt );
+			_nickTmp = std::string( _request, 0, nickIt - _request.begin() );
+			for ( ; nickIt != _request.end() && *nickIt != '\n'; ++nickIt );
+			_request.erase( _request.begin(), nickIt + 1 );
+			spaceTrimer();
+
 			clientIterator	tmpIt = _clients.begin();
-			for ( std::string::iterator rejectIt = _rejectChar.begin(); rejectIt != _rejectChar.end(); ++rejectIt ){
-				for ( std::string::iterator nickIt = _nickTmp.begin(); nickIt != _nickTmp.end(); ++nickIt ){
+			for ( strIt rejectIt = _rejectChar.begin(); rejectIt != _rejectChar.end(); ++rejectIt ){
+				for ( strIt nickIt = _nickTmp.begin(); nickIt != _nickTmp.end(); ++nickIt ){
 					if ( *nickIt == *rejectIt ){
 						_destSD = _sd;
 						_answer = "Nickerror\r\n";
 						sender();
 						throw IRCErr( "Nick format" );
 			}	}	}
-			for ( ; tmpIt != _clients.end(); ++tmpIt)
+
+			for ( ; tmpIt != _clients.end(); ++tmpIt )
 			{
 				if ( tmpIt->getNick() == _nickTmp )
 				{
@@ -100,25 +178,53 @@ class IRCData
 					throw IRCErr( "Nick already in use" );
 				}
 			}
-			_clientIt->setNick(_nickTmp);
+
+			_clientIt->setNick( _nickTmp );
+			if ( !_clientIt->getAutentification() )
+				WELCOME();
 		}
 
 		void				USER( void )
 		{
+			strIt					userIt;
+			std::string				hostTmp;
+			std::string				servTmp;
+			std::string				realNTmp;
+
+			for ( userIt = _request.begin(); userIt != _request.end()
+				&& *userIt != '\n' && *userIt != '\r' && *userIt != ' '; ++userIt );
+			_userTmp = std::string( _request, 0, userIt - _request.begin() );
+			_request.erase( _request.begin(), userIt + 1 );
+			for ( userIt = _request.begin(); userIt != _request.end()
+				&& *userIt != '\n' && *userIt != '\r' && *userIt != ' '; ++userIt );
+			
+			for ( ; userIt != _request.end() && *userIt != '\n'; ++userIt );
+			_request.erase( _request.begin(), userIt + 1 );
+
+			spaceTrimer();
+
 			clientIterator							tmpIt = _clients.begin();
-			for ( std::string::iterator rejectIt = _rejectChar.begin(); rejectIt != _rejectChar.end(); ++rejectIt ){
-				for ( std::string::iterator userIt = _userTmp.begin(); userIt != _userTmp.end(); ++userIt ){
+			for ( strIt rejectIt = _rejectChar.begin(); rejectIt != _rejectChar.end(); ++rejectIt ){
+				for ( strIt userIt = _userTmp.begin(); userIt != _userTmp.end(); ++userIt ){
 					if ( *userIt == *rejectIt ){
 						_destSD = _sd;
 						_answer = "Usererror\r\n";
 						sender();
 						throw IRCErr( "User format" );
 			}	}	}
-			_clientIt->setUser(_userTmp);
+			_clientIt->setUser( _userTmp );
+			if ( !_clientIt->getAutentification() )
+				checkAutentification();
 		}
 
 		void				JOIN( void )
 		{
+			strIt	channelIt;
+			for ( channelIt = _request.begin(); channelIt != _request.end()
+				&& *channelIt != '\n' && *channelIt != '\r' && *channelIt != ' '; ++channelIt );
+			_channelTmp = std::string( _request, 0, channelIt - _request.begin() );
+			spaceTrimer();
+
 			std::list<std::string>::const_iterator chanIt;
 			for ( chanIt = _clientIt->getChannels().begin(); *chanIt != _channelTmp && chanIt != _clientIt->getChannels().end(); ++chanIt );
 			if ( chanIt != _clientIt->getChannels().end() )
@@ -134,11 +240,11 @@ class IRCData
 		void				OPENMSG( void )
 		{
 			clientIterator	clientIt = _clients.begin();
-			for ( ; clientIt != _clients.end(); clientIt++)
+			for ( ; clientIt != _clients.end(); clientIt++ )
 			{
 				std::list<std::string>::const_iterator channel = clientIt->getChannels().begin();
-				for ( ; channel != _clientIt->getChannels().end() && *channel != _dest; channel++);
-				if (channel != _clientIt->getChannels().end())
+				for ( ; channel != _clientIt->getChannels().end() && *channel != _dest; channel++ );
+				if ( channel != _clientIt->getChannels().end() )
 				{
 					_destSD = _clientIt->getSocket();
 					_answer = "A voir formattage message"; // A voir
@@ -150,27 +256,23 @@ class IRCData
 		void				PRIVMSG( void )
 		{
 			clientIterator							clientIt = _clients.begin();
-			while (clientIt != _clients.end())
+			for ( ; clientIt != _clients.end() && clientIt->getNick() != _nickTmp; ++clientIt );
+			if ( clientIt != _clients.end() )
 			{
-				if ( clientIt->getNick() == _nickTmp )
-				{
-					_destSD = clientIt->getSocket();
-					_answer = " A VOIR formmattage "; // A VOIR
-					sender();
-					break;
-				}
-				clientIt++;
+				_destSD = clientIt->getSocket();
+				_answer = " A VOIR formmattage "; // A VOIR
+				sender();
 			}
 		}
 
 		void				MSG( void )
 		{
-			std::string::iterator strIt;
-			for (strIt = _request.begin(); strIt != _request.end() && *strIt != ' '; strIt++);
+			strIt strIt;
+			for ( strIt = _request.begin(); strIt != _request.end() && *strIt != ' '; strIt++ );
 			_dest = _request.substr( 0, _request.begin() - strIt );
+			_request.erase( 0, strIt - _request.begin() );
 
-			_request.erase(_request.begin(), strIt + 1);
-			if (_dest[0] == '#')
+			if ( _dest[0] == '#' )
 				OPENMSG();
 			else
 				PRIVMSG();
@@ -183,80 +285,11 @@ class IRCData
 			_address.sin_port = htons( _port );
 		}
 
-		std::string WELCOME( void )
-		{
-			_destSD = _sd;
-			_answer = ":" + _selfIP + " 001 " + _clientIt->getNick() + " :Welcome to the IRC_QJ_Server "
-			+ _clientIt->getNick() + "!" + _clientIt->getUser() + "@" + inet_ntoa( _address.sin_addr ) + "\r\n";
-			sender();
-		}
-
 		std::string PONG( void )
 		{
 			_destSD = _sd;
 			_answer = ":" + _selfIP + " PONG " + _selfIP + " :" + inet_ntoa( _address.sin_addr ) + "\r\n"; 
 			sender();
-		}
-
-		void				receveMessage( void ) {
-			std::cout << "message start" << std::endl;
-			int readvalue;
-			_request.clear();
-			for ( int index = 0; index != 1024; ++index )
-				_buff[index] = 0;
-
-			readvalue = recv( _sd , _buff, 1024, 0 );
-			_request.append( reinterpret_cast<char *>( _buff ), readvalue );
-			std::cout << readvalue << " : " << _request.length() << " : " << std::endl << _request << std::endl;
-			std::cout << "message exit" << std::endl;
-		}
-
-		void				formatRequest( void )
-		{
-			if ( *_request.c_str() == '/' )
-			{
-				std::string::iterator _requestIt;
-				int index = _request.find( ' ' );
-				_request.erase( _request.begin() );
-				if ( index >= _request.length() )
-					index = _request.length();
-				for ( _requestIt = _request.begin(); _requestIt != _request.begin() + index; ++_requestIt );
-					( *_requestIt ) = std::toupper( *_requestIt );
-				_cmd = _request.substr( 0, index );
-				_request.erase( 0, index + 1 );
-			}
-		}
-
-		void				newClient( void )
-		{
-			receveMessage();
-
-			std::cout << _request << std::endl;
-			_request.erase( 0 , _request.find( '\n' ) + 1 );
-			if ( !_request.size() )
-				receveMessage();
-			( _request, 5, _request.find( "\r\n" ) - 5 );
-			_request.erase( 0 , _request.find( '\n' ) + 1 );
-//			receveMessage();
-			std::string nick( _request, 5, _request.find( "\r\n" ) - 5 );
-			_request.erase( 0 , _request.find( '\n' ) + 1 );
-//			receveMessage();
-			std::string user( _request, 5, _request.find( "\r\n" ) - 5 );
-			_request.erase( 0 , _request.find( '\n' ) + 1 );
-			std::cout << "Adding to list of sockets as " << _index << std::endl;
-		}
-
-		void				connectionAcceptator( void )
-		{
-			if ( ( _new_socket = accept( _master_socket, reinterpret_cast<struct sockaddr *>( &_address ), reinterpret_cast<socklen_t *>( &_addrlen ) ) ) < 0 )
-				throw IRCErr( "accept" );
-			_sd = _new_socket;
-			_clients.push_back( Client( _new_socket ) );
-			_clientIt = ( _clients.end()-- );
-			std::cout << "New connection , socket fd is " << _new_socket << ", ip is : " << inet_ntoa( _address.sin_addr ) << ", port : " << ntohs( _address.sin_port ) << std::endl;
-			newClient();
-			WELCOME();
-			std::cout << "Welcome message sent successfully" << std::endl;
 		}
 
 		void				closeEraseDeleteClient( void )
@@ -328,7 +361,7 @@ class IRCData
 			_addrlen = sizeof( _address );
 
 			gethostname( selfhost, sizeof( selfhost ) );
-			host_entry = gethostbyname(selfhost);
+			host_entry = gethostbyname( selfhost );
 			_selfIP = inet_ntoa( *( reinterpret_cast<struct in_addr*>( host_entry->h_addr_list[0] ) ) );
 
 			std::cout << "Waiting for connections ..." << std::endl;
@@ -358,28 +391,55 @@ class IRCData
 				throw IRCErr( "select error" );
 		}
 
+		void				execFct( void )
+		{
+			listPair::iterator	listPairIt;
+
+			for ( listPairIt = _listFctn.begin(); listPairIt->first != _cmd && listPairIt != _listFctn.end(); ++listPairIt );
+			if ( listPairIt != _listFctn.end() )
+				listPairIt->second;
+		}
+
+		void				connectionSocket( void )
+		{
+			if ( ( _new_socket = accept( _master_socket, reinterpret_cast<struct sockaddr *>( &_address ), reinterpret_cast<socklen_t *>( &_addrlen ) ) ) < 0 )
+				throw IRCErr( "accept" );
+			_sd = _new_socket;
+			_clients.push_back( Client( _new_socket ) );
+			_clientIt = _clients.end();
+			_clientIt--;
+			std::cout << "New connection , socket fd is " << _new_socket << ", ip is : " << inet_ntoa( _address.sin_addr ) << ", port : " << ntohs( _address.sin_port ) << std::endl;
+		}
+
+		void				newClient( void )
+		{
+			connectionSocket();
+			receveRequest();
+			std::cout << _request << std::endl;
+			strIt	CAPIt;
+			for ( CAPIt = _request.begin(); CAPIt != _request.end()
+				&& *CAPIt != '\n' && *CAPIt != '\r' && *CAPIt != ' '; ++CAPIt );
+			std::string cap( _request, 0, CAPIt - _request.begin() );
+			if ( cap == "CAP" )
+			{
+				for ( ; CAPIt != _request.end() && *CAPIt != '\n'
+						&& *CAPIt != ' '; ++CAPIt );
+				_request.erase( 0, CAPIt - _request.begin() );
+			}
+			spaceTrimer();
+			while( _request.size() )
+				execFct();
+			std::cout << "Adding to list of sockets as " << _index << std::endl;
+		}
+
 		void				connectionListener( void ){
-			try { connectionAcceptator(); }
+			try { newClient(); }
 			catch( IRCErr const &err )
 			{ 
 				if ( _new_socket != -1 )
 					close( _new_socket );
 				std::cerr << err.getError() << std::endl;
-//				if ( _clientTmp )
-//					delete _clientTmp;
 			}
-		}
-
-
-		void				findFct( void )
-		{
-			listPair::iterator	listPairIt;
-
-			for (listPairIt = _listFctn.begin(); listPairIt->first != _cmd && listPairIt != _listFctn.end(); ++listPairIt);
-			if ( listPairIt != _listFctn.end() )
-				listPairIt->second;
-			else
-				MSG();
 		}
 
 		void				IOListener( void )
@@ -393,21 +453,25 @@ class IRCData
 					//incoming message
 					try
 					{
-						receveMessage();
+						receveRequest();
 						if ( _request.length() == 0 )
 							closeEraseDeleteClient();
 						else
 						{
-							if ( _cmd == "PASS" )
-								PASS();
-							else
+							while ( _request.size() )
 							{
-								checkPass();
-								findFct();
+								getCmd();
+								if ( _cmd == "PASS" )
+									PASS();
+								else
+								{
+									checkPass();
+									execFct();
+								}
 							}
 						}
 					}
-					catch ( IRCErr const &err)
+					catch ( IRCErr const &err )
 					{ std::cout << err.getError() << std::endl; }
 				}  
 			}
