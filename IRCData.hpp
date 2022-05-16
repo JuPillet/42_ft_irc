@@ -68,7 +68,6 @@ class IRCData
 			if ( readvalue != -1 )
 				_request.append( reinterpret_cast<char *>( _buff ), readvalue );
 			std::cout << "_sd: " << _sd << " - readvalue: " << readvalue << " : " << _request.length() << " : " << std::endl << _request << std::endl;
-			exit(0);
 			std::cout << "message exit" << std::endl;
 			spaceTrimer();
 		}
@@ -153,8 +152,6 @@ class IRCData
 
 		void				NICK( void )
 		{
-			checkPass();
-
 			strIt	nickIt;
 			_nickTmp.clear();
 			for ( nickIt = _request.begin(); nickIt != _request.end()
@@ -184,8 +181,8 @@ class IRCData
 					throw IRCErr( "Nick already in use" );
 				}
 			}
-
 			_clientIt->setNick( _nickTmp );
+			checkPass();
 			if ( !_clientIt->getAutentification() )
 				WELCOME();
 		}
@@ -231,6 +228,7 @@ class IRCData
 						throw IRCErr( "User format" );
 			}	}	}
 			_clientIt->setUser( _userTmp );
+			checkPass();
 			if ( !_clientIt->getAutentification() )
 				WELCOME();
 		}
@@ -238,6 +236,7 @@ class IRCData
 		void				JOIN( void )
 		{
 			strIt	channelIt;
+			//ICI CREER UN CHECK AUTHENTIFICATION
 			for ( channelIt = _request.begin(); channelIt != _request.end()
 				&& *channelIt != '\n' && *channelIt != '\r' && *channelIt != ' '; ++channelIt );
 			_channelTmp = std::string( _request, 0, channelIt - _request.begin() );
@@ -286,6 +285,7 @@ class IRCData
 		void				MSG( void )
 		{
 			strIt strIt;
+			//ICI CREER UN CHECK AUTHENTIFICATION
 			for ( strIt = _request.begin(); strIt != _request.end() && *strIt != ' '; strIt++ );
 			_dest = _request.substr( 0, _request.begin() - strIt );
 			_request.erase( 0, strIt - _request.begin() );
@@ -405,11 +405,19 @@ class IRCData
 		}
 
 		void				activityListener( void ) {
-			_activity = select( _max_sd + 1 , &_readfds , NULL , NULL , NULL );  
+			_activity = select( _max_sd + 1, &_readfds, NULL, NULL, NULL);
 
+			std::cout << _activity << std::endl;
 			if ( ( _activity < 0 ) && ( errno != EINTR ) )  
 				throw IRCErr( "select error" );
 		}
+
+//		void				activityListener( void ) {
+//			_activity = select( _max_sd + 1 , &_readfds , NULL , NULL , NULL );  
+//
+//			if ( ( _activity < 0 ) && ( errno != EINTR ) )  
+//				std::cout << "select error" << std::endl;
+//		}
 
 		void				execFct( void )
 		{
@@ -425,70 +433,67 @@ class IRCData
 				_request.clear();
 		}
 
-		void				connectionSocket( void )
-		{
-			if ( ( _new_socket = accept( _master_socket, reinterpret_cast<struct sockaddr *>( &_address ), reinterpret_cast<socklen_t *>( &_addrlen ) ) ) < 0 )
-				throw IRCErr( "accept" );
-			_clients.push_back( Client( _new_socket ) );
-			_clientIt = --_clients.end();
-			_sd = _clientIt->getSocket();
-			std::cout << "New connection , socket fd is " << _new_socket << ", ip is : " << inet_ntoa( _address.sin_addr ) << ", port : " << ntohs( _address.sin_port ) << std::endl;
-		}
+//		void				connectionSocket( void )
+//		{
+//			if ( ( _new_socket = accept( _master_socket, reinterpret_cast<struct sockaddr *>( &_address ), reinterpret_cast<socklen_t *>( &_addrlen ) ) ) < 0 )
+//				throw IRCErr( "accept" );
+//			_clients.push_front( Client( _new_socket ) );
+//			_clientIt = _clients.begin();
+//			_sd = _clientIt->getSocket();
+//			std::cout << "New connection , socket fd is " << _new_socket << ", ip is : " << inet_ntoa( _address.sin_addr ) << ", port : " << ntohs( _address.sin_port ) << std::endl;
+//		}
+
+//		void				newClient( void )
+//		{
+//			connectionSocket();
+//			receveRequest();
+//			while( _request.size() )
+//			{
+//				setCmd();
+//				execFct();
+//			}
+//		}
 
 		void				newClient( void )
 		{
-			connectionSocket();
-			receveRequest();
-			while( _request.size() )
+			if ( ( _new_socket = accept( _master_socket, reinterpret_cast<struct sockaddr *>( &_address ), reinterpret_cast<socklen_t *>( &_addrlen ) ) ) < 0 )
 			{
-				setCmd();
-				execFct();
+				std::cout << "error _new_socket: " << _new_socket << std::endl;
+				exit(1);
+				throw IRCErr( "accept" );
 			}
+			_clients.push_back( Client( _new_socket ) );
+			std::cout << "New connection , socket fd is " << _new_socket << ", ip is : " << inet_ntoa( _address.sin_addr ) << ", port : " << ntohs( _address.sin_port ) << std::endl;
 		}
 
-		void				connectionListener( void )
-		{
-			try
-			{ newClient(); }
-			catch( IRCErr const &err )
-			{ 
-				if ( _new_socket != -1 )
-					close( _new_socket );
-				std::cerr << err.getError() << std::endl;
-			}
-		}
+//		void				connectionListener( void )
+//		{
+//			try
+//			{ newClient(); }
+//			catch( IRCErr const &err )
+//			{ std::cerr << err.getError() << std::endl; }
+//		}
 
 		void				IOListener( void )
 		{
 			for ( _clientIt = _clients.begin(); _clientIt != _clients.end(); ++_clientIt )
 			{  
-				_sd = _clientIt->getSocket();
-				if ( FD_ISSET( _sd , &_readfds ) )  
+				if ( FD_ISSET( _clientIt->getSocket() , &_readfds ) )  
 				{
+					_sd = _clientIt->getSocket() - 1;
 					//Check if it was for closing , and also read the 
 					//incoming message
-					try
+					receveRequest();
+					if ( _request.length() == 0 )
+						closeEraseDeleteClient();
+					else
 					{
-						receveRequest();
-						if ( _request.length() == 0 )
-							closeEraseDeleteClient();
-						else
+						while ( _request.size() )
 						{
-							while ( _request.size() )
-							{
-								setCmd();
-								if ( _cmd == "PASS" )
-									PASS();
-								else
-								{
-									checkPass();
-									execFct();
-								}
-							}
+							setCmd();
+							execFct();
 						}
 					}
-					catch ( IRCErr const &err )
-					{ std::cout << err.getError() << std::endl; }
 				}  
 			}
 		}

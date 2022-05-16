@@ -17,15 +17,23 @@ int main(int ac, char **av)
 
 	while ( true )
 	{
-		server.addClearedMasterSocket();
+		server.addClearedMasterSocket(); //OK
+		try
+		{ server.activityListener(); }
+		catch ( IRCErr const &err )
+		{ std::cerr << err.getError() << std::endl; }
 		try
 		{
-			server.activityListener();
 			if ( FD_ISSET( server.getMasterSocket(), const_cast<fd_set*>( server.getPTReadFds() ) ) )
-				server.connectionListener();
-			else
-				server.IOListener();
+			{
+				server.newClient();
+				std::cout << "_new_socket accepted " << std::endl;
+			}
 		}
+		catch ( IRCErr const &err )
+		{ std::cerr << err.getError() << std::endl; }
+		try
+		{ 		server.IOListener(); }
 		catch ( IRCErr const &err )
 		{ std::cerr << err.getError() << std::endl; }
 	}
