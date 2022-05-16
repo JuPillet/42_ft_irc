@@ -20,8 +20,8 @@ class IRCData
 	int										_port;
 	std::string								_pass;
 /////	PtrFctn /////
-	typedef									void ( IRCData::*ptrfct )( void );
-	typedef std::pair<std::string, IRCData::ptrfct>	pairKV;
+	typedef void(IRCData::*ptrfct)( void );
+	typedef std::pair<std::string, ptrfct>	pairKV;
 	typedef std::list<pairKV>				listPair;
 	listPair								_listFctn;
 /////	Socket Info /////
@@ -42,7 +42,7 @@ class IRCData
 	std::list<Client>						_clients;
 	typedef	std::list<Client>::iterator	clientIterator;
 	clientIterator							_clientIt;
-	std::string								_passTmp, _nickTmp, _userTmp, _modeTmp, _nameTmp, _channelTmp;
+	std::string								_passTmp, _nickTmp, _userTmp, _modeTmp, _unknownTmp, _nameTmp, _channelTmp;
 	std::string 							_rejectChar;
 	int										_destSD;
 
@@ -63,10 +63,12 @@ class IRCData
 			_request.clear();
 			for ( int index = 0; index != 1024; ++index )
 				_buff[index] = 0;
-
-			readvalue = recv( _sd , _buff, 1024, 0 );
-			_request.append( reinterpret_cast<char *>( _buff ), readvalue );
-			std::cout << readvalue << " : " << _request.length() << " : " << std::endl << _request << std::endl;
+			readvalue = recv( _sd, _buff, 1024, 0 );
+			std::cout << strerror(errno) << std::endl;
+			if ( readvalue != -1 )
+				_request.append( reinterpret_cast<char *>( _buff ), readvalue );
+			std::cout << "_sd: " << _sd << " - readvalue: " << readvalue << " : " << _request.length() << " : " << std::endl << _request << std::endl;
+			exit(0);
 			std::cout << "message exit" << std::endl;
 			spaceTrimer();
 		}
@@ -78,10 +80,7 @@ class IRCData
 				&& *cmdIt != '\n' && *cmdIt != '\r' && *cmdIt != ' '; ++cmdIt );
 			_cmd = std::string( _request, 0, cmdIt - _request.begin() );
 			_request.erase( 0, cmdIt - _request.begin() );
-			if ( _cmd != "PRIVMSG" )
-				spaceTrimer();
-			else if( _request.size() > 1 && _request[0] == ' ' )
-				_request.erase( 0, 1 );
+			spaceTrimer();
 		}
 
 		void sender ( void )
@@ -108,8 +107,15 @@ class IRCData
 			}
 		}
 
-		void				CAPLS( void )
-		{ _request.erase( 0 , _request.find( '\n' ) + 1 ); }
+		void				CAP( void )
+		{
+			strIt	capIt;
+
+			std::cout << _request << std::endl;
+			for ( ; capIt != _request.end() && *capIt != '\n'; ++capIt );
+			_request.erase( 0, capIt - _request.begin() );
+			spaceTrimer();
+		}
 
 		void				checkPass( void )
 		{
@@ -136,7 +142,7 @@ class IRCData
 				&& *passIt != '\n' && *passIt != '\r' && *passIt != ' '; ++passIt );
 			_passTmp = std::string( _request, 0, passIt - _request.begin() );
 			for ( ; passIt != _request.end() && *passIt != '\n'; ++passIt );
-			_request.erase( _request.begin(), passIt + 1 );
+			_request.erase( 0, passIt - _request.begin() );
 			spaceTrimer();
 
 			_clientIt->setPass( _passTmp );
@@ -155,7 +161,7 @@ class IRCData
 				&& *nickIt != '\n' && *nickIt != '\r' && *nickIt != ' '; ++nickIt );
 			_nickTmp = std::string( _request, 0, nickIt - _request.begin() );
 			for ( ; nickIt != _request.end() && *nickIt != '\n'; ++nickIt );
-			_request.erase( _request.begin(), nickIt + 1 );
+			_request.erase( 0, nickIt - _request.begin() );
 			spaceTrimer();
 
 			clientIterator	tmpIt = _clients.begin();
@@ -194,15 +200,25 @@ class IRCData
 			for ( userIt = _request.begin(); userIt != _request.end()
 				&& *userIt != '\n' && *userIt != '\r' && *userIt != ' '; ++userIt );
 			_userTmp = std::string( _request, 0, userIt - _request.begin() );
-			_request
+			_request.erase(0, userIt - _request.begin());
 			spaceTrimer();
 
 			for ( userIt = _request.begin(); userIt != _request.end()
 				&& *userIt != '\n' && *userIt != '\r' && *userIt != ' '; ++userIt );
+			_modeTmp = std::string( _request, 0, userIt - _request.begin() );
+			_request.erase(0, userIt - _request.begin());
 			spaceTrimer();
 
-			for ( ; userIt != _request.end() && *userIt != '\n'; ++userIt );
-			_request.erase( _request.begin(), userIt + 1 );
+			for ( userIt = _request.begin(); userIt != _request.end()
+				&& *userIt != '\n' && *userIt != '\r' && *userIt != ' '; ++userIt );
+			_unknownTmp = std::string( _request, 0, userIt - _request.begin() );
+			_request.erase(0, userIt - _request.begin());
+			spaceTrimer();
+
+			for ( userIt = _request.begin(); userIt != _request.end()
+				&& *userIt != '\n' && *userIt != '\r' && *userIt != ' '; ++userIt );
+			_nameTmp = std::string( _request, 0, userIt - _request.begin() );
+			_request.erase(0, userIt - _request.begin());
 			spaceTrimer();
 
 			clientIterator							tmpIt = _clients.begin();
@@ -287,7 +303,7 @@ class IRCData
 			_address.sin_port = htons( _port );
 		}
 
-		std::string PONG( void )
+		void	PONG( void )
 		{
 			_destSD = _sd;
 			_answer = ":" + _selfIP + " PONG " + _selfIP + " :" + inet_ntoa( _address.sin_addr ) + "\r\n"; 
@@ -325,10 +341,11 @@ class IRCData
 
 		void initFct ()
 		{
-			_listFctn.push_back( pairKV( "NICK", NICK ) );
-			_listFctn.push_back( pairKV( "USER", USER ) );
-			_listFctn.push_back( pairKV( "JOIN", JOIN ) );
-			_listFctn.push_back( pairKV( "PRIVMSG", MSG ) );
+			_listFctn.push_back( pairKV( "CAP", &IRCData::CAP ) );
+			_listFctn.push_back( pairKV( "NICK", &IRCData::NICK ) );
+			_listFctn.push_back( pairKV( "USER", &IRCData::USER ) );
+			_listFctn.push_back( pairKV( "JOIN", &IRCData::JOIN ) );
+			_listFctn.push_back( pairKV( "PRIVMSG", &IRCData::MSG ) );
 		}
 
 
@@ -339,12 +356,17 @@ class IRCData
 			struct hostent	*host_entry;
 	
 			_rejectChar = "~!@#$%&*()+=:;\"\',<.>?/";
+
 			_port = std::stoi( port, &lastchar );
 			std::cout << port[lastchar] << std::endl;
 			if ( port[lastchar] || _port < 0 || _port > 65535 )
 				throw( IRCErr( "Bad port value : enter port to 0 at 65 535" ) );
 
 			_pass = password;
+
+			gethostname( selfhost, sizeof( selfhost ) );
+			host_entry = gethostbyname( selfhost );
+			_selfIP = inet_ntoa( *( reinterpret_cast<struct in_addr*>( host_entry->h_addr_list[0] ) ) );
 
 			if ( ( _master_socket = socket( AF_INET , SOCK_STREAM , 0 ) ) == 0 )
 				throw( IRCErr( "socket failed" ) );
@@ -362,10 +384,6 @@ class IRCData
 
 			_addrlen = sizeof( _address );
 
-			gethostname( selfhost, sizeof( selfhost ) );
-			host_entry = gethostbyname( selfhost );
-			_selfIP = inet_ntoa( *( reinterpret_cast<struct in_addr*>( host_entry->h_addr_list[0] ) ) );
-
 			std::cout << "Waiting for connections ..." << std::endl;
 		}
 
@@ -379,9 +397,9 @@ class IRCData
 
 				//if valid socket descriptor then add to read list 
 				FD_SET( _sd, &_readfds );
-				 
+
 				//highest file descriptor number, need it for the select function 
-				if( _sd > _max_sd )  
+				if( _sd > _max_sd )
 					_max_sd = _sd;
 			}
 		}
@@ -395,21 +413,25 @@ class IRCData
 
 		void				execFct( void )
 		{
-			listPair::iterator	listPairIt;
+			listPair::iterator						_listPairIt;
 
-			for ( listPairIt = _listFctn.begin(); listPairIt->first != _cmd && listPairIt != _listFctn.end(); ++listPairIt );
-			if ( listPairIt != _listFctn.end() )
-				listPairIt->second;
+			for ( _listPairIt = _listFctn.begin(); _listPairIt->first != _cmd && _listPairIt != _listFctn.end(); ++_listPairIt );
+			if ( _listPairIt != _listFctn.end() )
+			{
+				ptrfct ptrFct = _listPairIt->second;
+				(this->*ptrFct)();
+			}
+			else
+				_request.clear();
 		}
 
 		void				connectionSocket( void )
 		{
 			if ( ( _new_socket = accept( _master_socket, reinterpret_cast<struct sockaddr *>( &_address ), reinterpret_cast<socklen_t *>( &_addrlen ) ) ) < 0 )
 				throw IRCErr( "accept" );
-			_sd = _new_socket;
 			_clients.push_back( Client( _new_socket ) );
-			_clientIt = _clients.end();
-			_clientIt--;
+			_clientIt = --_clients.end();
+			_sd = _clientIt->getSocket();
 			std::cout << "New connection , socket fd is " << _new_socket << ", ip is : " << inet_ntoa( _address.sin_addr ) << ", port : " << ntohs( _address.sin_port ) << std::endl;
 		}
 
@@ -417,25 +439,17 @@ class IRCData
 		{
 			connectionSocket();
 			receveRequest();
-			std::cout << _request << std::endl;
-			strIt	CAPIt;
-			for ( CAPIt = _request.begin(); CAPIt != _request.end()
-				&& *CAPIt != '\n' && *CAPIt != '\r' && *CAPIt != ' '; ++CAPIt );
-			std::string cap( _request, 0, CAPIt - _request.begin() );
-			if ( cap == "CAP" )
-			{
-				for ( ; CAPIt != _request.end() && *CAPIt != '\n'
-						&& *CAPIt != ' '; ++CAPIt );
-				_request.erase( 0, CAPIt - _request.begin() );
-			}
-			spaceTrimer();
 			while( _request.size() )
+			{
+				setCmd();
 				execFct();
-			std::cout << "Adding to list of sockets as " << _index << std::endl;
+			}
 		}
 
-		void				connectionListener( void ){
-			try { newClient(); }
+		void				connectionListener( void )
+		{
+			try
+			{ newClient(); }
 			catch( IRCErr const &err )
 			{ 
 				if ( _new_socket != -1 )
