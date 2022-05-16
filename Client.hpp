@@ -15,16 +15,19 @@ class Client
 	std::string							_name;
 	std::list<std::string>				_channels;
 										Client( void ): _client_socket(0), _authentified( false ), _pass(), _nick(), _user(), _channels() {};
+	public:
 										Client	&operator=( Client const &src )
 										{
-											_pass = src._pass;
 											_client_socket = src._client_socket;
+											_authentified = src._authentified;
+											_pass = src._pass;
 											_nick = src._nick;
-											for ( std::list<std::string>::iterator channelIt = static_cast<Client>(src)._channels.begin(); channelIt != src._channels.end(); ++channelIt )
-												_channels.push_back( *channelIt );
+											_user = src._user;
+											_name = src._name;
+											for ( std::list<std::string>::const_iterator chanIt = src._channels.begin(); chanIt != src._channels.end(); ++chanIt )
+												_channels.push_back( *chanIt );
 											return *this;
 										}
-	public:
 										Client( int const _new_socket ): _client_socket( _new_socket ), _authentified( false ), _pass(), _nick(), _user(), _channels()
 										{ return ; }
 										Client( int const _new_socket, std::string const &pass, std::string const &nick, std::string const &user ):

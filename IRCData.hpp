@@ -457,11 +457,7 @@ class IRCData
 		void				newClient( void )
 		{
 			if ( ( _new_socket = accept( _master_socket, reinterpret_cast<struct sockaddr *>( &_address ), reinterpret_cast<socklen_t *>( &_addrlen ) ) ) < 0 )
-			{
-				std::cout << "error _new_socket: " << _new_socket << std::endl;
-				exit(1);
 				throw IRCErr( "accept" );
-			}
 			_clients.push_back( Client( _new_socket ) );
 			std::cout << "New connection , socket fd is " << _new_socket << ", ip is : " << inet_ntoa( _address.sin_addr ) << ", port : " << ntohs( _address.sin_port ) << std::endl;
 		}
