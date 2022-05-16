@@ -42,7 +42,7 @@ class IRCData
 	std::list<Client>						_clients;
 	typedef	std::list<Client>::iterator	clientIterator;
 	clientIterator							_clientIt;
-	std::string								_passTmp, _nickTmp, _userTmp, _channelTmp;
+	std::string								_passTmp, _nickTmp, _userTmp, _modeTmp, _nameTmp, _channelTmp;
 	std::string 							_rejectChar;
 	int										_destSD;
 
@@ -71,7 +71,7 @@ class IRCData
 			spaceTrimer();
 		}
 
-		void				getCmd( void )
+		void				setCmd( void )
 		{
 			strIt	cmdIt;
 			for ( cmdIt = _request.begin(); cmdIt != _request.end()
@@ -194,13 +194,15 @@ class IRCData
 			for ( userIt = _request.begin(); userIt != _request.end()
 				&& *userIt != '\n' && *userIt != '\r' && *userIt != ' '; ++userIt );
 			_userTmp = std::string( _request, 0, userIt - _request.begin() );
-			_request.erase( _request.begin(), userIt + 1 );
+			_request
+			spaceTrimer();
+
 			for ( userIt = _request.begin(); userIt != _request.end()
 				&& *userIt != '\n' && *userIt != '\r' && *userIt != ' '; ++userIt );
-			
+			spaceTrimer();
+
 			for ( ; userIt != _request.end() && *userIt != '\n'; ++userIt );
 			_request.erase( _request.begin(), userIt + 1 );
-
 			spaceTrimer();
 
 			clientIterator							tmpIt = _clients.begin();
@@ -460,7 +462,7 @@ class IRCData
 						{
 							while ( _request.size() )
 							{
-								getCmd();
+								setCmd();
 								if ( _cmd == "PASS" )
 									PASS();
 								else

@@ -11,6 +11,8 @@ class Client
 	std::string							_pass;
 	std::string							_nick;
 	std::string							_user;
+//	std::string							_role;
+	std::string							_name;
 	std::list<std::string>				_channels;
 										Client( void ): _client_socket(0), _authentified( false ), _pass(), _nick(), _user(), _channels() {};
 										Client( Client const &src );
