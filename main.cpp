@@ -12,7 +12,7 @@ int main(int ac, char **av)
 	catch ( IRCErr const &err )
 	{
 		std::cerr << err.getError() << std::endl;
-		std::exit( EXIT_FAILURE ) ;
+		std::exit( EXIT_FAILURE );
 	}
 
 	while ( true )
@@ -20,20 +20,20 @@ int main(int ac, char **av)
 		server.addClearedMasterSocket(); //OK
 		try
 		{ server.activityListener(); }
-		catch ( IRCErr const &err )
-		{ std::cerr << err.getError() << std::endl; }
+		catch ( IRCErr const &e )
+		{
+//			std::cerr << err.getError() << std::endl;
+			e.getError().size();
+			continue;
+		}
 		try
 		{
-			if ( FD_ISSET( server.getMasterSocket(), const_cast<fd_set*>( server.getPTReadFds() ) ) )
-			{
+			if ( FD_ISSET( server.getMasterSocket(), server.getPtrFds() ) )
 				server.newClient();
-				std::cout << "_new_socket accepted " << std::endl;
-			}
 		}
 		catch ( IRCErr const &err )
 		{ std::cerr << err.getError() << std::endl; }
-		try
-		{ 		server.IOListener(); }
+		try { server.IOListener(); }
 		catch ( IRCErr const &err )
 		{ std::cerr << err.getError() << std::endl; }
 	}

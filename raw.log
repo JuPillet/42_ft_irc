@@ -1,0 +1,4 @@
+<< CAP LS
+<< PASS test
+<< NICK jpillet
+<< USER jpillet jpillet 10.11.2.4 :Julien Pillet
