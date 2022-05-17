@@ -316,7 +316,7 @@ class IRCData
 			std::cout << "Host disconnected , ip " << inet_ntoa( _address.sin_addr ) << ", port " << ntohs( _address.sin_port ) << std::endl;
 			FD_CLR( _sd, &_crntfds );
 			//Close the socket and mark as 0 in list for reuse
-//			close( _sd );
+			close( _sd );
 			_clients.erase( _clientIt );
 		}
 	public:
@@ -407,7 +407,7 @@ class IRCData
 				if( _sd > _max_sd )
 					_max_sd = _sd;
 			}
-			std::cout << "MAXSD: " << _max_sd <<std::endl;
+//			std::cout << "MAXSD: " << _max_sd <<std::endl;
 		}
 
 		void				activityListener( void )
@@ -439,16 +439,7 @@ class IRCData
 			FD_SET( _new_socket, &_crntfds );
 			Client _new_cli( _new_socket );
 			_clients.push_back( _new_cli );
-//			_clientIt = _clients.end();
-//			_clientIt--;
-//			_sd = _clientIt->getSocket();
 			_sd = _new_socket;
-			receveRequest();
-			while ( _request.size() )
-			{
-				setCmd();
-				execFct();
-			}
 			std::cout << "New connection , socket fd is " << _new_socket << ", ip is : " << inet_ntoa( _address.sin_addr ) << ", port : " << ntohs( _address.sin_port ) << std::endl;
 		}
 

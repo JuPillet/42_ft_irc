@@ -33,7 +33,7 @@ class Client
 										Client( int const _new_socket, std::string const &pass, std::string const &nick, std::string const &user ):
 										 _client_socket( _new_socket ), _authentified( false ), _pass( pass ), _nick( nick ), _user( user ), _channels()
 										{ return ; }
-										~Client( void ) { close( _client_socket ); }
+										~Client( void ) { return; }
 		void							setSocket( int new_socket ) { _client_socket = new_socket; }
 		int								getSocket( void ) const { return _client_socket; }
 		void							setAutentification( void ) { _authentified = true; }
