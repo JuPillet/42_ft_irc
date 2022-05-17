@@ -39,8 +39,8 @@ class IRCData
 	std::string 							_dest;
 /////	Client Info /////
 //	Client									_clientTmp;
-	std::list<Client>						_clients;
-	typedef	std::list<Client>::iterator	clientIterator;
+	std::list<Client*>						_clients;
+	typedef	std::list<Client*>::iterator	clientIterator;
 	clientIterator							_clientIt;
 	std::string								_passTmp, _nickTmp, _userTmp, _modeTmp, _unknownTmp, _nameTmp, _channelTmp;
 	std::string 							_rejectChar;
@@ -63,11 +63,15 @@ class IRCData
 			for ( int index = 0; index != 1024; ++index )
 				_buff[index] = 0;
 			readvalue = recv( _sd, _buff, 1024, 0 );
-			std::cout << strerror(errno) << std::endl;
+			
 			if ( readvalue != -1 )
+			{
 				_request = std::string( reinterpret_cast<char *>( _buff ), readvalue );
-			std::cout << "_sd: " << _sd << " - readvalue: " << readvalue << " : " << _request.length() << " : " << std::endl << _request << std::endl;
-			spaceTrimer();
+				std::cout << "_sd: " << _sd << " - readvalue: " << readvalue << " : " << _request.length() << " : " << std::endl << _request << std::endl;
+				spaceTrimer();
+			}
+			else
+				std::cout << strerror(errno) << std::endl;
 			std::cout << "message exit" << std::endl;
 		}
 
@@ -83,7 +87,7 @@ class IRCData
 
 		void sender ( void )
 		{
-			if ( send( _destSD, _answer.c_str(), _answer.length(), 0 ) )
+			if ( send( _destSD, _answer.c_str(), _answer.length(), 0 ) == -1 )
 			{
 				_answer.clear();
 				throw( IRCErr( "send" ) );
@@ -93,23 +97,22 @@ class IRCData
 
 		void	WELCOME( void )
 		{
-			if ( _clientIt->getPass() == _pass
-				&& _clientIt->getNick().size() && _clientIt->getUser().size() )
+			if ( (*_clientIt)->getPass() == _pass
+				&& (*_clientIt)->getNick().size() && (*_clientIt)->getUser().size() )
 			{
 				_destSD = _sd;
-				_answer = ":" + _selfIP + " 001 " + _clientIt->getNick() + " :Welcome to the IRC_QJ_Server "
-				+ _clientIt->getNick() + "!" + _clientIt->getUser() + "@" + inet_ntoa( _address.sin_addr ) + "\r\n";
+				_answer = ":" + _selfIP + " 001 " + (*_clientIt)->getNick() + " :Welcome to the IRC_QJ_Server "
+				+ (*_clientIt)->getNick() + "!" + (*_clientIt)->getUser() + "@" + inet_ntoa( _address.sin_addr ) + "\r\n";
+				std::cout << "_destSD: " << _destSD << std::endl;
 				sender();
 				std::cout << "Welcome message sent successfully" << std::endl;
-				_clientIt->setAutentification();
+				(*_clientIt)->setAutentification();
 			}
 		}
 
 		void				CAP( void )
 		{
 			strIt	capIt;
-
-			std::cout << _request << std::endl;
 			for ( ; capIt != _request.end() && *capIt != '\n'; ++capIt );
 			_request.erase( 0, capIt - _request.begin() );
 			spaceTrimer();
@@ -117,7 +120,7 @@ class IRCData
 
 		void				checkPass( void )
 		{
-			if ( _clientIt->getPass() != _pass )
+			if ( (*_clientIt)->getPass() != _pass )
 			{
 				_answer = ":Bad password\r\n";
 				sender();
@@ -127,12 +130,13 @@ class IRCData
 
 		void				PASS( void )
 		{
+			std::cout << _cmd << std::endl;
 			_destSD = _sd;
-			if ( _clientIt->getAutentification() )
+			if ( (*_clientIt)->getAutentification() )
 			{
-				_answer = ":" + _selfIP + " 462 " + " " + _clientIt->getNick() + " " + ":You may not reregister";
+				_answer = ":" + _selfIP + " 462 " + " " + (*_clientIt)->getNick() + " " + ":You may not reregister";
 				sender();
-				throw IRCErr( _clientIt->getUser() + " try a double registration" );
+				throw IRCErr( (*_clientIt)->getUser() + " try a double registration" );
 			}
 
 			strIt	passIt;
@@ -143,9 +147,9 @@ class IRCData
 			_request.erase( 0, passIt - _request.begin() );
 			spaceTrimer();
 
-			_clientIt->setPass( _passTmp );
+			(*_clientIt)->setPass( _passTmp );
 			checkPass();
-			if ( !_clientIt->getAutentification() )
+			if ( !(*_clientIt)->getAutentification() )
 				WELCOME();
 		}
 
@@ -172,7 +176,7 @@ class IRCData
 
 			for ( ; tmpIt != _clients.end(); ++tmpIt )
 			{
-				if ( tmpIt->getNick() == _nickTmp )
+				if ( (*tmpIt)->getNick() == _nickTmp )
 				{
 					_destSD = _sd;
 					_answer = "Nick already in use\r\n"; // A verifier a deux, si j essaie de prendre le nick d un autre
@@ -180,9 +184,10 @@ class IRCData
 					throw IRCErr( "Nick already in use" );
 				}
 			}
-			_clientIt->setNick( _nickTmp );
+
+			(*_clientIt)->setNick( _nickTmp );
 			checkPass();
-			if ( !_clientIt->getAutentification() )
+			if ( !(*_clientIt)->getAutentification() )
 				WELCOME();
 		}
 
@@ -226,9 +231,9 @@ class IRCData
 						sender();
 						throw IRCErr( "User format" );
 			}	}	}
-			_clientIt->setUser( _userTmp );
+			(*_clientIt)->setUser( _userTmp );
 			checkPass();
-			if ( !_clientIt->getAutentification() )
+			if ( !( (*_clientIt)->getAutentification() ) )
 				WELCOME();
 		}
 
@@ -242,15 +247,15 @@ class IRCData
 			spaceTrimer();
 
 			std::list<std::string>::const_iterator chanIt;
-			for ( chanIt = _clientIt->getChannels().begin(); *chanIt != _channelTmp && chanIt != _clientIt->getChannels().end(); ++chanIt );
-			if ( chanIt != _clientIt->getChannels().end() )
+			for ( chanIt = (*_clientIt)->getChannels().begin(); *chanIt != _channelTmp && chanIt != (*_clientIt)->getChannels().end(); ++chanIt );
+			if ( chanIt != (*_clientIt)->getChannels().end() )
 			{
 				_destSD = _sd;
 				_answer = "a voir!!!";
 				sender();
 				throw( IRCErr( "Is already in the channel" ) );
 			}
-			_clientIt->setChannel( _channelTmp );
+			(*_clientIt)->setChannel( _channelTmp );
 		}
 
 		void				OPENMSG( void )
@@ -258,11 +263,11 @@ class IRCData
 			clientIterator	clientIt = _clients.begin();
 			for ( ; clientIt != _clients.end(); clientIt++ )
 			{
-				std::list<std::string>::const_iterator channel = clientIt->getChannels().begin();
-				for ( ; channel != _clientIt->getChannels().end() && *channel != _dest; channel++ );
-				if ( channel != _clientIt->getChannels().end() )
+				std::list<std::string>::const_iterator channel = (*clientIt)->getChannels().begin();
+				for ( ; channel != (*_clientIt)->getChannels().end() && *channel != _dest; channel++ );
+				if ( channel != (*_clientIt)->getChannels().end() )
 				{
-					_destSD = _clientIt->getSocket();
+					_destSD = (*_clientIt)->getSocket();
 					_answer = "A voir formattage message"; // A voir
 					sender(); 
 				}
@@ -272,10 +277,10 @@ class IRCData
 		void				PRIVMSG( void )
 		{
 			clientIterator							clientIt = _clients.begin();
-			for ( ; clientIt != _clients.end() && clientIt->getNick() != _nickTmp; ++clientIt );
+			for ( ; clientIt != _clients.end() && (*clientIt)->getNick() != _nickTmp; ++clientIt );
 			if ( clientIt != _clients.end() )
 			{
-				_destSD = clientIt->getSocket();
+				_destSD = (*clientIt)->getSocket();
 				_answer = " A VOIR formmattage "; // A VOIR
 				sender();
 			}
@@ -316,7 +321,7 @@ class IRCData
 			std::cout << "Host disconnected , ip " << inet_ntoa( _address.sin_addr ) << ", port " << ntohs( _address.sin_port ) << std::endl;
 			FD_CLR( _sd, &_crntfds );
 			//Close the socket and mark as 0 in list for reuse
-			close( _sd );
+			delete (*_clientIt);
 			_clients.erase( _clientIt );
 		}
 	public:
@@ -324,8 +329,8 @@ class IRCData
 							_sd(), _max_sd(), _clients(), _address(), _request(), _readfds()
 							{ _clients.clear(); }
 							~IRCData( void ) {
-//								for ( clientIterator userIt = _clients.begin(); userIt != _clients.end(); ++userIt )
-//									delete ( *userIt );
+								for ( _clientIt = _clients.begin(); _clientIt != _clients.end(); ++_clientIt )
+									delete ( *_clientIt );
 								_clients.erase( _clients.begin(), _clients.end() );
 							}
 		int	const			getMasterSocket( void ) const { return _master_socket; }
@@ -345,6 +350,7 @@ class IRCData
 		void initFct ()
 		{
 			_listFctn.push_back( pairKV( "CAP", &IRCData::CAP ) );
+			_listFctn.push_back( pairKV( "PASS", &IRCData::PASS ) );
 			_listFctn.push_back( pairKV( "NICK", &IRCData::NICK ) );
 			_listFctn.push_back( pairKV( "USER", &IRCData::USER ) );
 			_listFctn.push_back( pairKV( "JOIN", &IRCData::JOIN ) );
@@ -369,11 +375,6 @@ class IRCData
 
 			_pass = password;
 
-//			gethostname( selfhost, sizeof( selfhost ) );
-//			host_entry = gethostbyname( selfhost );
-//			_selfIP = inet_ntoa( *( reinterpret_cast<struct in_addr*>( host_entry->h_addr_list[0] ) ) );
-//			close(3);
-//			std::cout << host_entry << std::endl;
 			if ( ( _master_socket = socket( AF_INET, SOCK_STREAM, 0 ) ) == 0 )
 				throw( IRCErr( "socket failed" ) );
 			if ( setsockopt( _master_socket, SOL_SOCKET, SO_REUSEADDR, reinterpret_cast<char *>( &_opt ), sizeof( _opt ) ) < 0 )
@@ -395,6 +396,14 @@ class IRCData
 			FD_ZERO( &_crntfds );
 			FD_SET( _master_socket, &_crntfds );
 
+			gethostname( selfhost, sizeof( selfhost ) );
+			host_entry = gethostbyname( selfhost );
+			_selfIP = inet_ntoa( *( reinterpret_cast<struct in_addr*>( host_entry->h_addr_list[0] ) ) );
+
+			std::cout << host_entry << std::endl;
+
+			initFct();
+
 			std::cout << "Waiting for connections ..." << std::endl;
 		}
 
@@ -403,7 +412,7 @@ class IRCData
 			_max_sd = _master_socket;
 			for ( _clientIt = _clients.begin(); _clientIt != _clients.end(); ++_clientIt )
 			{
-				_sd = _clientIt->getSocket();
+				_sd = (*_clientIt)->getSocket();
 				if( _sd > _max_sd )
 					_max_sd = _sd;
 			}
@@ -413,23 +422,23 @@ class IRCData
 		void				activityListener( void )
 		{
 			_readfds = _writefds = _crntfds;
-			_activity = select( _max_sd + _clients.size() + 1, &_readfds, &_writefds, NULL, NULL );
+			_activity = select( _max_sd + _clients.size() + 1, &_readfds, NULL, NULL, NULL );
 			if ( ( _activity < 0 ) )  
 				throw IRCErr( "select error" );
 		}
 
 		void				execFct( void )
 		{
+			std::cout << "EXEC start" << std::endl;
 			listPair::iterator						_listPairIt;
-
-			for ( _listPairIt = _listFctn.begin(); _listPairIt->first != _cmd && _listPairIt != _listFctn.end(); ++_listPairIt );
+			for ( _listPairIt = _listFctn.begin(); _listPairIt != _listFctn.end() && _listPairIt->first != _cmd; ++_listPairIt );
 			if ( _listPairIt != _listFctn.end() )
 			{
+				std::cout << _cmd << std::endl;
 				ptrfct ptrFct = _listPairIt->second;
 				(this->*ptrFct)();
 			}
-			else
-				_request.clear();
+			std::cout << "EXEC exit" << std::endl;
 		}
 
 		void				newClient( void )
@@ -437,8 +446,7 @@ class IRCData
 			if ( ( _new_socket = accept( _master_socket, reinterpret_cast<struct sockaddr *>( &_address ), reinterpret_cast<socklen_t *>( &_addrlen ) ) ) < 0 )
 				throw IRCErr( "accept" );
 			FD_SET( _new_socket, &_crntfds );
-			Client _new_cli( _new_socket );
-			_clients.push_back( _new_cli );
+			_clients.push_back( new Client( _new_socket ) );
 			_sd = _new_socket;
 			std::cout << "New connection , socket fd is " << _new_socket << ", ip is : " << inet_ntoa( _address.sin_addr ) << ", port : " << ntohs( _address.sin_port ) << std::endl;
 		}
@@ -449,7 +457,7 @@ class IRCData
 			{
 				try
 				{
-					_sd = _clientIt->getSocket();
+					_sd = (*_clientIt)->getSocket();
 					if ( FD_ISSET( _sd , &_readfds ) )
 					{
 						//Check if it was for closing , and also read the 
