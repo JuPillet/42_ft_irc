@@ -28,8 +28,10 @@ int main(int ac, char **av)
 		}
 		try
 		{
-			if ( FD_ISSET( server.getMasterSocket(), server.getPtrFds() ) )
+			if ( FD_ISSET( server.getMasterSocket(), server.getPtrReadFds() ) )
 				server.newClient();
+//			else
+//				server.IOListener();
 		}
 		catch ( IRCErr const &err )
 		{ std::cerr << err.getError() << std::endl; }

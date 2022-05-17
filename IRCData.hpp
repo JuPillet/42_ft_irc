@@ -28,7 +28,7 @@ class IRCData
 	int										_opt;
 	int										_master_socket, _addrlen, _new_socket,
 											_activity, _sd, _index;
-	fd_set									_readfd, _writefd, _crntfds;
+	fd_set									_readfds, _writefds, _crntfds;
 	int										_max_sd;
 	struct sockaddr_in						_address;
 /////	Request Operation /////
@@ -67,8 +67,8 @@ class IRCData
 			if ( readvalue != -1 )
 				_request = std::string( reinterpret_cast<char *>( _buff ), readvalue );
 			std::cout << "_sd: " << _sd << " - readvalue: " << readvalue << " : " << _request.length() << " : " << std::endl << _request << std::endl;
-			std::cout << "message exit" << std::endl;
 			spaceTrimer();
+			std::cout << "message exit" << std::endl;
 		}
 
 		void				setCmd( void )
@@ -316,12 +316,12 @@ class IRCData
 			std::cout << "Host disconnected , ip " << inet_ntoa( _address.sin_addr ) << ", port " << ntohs( _address.sin_port ) << std::endl;
 			FD_CLR( _sd, &_crntfds );
 			//Close the socket and mark as 0 in list for reuse
-			close( _sd );
+//			close( _sd );
 			_clients.erase( _clientIt );
 		}
 	public:
 							IRCData( void ):_port(), _pass(), _opt(), _master_socket(), _addrlen(), _new_socket(), _activity(),
-							_sd(), _max_sd(), _clients(), _address(), _request(), _readfd()
+							_sd(), _max_sd(), _clients(), _address(), _request(), _readfds()
 							{ _clients.clear(); }
 							~IRCData( void ) {
 //								for ( clientIterator userIt = _clients.begin(); userIt != _clients.end(); ++userIt )
@@ -329,8 +329,12 @@ class IRCData
 								_clients.erase( _clients.begin(), _clients.end() );
 							}
 		int	const			getMasterSocket( void ) const { return _master_socket; }
-		fd_set	const		getReadFds( void ) const { return _readfd; }
-		fd_set	const		*getPtrFds( void ) const { return &_readfd; }
+		fd_set	const		getCrntFds( void ) const { return _crntfds; }
+		fd_set	const		*getPtrCrntFds( void ) const { return &_crntfds; }
+		fd_set	const		getReadFds( void ) const { return _readfds; }
+		fd_set	const		*getPtrReadFds( void ) const { return &_readfds; }
+		fd_set	const		getWriteFds( void ) const { return _writefds; }
+		fd_set	const		*getPtrWriteFds( void ) const { return &_writefds; }
 		struct sockaddr_in const &getAddress( void ) const { return _address; }
 		void				nbArgs( const int ac )
 		{
@@ -403,13 +407,14 @@ class IRCData
 				if( _sd > _max_sd )
 					_max_sd = _sd;
 			}
+			std::cout << "MAXSD: " << _max_sd <<std::endl;
 		}
 
 		void				activityListener( void )
 		{
-			_writefd = _readfd = _crntfds;
-			_activity = select( _max_sd + 1, &_readfd, &_writefd, NULL, NULL );
-			if ( ( _activity < 0 ) && ( errno != EINTR ) )  
+			_readfds = _writefds = _crntfds;
+			_activity = select( _max_sd + _clients.size() + 1, &_readfds, &_writefds, NULL, NULL );
+			if ( ( _activity < 0 ) )  
 				throw IRCErr( "select error" );
 		}
 
@@ -432,14 +437,18 @@ class IRCData
 			if ( ( _new_socket = accept( _master_socket, reinterpret_cast<struct sockaddr *>( &_address ), reinterpret_cast<socklen_t *>( &_addrlen ) ) ) < 0 )
 				throw IRCErr( "accept" );
 			FD_SET( _new_socket, &_crntfds );
-			_clients.push_back( Client( _new_socket ) );
+			Client _new_cli( _new_socket );
+			_clients.push_back( _new_cli );
+//			_clientIt = _clients.end();
+//			_clientIt--;
+//			_sd = _clientIt->getSocket();
 			_sd = _new_socket;
-//			receveRequest();
-//			while ( _request.size() )
-//			{
-//				setCmd();
-//				execFct();
-//			}
+			receveRequest();
+			while ( _request.size() )
+			{
+				setCmd();
+				execFct();
+			}
 			std::cout << "New connection , socket fd is " << _new_socket << ", ip is : " << inet_ntoa( _address.sin_addr ) << ", port : " << ntohs( _address.sin_port ) << std::endl;
 		}
 
@@ -450,9 +459,8 @@ class IRCData
 				try
 				{
 					_sd = _clientIt->getSocket();
-					if ( FD_ISSET( _sd , &_readfd ) )
+					if ( FD_ISSET( _sd , &_readfds ) )
 					{
-						
 						//Check if it was for closing , and also read the 
 						//incoming message
 						receveRequest();
