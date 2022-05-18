@@ -6,8 +6,8 @@
 >> :*.freenode.net NOTICE * :*** Could not resolve your hostname: Domain not found; using your IP address (62.129.8.171) instead.
 >> :*.freenode.net CAP * LS :account-notify account-tag away-notify batch cap-notify chghost draft/relaymsg echo-message extended-join inspircd.org/poison inspircd.org/standard-replies invite-notify labeled-response message-tags multi-prefix sasl server-time setname userhost-in-names 
 << CAP REQ :multi-prefix
->> PING :b]lZmtrQWT
-<< PONG :b]lZmtrQWT
+>> PING :\[RBPVEegh
+<< PONG :\[RBPVEegh
 >> :*.freenode.net CAP jpillet ACK :multi-prefix
 << CAP END
 >> :*.freenode.net NOTICE jpillet :*** Ident lookup timed out, using ~jpillet instead.
@@ -20,13 +20,13 @@
 >> :*.freenode.net 005 jpillet EXTBAN=,ACNOQRSTUacjmnpruwz HOSTLEN=64 INVEX=I KEYLEN=32 KICKLEN=255 LINELEN=512 MAXLIST=I:100,X:100,b:100,e:100,w:100 MAXTARGETS=20 MODES=20 MONITOR=30 NAMELEN=128 NAMESX NETWORK=freenode :are supported by this server
 >> :*.freenode.net 005 jpillet NICKLEN=30 PREFIX=(Yohv)!@%+ REMOVE SAFELIST SECURELIST=60 SILENCE=32 STATUSMSG=!@%+ TOPICLEN=390 UHNAMES USERIP USERLEN=10 USERMODES=,,s,BDHILRSTWcdghikorwxz VBANLIST :are supported by this server
 >> :*.freenode.net 005 jpillet VLIST=b WATCH=32 WHOX :are supported by this server
->> :*.freenode.net 251 jpillet :There are 19 users and 10734 invisible on 9 servers
+>> :*.freenode.net 251 jpillet :There are 19 users and 10801 invisible on 9 servers
 >> :*.freenode.net 252 jpillet 12 :operator(s) online
->> :*.freenode.net 253 jpillet 22 :unknown connections
->> :*.freenode.net 254 jpillet 14394 :channels formed
->> :*.freenode.net 255 jpillet :I have 3686 clients and 1 servers
->> :*.freenode.net 265 jpillet :Current local users: 3686  Max: 6046
->> :*.freenode.net 266 jpillet :Current global users: 10753  Max: 10805
+>> :*.freenode.net 253 jpillet 14 :unknown connections
+>> :*.freenode.net 254 jpillet 14376 :channels formed
+>> :*.freenode.net 255 jpillet :I have 3696 clients and 1 servers
+>> :*.freenode.net 265 jpillet :Current local users: 3696  Max: 6046
+>> :*.freenode.net 266 jpillet :Current global users: 10820  Max: 10820
 >> :*.freenode.net 375 jpillet :*.freenode.net message of the day
 >> :*.freenode.net 372 jpillet :  Hello, World!
 >> :*.freenode.net 372 jpillet : 
@@ -73,6 +73,12 @@
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
-
-
-CAP LS\r\nNICK jpillet\r\nUSER jpillet jpillet chat.freenode.net :Julien Pillet
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong

@@ -14,6 +14,7 @@ class Client
 //	std::string							_role;
 	std::string							_name;
 	std::list<std::string>				_channels;
+	std::string							_request;
 										Client( void ): _client_socket(0), _authentified( false ), _pass(), _nick(), _user(), _channels() {};
 	public:
 										Client	&operator=( Client const &src )
@@ -43,12 +44,13 @@ class Client
 											if( !getAutentification() )
 												_pass = pass;
 										}
-		std::string const				&getPass( void ) const { return _pass; }
+		std::string const				getPass( void ) const { return _pass; }
 		void							setNick( std::string const &nick ) { _nick = nick; }
-		std::string const				&getNick( void ) { return _nick; }
+		std::string const				getNick( void ) { return _nick; }
 		void							setUser( std::string const &user ) { _user = user; }
-		std::string const				&getUser( void ) { return _user; }
+		std::string const				getUser( void ) { return _user; }
 		void							setChannel( std::string channel ) { _channels.push_back( channel ); }
-		std::list<std::string> const	&getChannels( void ) const { return _channels; }
+		std::list<std::string> const	getChannels( void ) const { return _channels; }
+		std::string						*getRequest( void ) { return &_request; }
 		//void removeChannel
 };

@@ -30,14 +30,14 @@ int main(int ac, char **av)
 		{
 			if ( FD_ISSET( server.getMasterSocket(), server.getPtrReadFds() ) )
 				server.newClient();
-//			else
-//				server.IOListener();
 		}
 		catch ( IRCErr const &err )
 		{ std::cerr << err.getError() << std::endl; }
 		try { server.IOListener(); }
 		catch ( IRCErr const &err )
 		{ std::cerr << err.getError() << std::endl; }
+		usleep( 500000 );
+		std::cout << "END OF IOListener" << std::endl;
 	}
 
 	return 0;
