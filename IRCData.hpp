@@ -113,7 +113,9 @@ class IRCData
 		void				CAP( void )
 		{
 			strIt	capIt;
-			for ( ; capIt != _request.end() && *capIt != '\n'; ++capIt );
+			for ( capIt = _request.begin(); capIt != _request.end() && *capIt != '\n'; ++capIt )
+				std::cout << *capIt;
+			std::cout << std::endl;
 			_request.erase( 0, capIt - _request.begin() );
 			spaceTrimer();
 		}
@@ -221,6 +223,13 @@ class IRCData
 			_nameTmp = std::string( _request, 0, userIt - _request.begin() );
 			_request.erase(0, userIt - _request.begin());
 			spaceTrimer();
+			_nameTmp += ' ';
+
+			for ( userIt = _request.begin(); userIt != _request.end()
+				&& *userIt != '\n' && *userIt != '\r' && *userIt != ' '; ++userIt );
+			_nameTmp += std::string( _request, 0, userIt - _request.begin() );
+			_request.erase(0, userIt - _request.begin());
+			spaceTrimer();
 
 			clientIterator							tmpIt = _clients.begin();
 			for ( strIt rejectIt = _rejectChar.begin(); rejectIt != _rejectChar.end(); ++rejectIt ){
@@ -231,6 +240,7 @@ class IRCData
 						sender();
 						throw IRCErr( "User format" );
 			}	}	}
+
 			(*_clientIt)->setUser( _userTmp );
 			checkPass();
 			if ( !( (*_clientIt)->getAutentification() ) )
@@ -377,7 +387,7 @@ class IRCData
 
 			if ( ( _master_socket = socket( AF_INET, SOCK_STREAM, 0 ) ) == 0 )
 				throw( IRCErr( "socket failed" ) );
-			if ( setsockopt( _master_socket, SOL_SOCKET, SO_REUSEADDR, reinterpret_cast<char *>( &_opt ), sizeof( _opt ) ) < 0 )
+			if ( setsockopt( _master_socket, SOL_SOCKET, SO_REUSEPORT, reinterpret_cast<char *>( &_opt ), sizeof( _opt ) ) < 0 )
 				throw( IRCErr( "setsock_opt" ) );
 
 			setAddress();
@@ -422,7 +432,7 @@ class IRCData
 		void				activityListener( void )
 		{
 			_readfds = _writefds = _crntfds;
-			_activity = select( _max_sd + _clients.size() + 1, &_readfds, NULL, NULL, NULL );
+			_activity = select( _max_sd + _clients.size() + 1, &_readfds, &_writefds, NULL, NULL );
 			if ( ( _activity < 0 ) )  
 				throw IRCErr( "select error" );
 		}
@@ -434,10 +444,14 @@ class IRCData
 			for ( _listPairIt = _listFctn.begin(); _listPairIt != _listFctn.end() && _listPairIt->first != _cmd; ++_listPairIt );
 			if ( _listPairIt != _listFctn.end() )
 			{
-				std::cout << _cmd << std::endl;
 				ptrfct ptrFct = _listPairIt->second;
 				(this->*ptrFct)();
 			}
+
+			if( *_request.begin() == '\r' )
+				_request.erase( _request.begin() );
+			if( *_request.begin() == '\n' )
+				_request.erase( _request.begin() );
 			std::cout << "EXEC exit" << std::endl;
 		}
 
@@ -469,11 +483,15 @@ class IRCData
 						{
 							while ( _request.size() )
 							{
+								std::cout << _request << std::endl;
 								setCmd();
 								execFct();
+								usleep( 5000000 );
 							}
 						}
 					}
+					usleep( 5000000 );
+					std::cout << "EXIT IOEXEC" << std::endl;
 				}
 				catch ( IRCErr const &err )
 				{ std::cerr << err.getError() << std::endl; }
