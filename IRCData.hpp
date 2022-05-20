@@ -40,7 +40,7 @@ class IRCData
 	char									_buff[1024];
 	std::string 							_dest;
 /////	Client Info /////
-	std::list<Client*>						_clients;
+//	std::list<Client*>						_clients;
 	typedef	std::list<Client*>::iterator	clientIterator;
 	clientIterator							_clientIt;
 	std::string								_passTmp, _nickTmp, _userTmp, _modeTmp, _hostTmp, _nameTmp;
@@ -48,6 +48,7 @@ class IRCData
 	int										_destSD;
 /////	Channel info /////
 	std::list<Channel>						_Channels;
+	typedef std::list<Channel>::iterator	channelIterator;
 	std::string								_channelTmp, _chanPassTmp;
 
 							IRCData( IRCData &src );
@@ -284,16 +285,16 @@ class IRCData
 			_chanPassTmp = std::string( *_request, 0, channelIt - _request->begin() );
 			clearPostArgs();
 
-			std::list<std::string>::const_iterator chanIt;
-//			for ()
+			channelIterator	chanIt;
+
 			for ( chanIt = (*_clientIt)->getChannels().begin(); chanIt != (*_clientIt)->getChannels().end() && *chanIt != _channelTmp; ++chanIt );
-			if ( chanIt != (*_clientIt)->getChannels().end() )
-			{
-				_destSD = _sd;
-				_answer = "a voir!!!";
-				sender();
-				throw( IRCErr( "Is already in the channel" ) );
-			}
+//			if ( chanIt != (*_clientIt)->getChannels().end() )
+//			{
+//				_destSD = _sd;
+//				_answer = "a voir!!!";
+//				sender();
+//				throw( IRCErr( "Is already in the channel" ) );
+//			}
 
 //			if (  )
 			(*_clientIt)->setChannel( _channelTmp );

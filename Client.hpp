@@ -11,13 +11,25 @@ class Client
 	std::string							_pass;
 	std::string							_nick;
 	std::string							_user;
-//	std::string							_role;
 	std::string							_name;
-	std::list<std::string>				_channels;
 	std::string							_request;
-										Client( void ): _client_socket(0), _authentified( false ), _pass(), _nick(), _user(), _channels() {};
+										Client( void ): _client_socket(0), _authentified( false ), _pass(), _nick(), _user() {};
 	public:
-										Client	&operator=( Client const &src )
+		
+										Client( int const _new_socket ):
+											_client_socket( _new_socket ), _authentified( false ), _pass(), _nick(), _user(), _name(), _request()
+										{ return ; }
+
+										Client( int const _new_socket, std::string const &pass, std::string const &nick, std::string const &user ):
+											_client_socket( _new_socket ), _authentified( false ), _pass( pass ), _nick( nick ), _user( user ), _name(), _request()
+										{ return ; }
+
+		explicit						Client( Client const &src ): _client_socket( src.getSocket() ), _authentified( src.getAutentification() ),
+											_pass( src.getPass() ), _nick( src.getNick() ), _user( src.getUser() ), _name( src.getName() ), _request( *src.getRequest() )
+										{ return ; }
+
+										~Client( void ) { close( _client_socket ); }
+		Client							&operator=( Client const &src )
 										{
 											_client_socket = src._client_socket;
 											_authentified = src._authentified;
@@ -25,16 +37,8 @@ class Client
 											_nick = src._nick;
 											_user = src._user;
 											_name = src._name;
-											for ( std::list<std::string>::const_iterator chanIt = src._channels.begin(); chanIt != src._channels.end(); ++chanIt )
-												_channels.push_back( *chanIt );
 											return *this;
 										}
-										Client( int const _new_socket ): _client_socket( _new_socket ), _authentified( false ), _pass(), _nick(), _user(), _channels()
-										{ return ; }
-										Client( int const _new_socket, std::string const &pass, std::string const &nick, std::string const &user ):
-										 _client_socket( _new_socket ), _authentified( false ), _pass( pass ), _nick( nick ), _user( user ), _channels()
-										{ return ; }
-										~Client( void ) { close( _client_socket ); }
 		void							setSocket( int new_socket ) { _client_socket = new_socket; }
 		int								getSocket( void ) const { return _client_socket; }
 		void							setAutentification( void ) { _authentified = true; }
@@ -46,11 +50,34 @@ class Client
 										}
 		std::string const				getPass( void ) const { return _pass; }
 		void							setNick( std::string const &nick ) { _nick = nick; }
-		std::string const				getNick( void ) { return _nick; }
+		std::string const				getNick( void ) const { return _nick; }
 		void							setUser( std::string const &user ) { _user = user; }
-		std::string const				getUser( void ) { return _user; }
-		void							setChannel( std::string channel ) { _channels.push_back( channel ); }
-		std::list<std::string> const	getChannels( void ) const { return _channels; }
-		std::string						*getRequest( void ) { return &_request; }
-		//void removeChannel
+		std::string const				getUser( void ) const { return _user; }
+//		void							setChannel( std::string channel ) { _channels.push_back( channel ); }
+//		std::list<std::string> const	getChannels( void ) const { return _channels; }
+		void							setRequest( std::string const &src )
+										{
+
+										}
+		std::string						const *getRequest( void ) const { return &_request; }
+		
 };
+
+class VoiceClient: public Client
+{
+	public:
+		VoiceClient( Client const &src ): Client( src ) {}
+		~VoiceClient( void ) {}
+};
+
+
+class ChannelOperator: public VoiceClient
+{
+private:
+	/* data */
+public:
+	ChannelOperator(/* args */);
+	~ChannelOperator();
+};
+
+
