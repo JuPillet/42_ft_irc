@@ -454,7 +454,7 @@ class IRCData
 		{
 			std::cout << "EXEC start" << std::endl;
 			std::cout << _request << std::endl;
-			listPair::iterator						_listPairIt;
+			listPair::iterator	_listPairIt;
 			for ( _listPairIt = _listFctn.begin(); _listPairIt != _listFctn.end() && _listPairIt->first != _cmd; ++_listPairIt );
 			if ( _listPairIt != _listFctn.end() )
 			{
