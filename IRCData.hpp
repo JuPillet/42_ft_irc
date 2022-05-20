@@ -12,6 +12,8 @@
 #include <algorithm>
 #include "Client.hpp"
 
+class Channel;
+
 class IRCData
 {
 	typedef std::string::iterator			strIt;
@@ -38,15 +40,16 @@ class IRCData
 	char									_buff[1024];
 	std::string 							_dest;
 /////	Client Info /////
-//	Client									_clientTmp;
 	std::list<Client*>						_clients;
 	typedef	std::list<Client*>::iterator	clientIterator;
 	clientIterator							_clientIt;
-	std::string								_passTmp, _nickTmp, _userTmp, _modeTmp, _hostTmp, _nameTmp, _channelTmp;
+	std::string								_passTmp, _nickTmp, _userTmp, _modeTmp, _hostTmp, _nameTmp;
 	std::string 							_rejectChar;
 	int										_destSD;
+/////	Channel info /////
+	std::list<Channel>						_Channels;
+	std::string								_channelTmp, _chanPassTmp;
 
-	
 							IRCData( IRCData &src );
 							IRCData	&operator=( IRCData &src );
 
@@ -269,12 +272,20 @@ class IRCData
 			for ( channelIt = _request->begin(); channelIt != _request->end()
 				&& *channelIt != '\n' && *channelIt != '\r' && *channelIt != ' '; ++channelIt );
 			_channelTmp = std::string( *_request, 0, channelIt - _request->begin() );
-			clearPostArgs();
-
+			
 			if ( *_channelTmp.begin() != '#' )
 				_channelTmp = "#" + _channelTmp;
 
+			_request->erase( 0, channelIt - _request->begin() );
+			spaceTrimer();
+
+			for ( channelIt = _request->begin(); channelIt != _request->end()
+				&& *channelIt != '\n' && *channelIt != '\r' && *channelIt != ' '; ++channelIt );
+			_chanPassTmp = std::string( *_request, 0, channelIt - _request->begin() );
+			clearPostArgs();
+
 			std::list<std::string>::const_iterator chanIt;
+//			for ()
 			for ( chanIt = (*_clientIt)->getChannels().begin(); chanIt != (*_clientIt)->getChannels().end() && *chanIt != _channelTmp; ++chanIt );
 			if ( chanIt != (*_clientIt)->getChannels().end() )
 			{
@@ -283,6 +294,8 @@ class IRCData
 				sender();
 				throw( IRCErr( "Is already in the channel" ) );
 			}
+
+//			if (  )
 			(*_clientIt)->setChannel( _channelTmp );
 		}
 
