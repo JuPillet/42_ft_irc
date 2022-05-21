@@ -305,21 +305,53 @@ class IRCData
 			chanIt->setCli( *_clientIt );
 		}
 
-//		void				OPENMSG( void )
-//		{
-//			clientIterator	clientIt = _clients.begin();
-//			for ( ; clientIt != _clients.end(); clientIt++ )
-//			{
-//				constItStr channel = (*clientIt)->getChannels().begin();
-//				for ( ; channel != (*_clientIt)->getChannels().end() && *channel != _dest; channel++ );
-//				if ( channel != (*_clientIt)->getChannels().end() )
-//				{
-//					_destSD = (*_clientIt)->getSocket();
-//					_answer = "A voir formattage message"; // A voir
-//					sender(); 
-//				}
-//			}
-//		}
+		void				OPENMSG( void )
+		{
+			channelIterator	chanIt;
+			for ( chanIt = _channels.begin(); chanIt != _channels.end() && _dest != chanIt->getName(); ++chanIt );
+			if ( chanIt == _channels.end() )
+			{
+				_destSD = (*_clientIt)->getSocket();
+				_answer = "A voir formattage message"; // A voir chanel innexistant
+				sender();
+				throw ( IRCErr( "PRIVMSG - Channel " + _dest + " doesn't exist" ) );
+			}
+
+			if ( chanIt->isBan( *_clientIt ) )
+			{
+				_destSD = ( *_clientIt )->getSocket();
+				_answer = "A voir formattage message"; // A voir client banni du channel
+				sender();
+				throw ( IRCErr( "PRIVMSG - Unknown destination " + _dest ) );
+			}
+
+			if ( chanIt->getExt() && !chanIt->isCli( *_clientIt ) )
+			{
+				_destSD = ( *_clientIt )->getSocket();
+				_answer = "A voir formattage message"; // A voir le channel est fermé aux message exterieur
+				sender();
+				throw ( IRCErr( "PRIVMSG - Channel " + _dest + " external restriction" ) );
+			}
+
+			if ( chanIt->getMod() && !chanIt->isOps( *_clientIt ) && !chanIt->isVo( *_clientIt ) )
+			{
+				_destSD = ( *_clientIt )->getSocket();
+				_answer = "A voir formattage message"; // A voir le channel est restrin au moderateur
+				sender();
+				throw ( IRCErr( "PRIVMSG - Channel " + _dest + " moderation restriction" ) );
+			}		
+
+			constClientIterator	clientIt;
+			for ( clientIt = ( chanIt->getCli() )->cbegin() ; clientIt != _clients.end(); ++clientIt )
+			{
+				_destSD = (*_clientIt)->getSocket();
+				_answer = "A voir formattage message"; // A voir formatage pour envoyer un message
+				try
+				{ sender(); } //essaye d envoyer le message a l utilisateur
+				catch( IRCErr const &err )
+				{ std::cerr << err.getError() << std::endl; } //affiche ici si le message n a pas ete envoyé pour chaque utilisateur
+			}
+		}
 
 		void				PRIVMSG( void )
 		{
@@ -341,10 +373,9 @@ class IRCData
 			_dest = _request->substr( 0, strIt - _request->begin() );
 			_request->erase( 0, strIt - _request->begin() );
 
-//			if ( _dest[0] == '#' )
-//				OPENMSG();
-//			else
-			if ( _dest[0] != '#' )
+			if ( _dest[0] == '#' )
+				OPENMSG();
+			else
 				PRIVMSG();
 		}
 

@@ -13,9 +13,12 @@ typedef std::string::iterator					strIt;
 typedef std::pair<std::string, ptrfct>			pairKV;
 typedef std::list<pairKV>						listPair;
 typedef	std::list<Client*>::iterator			clientIterator;
+typedef	std::list<Client*>::const_iterator		constClientIterator;
 typedef std::list<Channel>::iterator			channelIterator;
 typedef std::list<std::string>::iterator		itStr;
 typedef std::list<std::string>::const_iterator	constItStr;
+typedef std::pair<std::string, time_t>			pairBan;
+typedef std::list<pairBan>::iterator			itBan;
 
 class Client
 {
