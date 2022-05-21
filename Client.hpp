@@ -4,17 +4,19 @@
 #include <list>
 #include "IRCErr.hpp"
 
-class	IRCData;
 class	Client;
+class	Channel;
+class	IRCData;
 
 typedef void(IRCData::*ptrfct)( void );
 typedef std::string::iterator					strIt;
 typedef std::pair<std::string, ptrfct>			pairKV;
 typedef std::list<pairKV>						listPair;
 typedef	std::list<Client*>::iterator			clientIterator;
-typedef std::list<Channel>::const_iterator		channelIterator;
+typedef std::list<Channel>::iterator			channelIterator;
 typedef std::list<std::string>::iterator		itStr;
 typedef std::list<std::string>::const_iterator	constItStr;
+
 class Client
 {
 	int									_client_socket;
@@ -69,5 +71,4 @@ class Client
 		void							setName( std::string const &name) { _name = name; }
 		std::string const				&getName( void ) const { return _name; }
 		std::string						const *getRequest( void ) const { return &_request; }
-		
 };

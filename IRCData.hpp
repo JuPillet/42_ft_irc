@@ -292,7 +292,7 @@ class IRCData
 			if ( chanIt == _channels.end() )
 			{
 				_channels.push_back( _channelTmp );
-				chanIt == _channels.end();
+				chanIt = _channels.end();
 			}
 			
 			if ( chanIt->isCli( *_clientIt ) )

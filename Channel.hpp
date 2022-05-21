@@ -60,6 +60,5 @@ class Channel
 			}
 			return (0);
 		}
-		void		setVo(Client *tmp) { _vo.push_back( tmp ); }
-		
+		void		setVo(Client *tmp) { _vo.push_back( tmp->getUser() ); }
 };
