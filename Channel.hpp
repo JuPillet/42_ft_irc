@@ -1,5 +1,8 @@
 #pragma once
+#include <ctime>
 #include "Client.hpp"
+
+typedef std::pair< std::string, time_t >	_pairBan;
 
 class Channel
 {
@@ -16,9 +19,9 @@ class Channel
 		typedef std::list<Client *>::iterator	ClientIt;
 
     public :
-		Channel( void ) : _mod (0), _priv (0), _secret(0), _limit (0), _extMsg(0){};
-		Channel(std::string str) : _name(str), _mod (0), _priv(0), _secret(0), _limit(0), _extMsg(0) {}
-		~Channel( void ){}
+		Channel( void ) : _mod (0), _priv (0), _secret(0), _limit (0), _extMsg(0) {}
+		Channel( std::string str ) : _name( str ), _mod (0), _priv(0), _secret(0), _limit(0), _extMsg(0) {}
+		~Channel( void ) {}
 		std::string getPass( void ) const { return ( _mdp ); }
 		void        setPass ( std::string str ) { _mdp = str; }
 		bool        getPriv( void )  const { return _priv;}

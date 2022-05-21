@@ -10,7 +10,7 @@
 #include <netdb.h>
 #include <list>
 #include <algorithm>
-#include "Client.hpp"
+#include "Channel.hpp"
 
 class Channel;
 
@@ -50,7 +50,7 @@ class IRCData
 	std::list<Channel>						_Channels;
 	typedef std::list<Channel>::iterator	channelIterator;
 	std::string								_channelTmp, _chanPassTmp;
-
+	std::list< _pairBan >					_servBan;
 							IRCData( IRCData &src );
 							IRCData	&operator=( IRCData &src );
 
