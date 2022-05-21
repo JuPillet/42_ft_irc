@@ -66,12 +66,18 @@ class Channel
 		void					setVo(Client *tmp) { _cliVo.push_back( tmp->getUser() ); }
 		std::list<Client *>		*getCli( void ) { return &_cliVo; }
 
+
+
+
+
+
+
 		bool					isBan (Client *tmp) {
 			for ( itBan tmpIt = _cliBan.begin(); tmpIt != _cliBan.end(); ++tmpIt )
 			{
 				if ( tmpIt->first == tmp->getUser() )
 				{
-					if (tmpIt->second <= std::time(nullptr))
+					if (tmpIt->second && tmpIt->second <= std::time(nullptr))
 					{
 						_cliBan.erase(tmpIt);
 						break;
@@ -83,20 +89,29 @@ class Channel
 			return (0);
 		}
 
+
+
 //		bool					isBan (Client *cli)
 //		{
 //			itBan banIt;
-//			for ( banIt = _cliBan.begin(); banIt != _cliBan.end() && banIt->first != tmp->getUser(); ++banIt );
+//			for ( banIt = _cliBan.begin(); banIt != _cliBan.end() && banIt->first != cli->getUser(); ++banIt );
 //
 //			if ( banIt == _cliBan.end() )
 //				return 0;
 //
-//			if (banIt->second > std::time(nullptr))
+//			if ( !banIt->second || banIt->second > std::time(nullptr) )
 //				return 1;
 //
 //			_cliBan.erase( banIt );
 //			return 0;
 //		}
+
+
+
+
+
+
+
 
 		void					setBan( Client *tmp , unsigned int nb )
 		{
