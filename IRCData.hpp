@@ -16,16 +16,15 @@ class Channel;
 
 class IRCData
 {
-	typedef std::string::iterator			strIt;
 /////	Server Info /////
 	std::string								_selfIP;
 	int										_port;
 	std::string								_pass;
+	std::list<Client*>                     _servOps;
+
 /////	PtrFctn /////
-	typedef void(IRCData::*ptrfct)( void );
-	typedef std::pair<std::string, ptrfct>	pairKV;
-	typedef std::list<pairKV>				listPair;
 	listPair								_listFctn;
+
 /////	Socket Info /////
 	int										_opt;
 	int										_master_socket, _addrlen, _new_socket,
@@ -33,24 +32,26 @@ class IRCData
 	fd_set									_readfds, _writefds, _crntfds;
 	int										_max_sd;
 	struct sockaddr_in						_address;
+
 /////	Request Operation /////
 	std::string								*_request;
 	std::string								_cmd;
 	std::string								_answer;
 	char									_buff[1024];
 	std::string 							_dest;
+
 /////	Client Info /////
-//	std::list<Client*>						_clients;
-	typedef	std::list<Client*>::iterator	clientIterator;
+	std::list<Client*>						_clients;
 	clientIterator							_clientIt;
 	std::string								_passTmp, _nickTmp, _userTmp, _modeTmp, _hostTmp, _nameTmp;
 	std::string 							_rejectChar;
 	int										_destSD;
+
 /////	Channel info /////
-	std::list<Channel>						_Channels;
-	typedef std::list<Channel>::iterator	channelIterator;
+	std::list<Channel>						_channels;
 	std::string								_channelTmp, _chanPassTmp;
 	std::list< _pairBan >					_servBan;
+
 							IRCData( IRCData &src );
 							IRCData	&operator=( IRCData &src );
 
@@ -72,7 +73,7 @@ class IRCData
 		void				receveRequest( void ) {
 			std::cout << "message start" << std::endl;
 
-			_request = ( *_clientIt )->getRequest();
+			_request = const_cast<std::string *>( ( *_clientIt )->getRequest() );
 			std::cout << _request << std::endl;
 			if ( *( _request->end() - 1 ) == '\n' )
 				_request->clear();
@@ -287,34 +288,38 @@ class IRCData
 
 			channelIterator	chanIt;
 
-			for ( chanIt = (*_clientIt)->getChannels().begin(); chanIt != (*_clientIt)->getChannels().end() && *chanIt != _channelTmp; ++chanIt );
-//			if ( chanIt != (*_clientIt)->getChannels().end() )
-//			{
-//				_destSD = _sd;
-//				_answer = "a voir!!!";
-//				sender();
-//				throw( IRCErr( "Is already in the channel" ) );
-//			}
-
-//			if (  )
-			(*_clientIt)->setChannel( _channelTmp );
-		}
-
-		void				OPENMSG( void )
-		{
-			clientIterator	clientIt = _clients.begin();
-			for ( ; clientIt != _clients.end(); clientIt++ )
+			for ( chanIt = _channels.begin(); chanIt != _channels.end() && _channelTmp != chanIt->getName(); ++chanIt );
+			if ( chanIt == _channels.end() )
 			{
-				std::list<std::string>::const_iterator channel = (*clientIt)->getChannels().begin();
-				for ( ; channel != (*_clientIt)->getChannels().end() && *channel != _dest; channel++ );
-				if ( channel != (*_clientIt)->getChannels().end() )
-				{
-					_destSD = (*_clientIt)->getSocket();
-					_answer = "A voir formattage message"; // A voir
-					sender(); 
-				}
+				_channels.push_back( _channelTmp );
+				chanIt == _channels.end();
 			}
+			
+			if ( chanIt->isCli( *_clientIt ) )
+			{
+				_destSD = _sd;
+				_answer = "a voir!!!";
+				sender();
+				throw( IRCErr( "Is already in the channel" ) );
+			}
+			chanIt->setCli( *_clientIt );
 		}
+
+//		void				OPENMSG( void )
+//		{
+//			clientIterator	clientIt = _clients.begin();
+//			for ( ; clientIt != _clients.end(); clientIt++ )
+//			{
+//				constItStr channel = (*clientIt)->getChannels().begin();
+//				for ( ; channel != (*_clientIt)->getChannels().end() && *channel != _dest; channel++ );
+//				if ( channel != (*_clientIt)->getChannels().end() )
+//				{
+//					_destSD = (*_clientIt)->getSocket();
+//					_answer = "A voir formattage message"; // A voir
+//					sender(); 
+//				}
+//			}
+//		}
 
 		void				PRIVMSG( void )
 		{
@@ -336,9 +341,10 @@ class IRCData
 			_dest = _request->substr( 0, strIt - _request->begin() );
 			_request->erase( 0, strIt - _request->begin() );
 
-			if ( _dest[0] == '#' )
-				OPENMSG();
-			else
+//			if ( _dest[0] == '#' )
+//				OPENMSG();
+//			else
+			if ( _dest[0] != '#' )
 				PRIVMSG();
 		}
 
@@ -523,4 +529,5 @@ class IRCData
 				{ std::cerr << err.getError() << std::endl; }
 			}
 		}
+
 };
