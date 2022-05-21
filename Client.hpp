@@ -55,29 +55,8 @@ class Client
 		std::string const				getUser( void ) const { return _user; }
 //		void							setChannel( std::string channel ) { _channels.push_back( channel ); }
 //		std::list<std::string> const	getChannels( void ) const { return _channels; }
-		void							setRequest( std::string const &src )
-										{
-
-										}
+		void							setName( std::string const &name) { _name = name; }
+		std::string const				&getName( void ) const { return _name; }
 		std::string						const *getRequest( void ) const { return &_request; }
 		
 };
-
-class VoiceClient: public Client
-{
-	public:
-		VoiceClient( Client const &src ): Client( src ) {}
-		~VoiceClient( void ) {}
-};
-
-
-class ChannelOperator: public VoiceClient
-{
-private:
-	/* data */
-public:
-	ChannelOperator(/* args */);
-	~ChannelOperator();
-};
-
-
