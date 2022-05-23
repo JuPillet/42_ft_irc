@@ -491,7 +491,7 @@ class IRCData
 				_destSD = ( *_clientIt )->getSocket();
 				_answer = "A voir formattage message"; // A voir client banni du channel
 				sender();
-				throw ( IRCErr( "PRIVMSG - Unknown destination " + _dest ) );
+				throw ( IRCErr( "PRIVMSG - You have been banned of " + _dest ) );
 			}
 
 			if ( chanIt->getExt() && !chanIt->isCli( *_clientIt ) )
@@ -525,7 +525,7 @@ class IRCData
 		void				PRIVMSG( void )
 		{
 			clientIterator							clientIt = _clients.begin();
-			for ( ; clientIt != _clients.end() && (*clientIt)->getNick() != _nickTmp; ++clientIt );
+			for ( ; clientIt != _clients.end() && _dest != (*clientIt)->getNick(); ++clientIt );
 			if ( clientIt != _clients.end() )
 			{
 				_destSD = (*clientIt)->getSocket();
