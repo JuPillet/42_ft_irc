@@ -44,7 +44,6 @@ class IRCData
 	std::list<Client*>						_clients;
 	std::list<std::string>					_servOps;
 	clientIterator							_clientIt;
-	std::string								_passTmp, _nickTmp, _userTmp, _modeTmp, _hostTmp, _nameTmp;
 	std::string 							_rejectChar;
 	int										_destSD;
 
@@ -182,14 +181,17 @@ class IRCData
 
 		void				PASS( void )
 		{
+			std::string	passTmp;
+			strIt		passIt;
+
 			std::cout << _cmd << std::endl;
 			_destSD = _sd;
-
-			strIt	passIt;
+	
 			for ( passIt = _request->begin(); passIt != _request->end()
 				&& *passIt != '\n' && *passIt != '\r' && *passIt != ' '; ++passIt );
-			_passTmp = std::string( *_request, 0, passIt - _request->begin() );
+			passTmp = std::string( *_request, 0, passIt - _request->begin() );
 			clearPostArgs();
+
 
 			if ( (*_clientIt)->getAutentification() )
 			{
@@ -197,7 +199,7 @@ class IRCData
 				sender();
 				throw IRCErr( (*_clientIt)->getUser() + " try a double registration" );
 			}
-			(*_clientIt)->setPass( _passTmp );
+			(*_clientIt)->setPass( passTmp );
 			checkPass();
 			if ( !(*_clientIt)->getAutentification() )
 				WELCOME();
@@ -205,15 +207,24 @@ class IRCData
 
 		void				NICK( void )
 		{
-			strIt	nickIt;
-			_nickTmp.clear();
+			std::string	nickTmp;
+			strIt		nickIt;
+			nickTmp.clear();
 			for ( nickIt = _request->begin(); nickIt != _request->end()
 				&& *nickIt != '\n' && *nickIt != '\r' && *nickIt != ' '; ++nickIt );
-			_nickTmp = std::string( *_request, 0, nickIt - _request->begin() );
+			nickTmp = std::string( *_request, 0, nickIt - _request->begin() );
 			clearPostArgs();
 
+			if ( !nickTmp.size() )
+			{
+				_destSD = _sd;
+				_answer = "NICK format : NICK <nickname>\r\n"; //a voir le format en cas de NICK
+				sender();
+				throw IRCErr( "Nick format" );
+			}
+
 			for ( strIt rejectIt = _rejectChar.begin(); rejectIt != _rejectChar.end(); ++rejectIt ){
-				for ( strIt nickIt = _nickTmp.begin(); nickIt != _nickTmp.end(); ++nickIt ){
+				for ( strIt nickIt = nickTmp.begin(); nickIt != nickTmp.end(); ++nickIt ){
 					if ( *nickIt == *rejectIt ){
 						_destSD = _sd;
 						_answer = "Nickerror\r\n";
@@ -224,7 +235,7 @@ class IRCData
 			clientIterator	cliIt = _clients.begin();
 			for ( ; cliIt != _clients.end(); ++cliIt )
 			{
-				if ( (*cliIt)->getNick() == _nickTmp )
+				if ( (*cliIt)->getNick() == nickTmp )
 				{
 					_destSD = _sd;
 					_answer = "Nick already in use\r\n"; // A verifier a deux, si j essaie de prendre le nick d un autre
@@ -233,7 +244,7 @@ class IRCData
 				}
 			}
 
-			(*_clientIt)->setNick( _nickTmp );
+			(*_clientIt)->setNick( nickTmp );
 			checkPass();
 			if ( !(*_clientIt)->getAutentification() )
 				WELCOME();
@@ -241,46 +252,51 @@ class IRCData
 
 		void				USER( void )
 		{
-			strIt					userIt;
-			std::string				hostTmp;
-			std::string				servTmp;
-			std::string				realNTmp;
+			std::string	userTmp, modeTmp, hostTmp, nameTmp;
+			strIt		userIt;
 
 			for ( userIt = _request->begin(); userIt != _request->end()
 				&& *userIt != '\n' && *userIt != '\r' && *userIt != ' '; ++userIt );
-			_userTmp = std::string( *_request, 0, userIt - _request->begin() );
+			userTmp = std::string( *_request, 0, userIt - _request->begin() );
 			_request->erase(0, userIt - _request->begin() + 1);
 			spaceTrimer();
 
 			for ( userIt = _request->begin(); userIt != _request->end()
 				&& *userIt != '\n' && *userIt != '\r' && *userIt != ' '; ++userIt );
-			_modeTmp = std::string( *_request, 0, userIt - _request->begin() );
+			modeTmp = std::string( *_request, 0, userIt - _request->begin() );
 			_request->erase(0, userIt - _request->begin() + 1);
 			spaceTrimer();
 
 			for ( userIt = _request->begin(); userIt != _request->end()
 				&& *userIt != '\n' && *userIt != '\r' && *userIt != ' '; ++userIt );
-			_hostTmp = std::string( *_request, 0, userIt - _request->begin() );
+			hostTmp = std::string( *_request, 0, userIt - _request->begin() );
 			_request->erase(0, userIt - _request->begin());
 			spaceTrimer();
 
 			if ( *_request->begin() == ':' )
 				_request->erase( _request->begin() );
-			_nameTmp.clear();
 			while ( _request->begin() != _request->end() && *_request->begin() != '\r' && *_request->begin() != '\n' )
 			{
 				for ( userIt = _request->begin(); userIt != _request->end()
 					&& *userIt != '\n' && *userIt != '\r' && *userIt != ' '; ++userIt );
-				_nameTmp += std::string( *_request, 0, userIt - _request->begin() );
+				nameTmp += std::string( *_request, 0, userIt - _request->begin() );
 				_request->erase(0, userIt - _request->begin());
 				spaceTrimer();
-				_nameTmp += ' ';
+				nameTmp += ' ';
 			}
-			_nameTmp.pop_back();
+			nameTmp.pop_back();
 			clearPostArgs();
 
+			if ( !( userTmp.size() && modeTmp.size() && hostTmp.size() && nameTmp.size() ) )
+			{
+				_destSD = _sd;
+				_answer = ":USER command format : USER <username> <mode> <host> <:fullname>\r\n"; //a voir le format en cas de USER
+				sender();
+				throw IRCErr( "USER format" );
+			}
+
 			for ( strIt rejectIt = _rejectChar.begin(); rejectIt != _rejectChar.end(); ++rejectIt ){
-				for ( strIt userIt = _userTmp.begin(); userIt != _userTmp.end(); ++userIt ){
+				for ( strIt userIt = userTmp.begin(); userIt != userTmp.end(); ++userIt ){
 					if ( *userIt == *rejectIt ){
 						_destSD = _sd;
 						_answer = "User format error\r\n";
@@ -289,18 +305,7 @@ class IRCData
 			}	}	}
 
 			clientIterator	cliIt = _clients.begin();
-			for ( ; cliIt != _clients.end(); ++cliIt )
-			{
-				if ( (*cliIt)->getNick() == _nickTmp )
-				{
-					_destSD = _sd;
-					_answer = "User already in use\r\n"; // A verifier a deux, si j essaie de prendre le nick d un autre
-					sender();
-					throw IRCErr( "User already in use" );
-				}
-			}			
-			
-			if ( isBan( _userTmp ) )
+			if ( isBan( userTmp ) )
 			{
 				_sd = ( *_clientIt )->getSocket();
 				_answer = "User serverBan rpl_code\r\n"; //Chercher le code erreur;
@@ -308,7 +313,18 @@ class IRCData
 				throw IRCErr( "User " + ( *_clientIt )->getUser() + " tried to connect during his banish time." );
 			}
 
-			(*_clientIt)->setUser( _userTmp );
+			for ( ; cliIt != _clients.end(); ++cliIt )
+			{
+				if ( (*cliIt)->getNick() == userTmp )
+				{
+					_destSD = _sd;
+					_answer = "User already in use\r\n"; // A verifier a deux, si j essaie de prendre le nick d un autre
+					sender();
+					throw IRCErr( "User already in use" );
+				}
+			}			
+
+			(*_clientIt)->setUser( userTmp );
 			checkPass();
 			if ( !( (*_clientIt)->getAutentification() ) )
 				WELCOME();
