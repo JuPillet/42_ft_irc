@@ -20,7 +20,7 @@ class IRCData
 	std::string								_selfIP;
 	int										_port;
 	std::string								_pass;
-	std::list<Client*>                     _servOps;
+	std::list<std::string>					_servOps;
 
 /////	PtrFctn /////
 	listPair								_listFctn;
@@ -42,6 +42,7 @@ class IRCData
 
 /////	Client Info /////
 	std::list<Client*>						_clients;
+	std::list<std::string>					_servOps;
 	clientIterator							_clientIt;
 	std::string								_passTmp, _nickTmp, _userTmp, _modeTmp, _hostTmp, _nameTmp;
 	std::string 							_rejectChar;
@@ -50,6 +51,8 @@ class IRCData
 /////	Channel info /////
 	std::list<Channel>						_channels;
 	std::string								_channelTmp, _chanPassTmp;
+
+/////	BanInfo /////
 	std::list< _pairBan >					_servBan;
 
 							IRCData( IRCData &src );
@@ -102,7 +105,7 @@ class IRCData
 			spaceTrimer();
 		}
 
-		void sender ( void )
+		void	sender( void )
 		{
 			if ( send( _destSD, _answer.c_str(), _answer.length(), 0 ) == -1 )
 			{
@@ -110,6 +113,39 @@ class IRCData
 				throw( IRCErr( "send" ) );
 			}
 			_answer.clear();
+		}
+
+		bool	isCli( std::string const &userTmp ) {
+			for ( clientIterator cliIt = _clients.begin(); cliIt != _clients.end(); ++cliIt ) {
+				if ( userTmp == ( *cliIt )->getUser() )
+					return (1);
+			}
+			return (0);
+		}
+
+		bool							isOps( Client *userTmp ) {
+			for ( itStr userIt = _servOps.begin(); userIt != _servOps.end(); ++userIt ) {
+				if ( *userIt == userTmp->getUser() )
+					return (1);
+			}
+			return (0);
+		}
+
+		bool	isBan ( std::string const cliUser  ) {
+			for ( itBan tmpIt = _servBan.begin(); tmpIt != _servBan.end(); ++tmpIt )
+			{
+				if ( tmpIt->first == cliUser )
+				{
+					if (tmpIt->second && tmpIt->second <= std::time(nullptr))
+					{
+						_servBan.erase(tmpIt);
+						break;
+					}
+					else
+						return 1;
+				}
+			}
+			return (0);
 		}
 
 		void	WELCOME( void )
@@ -176,7 +212,6 @@ class IRCData
 			_nickTmp = std::string( *_request, 0, nickIt - _request->begin() );
 			clearPostArgs();
 
-			clientIterator	tmpIt = _clients.begin();
 			for ( strIt rejectIt = _rejectChar.begin(); rejectIt != _rejectChar.end(); ++rejectIt ){
 				for ( strIt nickIt = _nickTmp.begin(); nickIt != _nickTmp.end(); ++nickIt ){
 					if ( *nickIt == *rejectIt ){
@@ -186,9 +221,10 @@ class IRCData
 						throw IRCErr( "Nick format" );
 			}	}	}
 
-			for ( ; tmpIt != _clients.end(); ++tmpIt )
+			clientIterator	cliIt = _clients.begin();
+			for ( ; cliIt != _clients.end(); ++cliIt )
 			{
-				if ( (*tmpIt)->getNick() == _nickTmp )
+				if ( (*cliIt)->getNick() == _nickTmp )
 				{
 					_destSD = _sd;
 					_answer = "Nick already in use\r\n"; // A verifier a deux, si j essaie de prendre le nick d un autre
@@ -243,15 +279,34 @@ class IRCData
 			_nameTmp.pop_back();
 			clearPostArgs();
 
-			clientIterator							tmpIt = _clients.begin();
 			for ( strIt rejectIt = _rejectChar.begin(); rejectIt != _rejectChar.end(); ++rejectIt ){
 				for ( strIt userIt = _userTmp.begin(); userIt != _userTmp.end(); ++userIt ){
 					if ( *userIt == *rejectIt ){
 						_destSD = _sd;
-						_answer = "Usererror\r\n";
+						_answer = "User format error\r\n";
 						sender();
-						throw IRCErr( "User format" );
+						throw IRCErr( "User format error" );
 			}	}	}
+
+			clientIterator	cliIt = _clients.begin();
+			for ( ; cliIt != _clients.end(); ++cliIt )
+			{
+				if ( (*cliIt)->getNick() == _nickTmp )
+				{
+					_destSD = _sd;
+					_answer = "User already in use\r\n"; // A verifier a deux, si j essaie de prendre le nick d un autre
+					sender();
+					throw IRCErr( "User already in use" );
+				}
+			}			
+			
+			if ( isBan( _userTmp ) )
+			{
+				_sd = ( *_clientIt )->getSocket();
+				_answer = "User serverBan rpl_code\r\n"; //Chercher le code erreur;
+				sender();
+				throw IRCErr( "User " + ( *_clientIt )->getUser() + " tried to connect during his banish time." );
+			}
 
 			(*_clientIt)->setUser( _userTmp );
 			checkPass();
@@ -305,7 +360,105 @@ class IRCData
 			chanIt->setCli( *_clientIt );
 		}
 
-		void				OPENMSG( void )
+		void			KILL( clientIterator const &cliIt, std::string const reason )
+		{
+			_sd = ( *cliIt )->getSocket();
+			_answer = " Avoir le formatage réponse envoyé à la personne ban " + reason;
+			sender();
+			delete ( *cliIt );
+			_clients.erase( cliIt );
+		}
+
+		void			KILL( void )
+		{
+			std::string		userKick;
+			size_t			endStol;
+			std::string		reason;
+			strIt			argIt;
+			clientIterator	cliIt;
+
+			if ( !isOps( *_clientIt ) )
+			{
+				_request->clear();
+				_sd = ( *_clientIt )->getSocket();
+				_answer = " A voir ici le code erreur KLINE ";
+				sender();
+				throw IRCErr( ( *_clientIt )->getUser() + " try command KILL without serveur operator rights." );
+			}
+
+			for ( argIt = _request->begin(); argIt != _request->end()
+				&& *argIt != '\n' && *argIt != '\r' && *argIt != ' '; ++argIt );
+			userKick = std::string( *_request, 0, argIt - _request->begin() );
+			_request->erase( 0, argIt - _request->begin() );
+			spaceTrimer();
+
+			if ( *argIt == ':' )
+			{
+				for ( argIt = _request->begin(); argIt != _request->end()
+					&& *argIt != '\n' && *argIt != '\r'; ++argIt );
+				reason = std::string( *_request, 0, argIt - _request->begin() );
+			}
+			clearPostArgs();
+
+			for ( cliIt = _clients.begin(); cliIt != _clients.end() && ( *cliIt )->getUser() != userKick; ++cliIt );
+			if ( cliIt != _clients.end() )
+				KILL( cliIt, reason );
+		}
+
+		void			KLINE( void )
+		{
+			std::string		userBan;
+			time_t			timeBan = 0;
+			size_t			endStol;
+			std::string		reason;
+			strIt			argIt;
+			clientIterator	cliIt;
+
+			if ( !isOps( *_clientIt ) )
+			{
+				_request->clear();
+				_sd = ( *_clientIt )->getSocket();
+				_answer = " A voir ici le code erreur KLINE ";
+				sender();
+				throw IRCErr( ( *_clientIt )->getUser() + " try command KLINE without serveur operator rights." );
+			}
+
+			for ( argIt = _request->begin(); argIt != _request->end()
+				&& *argIt != '\n' && *argIt != '\r' && *argIt != ' '; ++argIt );
+			userBan = std::string( *_request, 0, argIt - _request->begin() );
+			_request->erase( 0, argIt - _request->begin() );
+			spaceTrimer();
+
+			for ( argIt = _request->begin(); argIt != _request->end()
+				&& *argIt != '\n' && *argIt != '\r' && *argIt != ' '; ++argIt );
+			timeBan = IRC::stol( *_request, &endStol );
+			if ( endStol == 'h' || endStol == 'd' )
+			{
+				timeBan *= 3600;
+				if ( endStol == 'd' )
+					timeBan *= 24;
+				++argIt;
+			}
+			if ( timeBan )
+				timeBan += std::time( 0 );
+			_request->erase( 0, argIt - _request->begin() );
+			spaceTrimer();
+
+			if ( *argIt == ':' )
+			{
+				for ( argIt = _request->begin(); argIt != _request->end()
+					&& *argIt != '\n' && *argIt != '\r'; ++argIt );
+				reason = std::string( *_request, 0, argIt - _request->begin() );
+			}
+			clearPostArgs();
+
+			_servBan.push_back( pairBan( userBan, timeBan ) );
+			for ( cliIt = _clients.begin(); cliIt != _clients.end() && ( *cliIt )->getUser() != userBan; ++cliIt );
+			if ( cliIt != _clients.end() )
+				KILL( cliIt, reason );
+		}
+
+		void					OPENMSG( void )
 		{
 			channelIterator	chanIt;
 			for ( chanIt = _channels.begin(); chanIt != _channels.end() && _dest != chanIt->getName(); ++chanIt );
@@ -427,11 +580,13 @@ class IRCData
 			_listFctn.push_back( pairKV( "USER", &IRCData::USER ) );
 			_listFctn.push_back( pairKV( "PING", &IRCData::PONG ) );
 			_listFctn.push_back( pairKV( "JOIN", &IRCData::JOIN ) );
+			_listFctn.push_back( pairKV( "KILL", &IRCData::KILL ) );
 			_listFctn.push_back( pairKV( "PRIVMSG", &IRCData::MSG ) );
+
 		}
 
 
-		void				init( std::string port, std::string password )
+		void				init( std::string port, std::string password, char **ep )
 		{
 			size_t			lastchar;
 			char			selfhost[256];
@@ -441,12 +596,18 @@ class IRCData
 			_opt = 1;
 			_rejectChar = "~!@#$%&*()+=:;\"\',<.>?/";
 
-			_port = std::stoi( port, &lastchar );
+			_port = IRC::stoi( port, &lastchar );
 			std::cout << port[lastchar] << std::endl;
 			if ( port[lastchar] || _port < 0 || _port > 65535 )
 				throw( IRCErr( "Bad port value : enter port to 0 at 65 535" ) );
 
 			_pass = password;
+
+			int	var;
+			for ( var = 0; ep[var] && std::string( "USER=" ) != ep[var]; ++var );
+			if ( !ep[var] )
+				throw ( IRCErr( "no user fount for serverOPs" ) );
+			_servOps.push_back( ep[var] + 5 );
 
 			if ( ( _master_socket = socket( AF_INET, SOCK_STREAM, 0 ) ) == 0 )
 				throw( IRCErr( "socket failed" ) );

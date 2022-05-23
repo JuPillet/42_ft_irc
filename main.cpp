@@ -1,13 +1,13 @@
 #include "IRCData.hpp"
 
-int main(int ac, char **av)
+int main( int ac, char **av, char **ep )
 {
 	IRCData server;
 
 	try
 	{
 		server.nbArgs( ac );
-		server.init( av[1], av[2] );
+		server.init( av[1], av[2], ep );
 	}
 	catch ( IRCErr const &err )
 	{
