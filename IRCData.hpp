@@ -601,7 +601,6 @@ class IRCData
 
 		}
 
-
 		void				init( std::string port, std::string password, char **ep )
 		{
 			size_t			lastchar;
