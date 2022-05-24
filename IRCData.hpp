@@ -38,13 +38,13 @@ class IRCData
 	std::string								_answer;
 	char									_buff[1024];
 	std::string 							_dest;
+	int										_destSD;
 
 /////	Client Info /////
 	std::list<Client*>						_clients;
 	std::list<std::string>					_servOps;
 	clientIterator							_clientIt;
 	std::string 							_rejectChar;
-	int										_destSD;
 
 /////	Channel info /////
 	std::list<Channel>						_channels;
@@ -693,6 +693,15 @@ class IRCData
 			std::cout << "EXEC start" << std::endl;
 			std::cout << _request << std::endl;
 			listPair::iterator	_listPairIt;
+			if ( !( *_clientIt )->getAutentification() && _cmd != "PING" && _cmd != "PONG" && _cmd != "CAP" && _cmd != "PASS" && _cmd != "NICK" && _cmd != "USER" )
+			{
+				_request->clear();
+				_destSD = _sd;
+				_answer = "code erreur Identify yourself with command PASS, NICK and USER\r\n";
+				sender();
+				throw ( IRCErr( "Client try to use other command than PASS, NICK or USER without authentification\r\n" ) );
+			}
+
 			for ( _listPairIt = _listFctn.begin(); _listPairIt != _listFctn.end() && _listPairIt->first != _cmd; ++_listPairIt );
 			if ( _listPairIt != _listFctn.end() )
 			{
