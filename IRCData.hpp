@@ -395,6 +395,17 @@ class IRCData
 				throw( IRCErr( "Is already in the channel" ) );
 			}
 			chanIt->setCli( *_clientIt );
+
+			_answer = ( *_clientIt )->getNick() + "!" + ( *_clientIt )->getUser() + "@" + _selfIP + " " + _cmd + " :" + _channelTmp;
+			for ( constClientIterator chanCliIt = chanIt->getCli()->begin();
+					chanCliIt != chanIt->getCli()->end(); ++chanCliIt )
+			{
+				_destSD = ( *chanCliIt )->getSocket();
+				try
+				{ sender(); }
+				catch ( IRCErr const &err )
+				{ std::cerr << err.getError() << std::endl; }
+			}
 		}
 
 		void			KILLING( clientIterator const &cliIt, std::string const reason )
