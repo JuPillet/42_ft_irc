@@ -766,6 +766,7 @@ class IRCData
 							{
 								std::cout << *_request << std::endl;
 								setCmd();
+								
 								execFct();
 //								usleep( 5000000 );
 							}
