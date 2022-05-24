@@ -122,8 +122,8 @@ class IRCData
 		}
 
 		bool							isOps( Client *userTmp ) {
-			for ( itStr userIt = _servOps.begin(); userIt != _servOps.end(); ++userIt ) {
-				if ( *userIt == userTmp->getUser() )
+			for ( itStr opsIt = _servOps.begin(); opsIt != _servOps.end(); ++opsIt ) {
+				if ( *opsIt == userTmp->getUser() )
 					return (1);
 			}
 			return (0);
@@ -306,7 +306,7 @@ class IRCData
 			clientIterator	cliIt = _clients.begin();
 			if ( isBan( userTmp ) )
 			{
-				_sd = ( *_clientIt )->getSocket();
+				_destSD = ( *_clientIt )->getSocket();
 				_answer = "User serverBan rpl_code\r\n"; //Chercher le code erreur;
 				sender();
 				throw IRCErr( "User " + ( *_clientIt )->getUser() + " tried to connect during his banish time." );
@@ -377,7 +377,7 @@ class IRCData
 
 		void			KILL( clientIterator const &cliIt, std::string const reason )
 		{
-			_sd = ( *cliIt )->getSocket();
+			_destSD = ( *cliIt )->getSocket();
 			_answer = " Avoir le formatage réponse envoyé à la personne ban " + reason;
 			sender();
 			delete ( *cliIt );
@@ -395,7 +395,7 @@ class IRCData
 			if ( !isOps( *_clientIt ) )
 			{
 				_request->clear();
-				_sd = ( *_clientIt )->getSocket();
+				_destSD = ( *_clientIt )->getSocket();
 				_answer = " A voir ici le code erreur KLINE ";
 				sender();
 				throw IRCErr( ( *_clientIt )->getUser() + " try command KILL without serveur operator rights." );
@@ -432,7 +432,7 @@ class IRCData
 			if ( !isOps( *_clientIt ) )
 			{
 				_request->clear();
-				_sd = ( *_clientIt )->getSocket();
+				_destSD = ( *_clientIt )->getSocket();
 				_answer = " A voir ici le code erreur KLINE ";
 				sender();
 				throw IRCErr( ( *_clientIt )->getUser() + " try command KLINE without serveur operator rights." );
@@ -467,7 +467,14 @@ class IRCData
 			}
 			clearPostArgs();
 
-			_servBan.push_back( pairBan( userBan, timeBan ) );
+			if ( isBan( userBan ) )
+			{
+				itBan cliBanished;
+				for ( cliBanished = _servBan.begin(); cliBanished != _servBan.end() && cliBanished->first != userBan; ++cliBanished );
+				_servBan.erase( cliBanished );
+			}
+			_servBan.push_back( pairBan ( userBan, timeBan ) );
+
 			for ( cliIt = _clients.begin(); cliIt != _clients.end() && ( *cliIt )->getUser() != userBan; ++cliIt );
 			if ( cliIt != _clients.end() )
 				KILL( cliIt, reason );
