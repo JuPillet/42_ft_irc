@@ -100,6 +100,9 @@ class IRCData
 				&& *cmdIt != '\n' && *cmdIt != '\r' && *cmdIt != ' '; ++cmdIt );
 			_cmd = std::string( *_request, 0, cmdIt - _request->begin() );
 			_request->erase( 0, cmdIt - _request->begin() );
+			for ( cmdIt = _cmd.begin(); cmdIt != _cmd.end(); cmdIt++ )
+				if ( std::isalpha( *cmdIt ) )
+					*cmdIt = std::toupper(*cmdIt);
 			spaceTrimer();
 		}
 
@@ -121,7 +124,7 @@ class IRCData
 			return (0);
 		}
 
-		bool							isOps( Client *userTmp ) {
+		bool	isOps( Client *userTmp ) {
 			for ( itStr opsIt = _servOps.begin(); opsIt != _servOps.end(); ++opsIt ) {
 				if ( *opsIt == userTmp->getUser() )
 					return (1);
@@ -303,7 +306,6 @@ class IRCData
 						throw IRCErr( "User format error" );
 			}	}	}
 
-			clientIterator	cliIt = _clients.begin();
 			if ( isBan( userTmp ) )
 			{
 				_destSD = ( *_clientIt )->getSocket();
@@ -312,16 +314,27 @@ class IRCData
 				throw IRCErr( "User " + ( *_clientIt )->getUser() + " tried to connect during his banish time." );
 			}
 
-			for ( ; cliIt != _clients.end(); ++cliIt )
+//			clientIterator	cliIt = _clients.begin();
+//			for ( ; cliIt != _clients.end(); ++cliIt )
+//			{
+//				if ( ( *cliIt )->getUser() == userTmp )
+//				{
+//					_destSD = _sd;
+//					_answer = "User already in use\r\n"; // A verifier a deux, si j essaie de prendre le nick d un autre
+//					sender();
+//					throw IRCErr( "User already in use" );
+//				}
+//			}			
+
+			clientIterator	cliIt;// = _clients.begin();
+			for ( cliIt = _clients.begin(); cliIt != _clients.end() && userTmp != ( *cliIt )->getUser(); ++cliIt );
+			if ( cliIt != _clients.end() )
 			{
-				if ( (*cliIt)->getNick() == userTmp )
-				{
-					_destSD = _sd;
-					_answer = "User already in use\r\n"; // A verifier a deux, si j essaie de prendre le nick d un autre
-					sender();
-					throw IRCErr( "User already in use" );
-				}
-			}			
+				_destSD = _sd;
+				_answer = "User already in use\r\n"; // A verifier a deux, si j essaie de prendre le nick d un autre
+				sender();
+				throw IRCErr( "User already in use" );
+			}		
 
 			(*_clientIt)->setUser( userTmp );
 			checkPass();
@@ -375,7 +388,7 @@ class IRCData
 			chanIt->setCli( *_clientIt );
 		}
 
-		void			KILL( clientIterator const &cliIt, std::string const reason )
+		void			KILLING( clientIterator const &cliIt, std::string const reason )
 		{
 			_destSD = ( *cliIt )->getSocket();
 			_answer = " Avoir le formatage réponse envoyé à la personne ban " + reason;
@@ -396,7 +409,7 @@ class IRCData
 			{
 				_request->clear();
 				_destSD = ( *_clientIt )->getSocket();
-				_answer = " A voir ici le code erreur KLINE ";
+				_answer = " A voir ici le code erreur KLINE\r\n";
 				sender();
 				throw IRCErr( ( *_clientIt )->getUser() + " try command KILL without serveur operator rights." );
 			}
@@ -417,7 +430,7 @@ class IRCData
 
 			for ( cliIt = _clients.begin(); cliIt != _clients.end() && ( *cliIt )->getUser() != userKick; ++cliIt );
 			if ( cliIt != _clients.end() )
-				KILL( cliIt, reason );
+				KILLING( cliIt, reason );
 		}
 
 		void			KLINE( void )
@@ -477,7 +490,7 @@ class IRCData
 
 			for ( cliIt = _clients.begin(); cliIt != _clients.end() && ( *cliIt )->getUser() != userBan; ++cliIt );
 			if ( cliIt != _clients.end() )
-				KILL( cliIt, reason );
+				KILLING( cliIt, reason );
 		}
 
 		void					OPENMSG( void )
@@ -691,7 +704,6 @@ class IRCData
 		void				execFct( void )
 		{
 			std::cout << "EXEC start" << std::endl;
-			std::cout << _request << std::endl;
 			listPair::iterator	_listPairIt;
 			if ( !( *_clientIt )->getAutentification() && _cmd != "PING" && _cmd != "PONG" && _cmd != "CAP" && _cmd != "PASS" && _cmd != "NICK" && _cmd != "USER" )
 			{
@@ -705,6 +717,7 @@ class IRCData
 			for ( _listPairIt = _listFctn.begin(); _listPairIt != _listFctn.end() && _listPairIt->first != _cmd; ++_listPairIt );
 			if ( _listPairIt != _listFctn.end() )
 			{
+				std::cout << _cmd << std::endl;
 				ptrfct ptrFct = _listPairIt->second;
 				(this->*ptrFct)();
 			}
