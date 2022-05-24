@@ -225,8 +225,17 @@ class IRCData
 				throw IRCErr( "Nick format" );
 			}
 
-			for ( strIt rejectIt = _rejectChar.begin(); rejectIt != _rejectChar.end(); ++rejectIt ){
-				for ( strIt nickIt = nickTmp.begin(); nickIt != nickTmp.end(); ++nickIt ){
+			strIt nickIt = nickTmp.begin();
+			if ( !std::isalpha( *nickIt ) )
+			{
+				_destSD = _sd;
+				_answer = "Nickerror - first char of nick must be an alphabetic character\r\n";
+				sender();
+				throw IRCErr( "Nick format - first char not an alphabetic character" );
+			}
+
+			for ( ; nickIt != nickTmp.end(); ++nickIt ){
+				for ( strIt rejectIt = _rejectChar.begin(); rejectIt != _rejectChar.end(); ++rejectIt ){				
 					if ( *nickIt == *rejectIt ){
 						_destSD = _sd;
 						_answer = "Nickerror\r\n";
