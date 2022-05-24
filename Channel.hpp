@@ -7,33 +7,37 @@ namespace IRC
 {
 	int	stoi( const std::string &str, std::size_t *index = 0 )
 	{
-		char posinega = 1;
-		std::string::const_iterator strIt;
-		int result = 0;
-		for ( strIt = str.begin(); strIt != str.end() && std::isspace( *strIt ); ++strIt );
-		if ( *strIt == '-' )
+		char	posinega = 1;
+		size_t	ifnull;
+		int		result = 0;
+
+		if ( !index )
+			index = &ifnull;
+		for ( *index = 0; *index < str.size() && std::isspace( str[*index] ); ++( *index ) );
+		if ( *index < str.size() && str[*index] == '-' )
 			posinega = -1;
-		if ( *strIt == '+' || *strIt == '-' )
-			++strIt;
-		for ( strIt = str.begin(); strIt != str.end() && std::isdigit( *strIt ); ++strIt )
-			result = ( result * 10 ) + ( ( *strIt - '0' ) * posinega );
-		*index = *strIt;
+		if ( *index < str.size() && ( str[*index] == '+' || str[*index] == '-' ) )
+			++( *index );
+		for ( ; *index < str.size() && std::isdigit( str[*index] ); ++( *index ) )
+			result = ( result * 10 ) + ( ( str[*index] - '0' ) * posinega );
 		return result;
 	}
 
 	long int	stol( const std::string &str, std::size_t *index = 0 )
 	{
 		char posinega = 1;
-		std::string::const_iterator strIt;
+		size_t	ifnull;
 		long int result = 0;
-		for ( strIt = str.begin(); strIt != str.end() && std::isspace( *strIt ); ++strIt );
-		if ( *strIt == '-' )
+
+		if ( !index )
+			index = &ifnull;
+		for ( *index = 0; *index < str.size() && std::isspace( str[*index] ); ++( *index ) );
+		if ( *index < str.size() && str[*index] == '-' )
 			posinega = -1;
-		if ( *strIt == '+' || *strIt == '-' )
-			++strIt;
-		for ( strIt = str.begin(); strIt != str.end() && std::isdigit( *strIt ); ++strIt )
-			result = ( result * 10 ) + ( ( *strIt - '0' ) * posinega );
-		*index = *strIt;
+		if ( *index < str.size() && ( str[*index] == '+' || str[*index] == '-' ) )
+			++( *index );
+		for ( ; *index < str.size() && std::isdigit( str[*index] ); ++( *index ) )
+			result = ( result * 10 ) + ( ( str[*index] - '0' ) * posinega );
 		return result;
 	}
 };

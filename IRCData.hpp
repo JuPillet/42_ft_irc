@@ -612,6 +612,7 @@ class IRCData
 			_rejectChar = "~!@#$%&*()+=:;\"\',<.>?/";
 
 			_port = IRC::stoi( port, &lastchar );
+			std::cout << lastchar << std::endl;
 			std::cout << port[lastchar] << std::endl;
 			if ( port[lastchar] || _port < 0 || _port > 65535 )
 				throw( IRCErr( "Bad port value : enter port to 0 at 65 535" ) );
@@ -619,10 +620,13 @@ class IRCData
 			_pass = password;
 
 			int	var;
-			for ( var = 0; ep[var] && std::string( "USER=" ) != ep[var]; ++var );
+			for ( var = 0; ep[var] && std::string( ep[var] ).compare( 0, 5, "USER=" ) ; ++var );
+			if ( ep[var] )
+				std::cout << ep[var] << std::endl;
 			if ( !ep[var] )
-				throw ( IRCErr( "no user fount for serverOPs" ) );
+				throw ( IRCErr( "no user found for serverOPs" ) );
 			_servOps.push_back( ep[var] + 5 );
+			std::cout << *_servOps.begin() << std::endl;
 
 			if ( ( _master_socket = socket( AF_INET, SOCK_STREAM, 0 ) ) == 0 )
 				throw( IRCErr( "socket failed" ) );
