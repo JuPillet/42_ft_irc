@@ -20,7 +20,6 @@ class IRCData
 	std::string								_selfIP;
 	int										_port;
 	std::string								_pass;
-	std::list<std::string>					_servOps;
 
 /////	PtrFctn /////
 	listPair								_listFctn;
@@ -596,9 +595,10 @@ class IRCData
 			_listFctn.push_back( pairKV( "USER", &IRCData::USER ) );
 			_listFctn.push_back( pairKV( "PING", &IRCData::PONG ) );
 			_listFctn.push_back( pairKV( "JOIN", &IRCData::JOIN ) );
-			_listFctn.push_back( pairKV( "KILL", &IRCData::KILL ) );
 			_listFctn.push_back( pairKV( "PRIVMSG", &IRCData::MSG ) );
-
+			_listFctn.push_back( pairKV( "KILL", &IRCData::KILL ) );
+			_listFctn.push_back( pairKV( "KLINE", &IRCData::KLINE ) );
+//			_listFctn.push_back( pairKV( "MODE", &IRCData::MODE ) );	
 		}
 
 		void				init( std::string port, std::string password, char **ep )

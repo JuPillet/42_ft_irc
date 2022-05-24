@@ -15,7 +15,7 @@ namespace IRC
 			posinega = -1;
 		if ( *strIt == '+' || *strIt == '-' )
 			++strIt;
-		for ( strIt = str.begin(); strIt != str.end() && std::isdigit( *strIt ); ++strIt );
+		for ( strIt = str.begin(); strIt != str.end() && std::isdigit( *strIt ); ++strIt )
 			result = ( result * 10 ) + ( ( *strIt - '0' ) * posinega );
 		*index = *strIt;
 		return result;
@@ -31,7 +31,7 @@ namespace IRC
 			posinega = -1;
 		if ( *strIt == '+' || *strIt == '-' )
 			++strIt;
-		for ( strIt = str.begin(); strIt != str.end() && std::isdigit( *strIt ); ++strIt );
+		for ( strIt = str.begin(); strIt != str.end() && std::isdigit( *strIt ); ++strIt )
 			result = ( result * 10 ) + ( ( *strIt - '0' ) * posinega );
 		*index = *strIt;
 		return result;
