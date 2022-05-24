@@ -385,6 +385,7 @@ class IRCData
 			{
 				_channels.push_back( _channelTmp );
 				chanIt = _channels.end();
+				--chanIt;
 			}
 			
 			if ( chanIt->isCli( *_clientIt ) )
@@ -396,7 +397,7 @@ class IRCData
 			}
 			chanIt->setCli( *_clientIt );
 
-			_answer = ( *_clientIt )->getNick() + "!" + ( *_clientIt )->getUser() + "@" + _selfIP + " " + _cmd + " :" + _channelTmp;
+			_answer = ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + "10.12.4.3" + " " + _cmd + " " + _channelTmp + "\r\n";
 			for ( constClientIterator chanCliIt = chanIt->getCli()->begin();
 					chanCliIt != chanIt->getCli()->end(); ++chanCliIt )
 			{

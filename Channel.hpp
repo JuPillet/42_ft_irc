@@ -94,7 +94,7 @@ class Channel
 			return (0);
 		}
 
-		void							setCli( Client *tmp ) { _cliCrnt.push_back(tmp); }
+		void							setCli( Client *tmp ) { _cliCrnt.push_back( tmp ); }
 		std::list<Client *> const		*getCli( void ) const { return &_cliCrnt; }
 
 		bool							isVo( Client *tmp ) {

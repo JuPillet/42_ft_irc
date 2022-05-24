@@ -24,6 +24,7 @@ class Client
 {
 	int									_client_socket;
 	bool								_authentified;
+	std::string							_clIp;
 	std::string							_pass;
 	std::string							_nick;
 	std::string							_user;
