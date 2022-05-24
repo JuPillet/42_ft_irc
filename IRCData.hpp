@@ -225,7 +225,7 @@ class IRCData
 				throw IRCErr( "Nick format" );
 			}
 
-			strIt nickIt = nickTmp.begin();
+			nickIt = nickTmp.begin();
 			if ( !std::isalpha( *nickIt ) )
 			{
 				_destSD = _sd;
@@ -766,7 +766,7 @@ class IRCData
 							{
 								std::cout << *_request << std::endl;
 								setCmd();
-								
+
 								execFct();
 //								usleep( 5000000 );
 							}
