@@ -323,19 +323,7 @@ class IRCData
 				throw IRCErr( "User " + ( *_clientIt )->getUser() + " tried to connect during his banish time." );
 			}
 
-//			clientIterator	cliIt = _clients.begin();
-//			for ( ; cliIt != _clients.end(); ++cliIt )
-//			{
-//				if ( ( *cliIt )->getUser() == userTmp )
-//				{
-//					_destSD = _sd;
-//					_answer = "User already in use\r\n"; // A verifier a deux, si j essaie de prendre le nick d un autre
-//					sender();
-//					throw IRCErr( "User already in use" );
-//				}
-//			}			
-
-			clientIterator	cliIt;// = _clients.begin();
+			clientIterator	cliIt;
 			for ( cliIt = _clients.begin(); cliIt != _clients.end() && userTmp != ( *cliIt )->getUser(); ++cliIt );
 			if ( cliIt != _clients.end() )
 			{
@@ -517,6 +505,11 @@ class IRCData
 		void					OPENMSG( void )
 		{
 			channelIterator	chanIt;
+			clientIterator	clientIt;
+			strIt			msgIt;
+			for ( msgIt = _request->begin(); msgIt != _request->end() && *msgIt != '\n' && *msgIt != '\r'; ++msgIt );
+			std::string		privMsg( _request->substr( 0, msgIt - _request->begin() ) );
+			clearPostArgs();
 			for ( chanIt = _channels.begin(); chanIt != _channels.end() && _dest != chanIt->getName(); ++chanIt );
 			if ( chanIt == _channels.end() )
 			{
@@ -550,26 +543,32 @@ class IRCData
 				throw ( IRCErr( "PRIVMSG - Channel " + _dest + " moderation restriction" ) );
 			}		
 
-			constClientIterator	clientIt;
-			for ( clientIt = ( chanIt->getCli() )->cbegin() ; clientIt != _clients.end(); ++clientIt )
+			for ( clientIt = ( const_cast< std::list<Client*>* >( chanIt->getCli() ) )->begin() ; clientIt != _clients.end(); ++clientIt )
 			{
-				_destSD = (*_clientIt)->getSocket();
-				_answer = "A voir formattage message"; // A voir formatage pour envoyer un message
-				try
-				{ sender(); } //essaye d envoyer le message a l utilisateur
-				catch( IRCErr const &err )
-				{ std::cerr << err.getError() << std::endl; } //affiche ici si le message n a pas ete envoyé pour chaque utilisateur
+				if ( ( *clientIt )->getUser() != ( *_clientIt )->getUser() )
+				{
+					_destSD = ( *clientIt )->getSocket();
+					_answer = ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " " + _cmd + " " + privMsg + "\r\n"; // A voir formatage pour envoyer un message
+					try
+					{ sender(); } //essaye d envoyer le message a l utilisateur
+					catch( IRCErr const &err )
+					{ std::cerr << err.getError() << std::endl; } //affiche ici si le message n a pas ete envoyé a un utilisateur
+				}
 			}
 		}
 
 		void				PRIVMSG( void )
 		{
-			clientIterator							clientIt = _clients.begin();
-			for ( ; clientIt != _clients.end() && _dest != (*clientIt)->getNick(); ++clientIt );
+			clientIterator	clientIt;
+			strIt			msgIt;
+			for ( msgIt = _request->begin(); msgIt != _request->end() && *msgIt != '\n' && *msgIt != '\r'; ++msgIt );
+			std::string		privMsg( _request->substr( 0, msgIt - _request->begin() ) );
+			clearPostArgs();
+			for ( clientIt = _clients.begin(); clientIt != _clients.end() && _dest != (*clientIt)->getNick(); ++clientIt );
 			if ( clientIt != _clients.end() )
 			{
 				_destSD = (*clientIt)->getSocket();
-				_answer = " A VOIR formmattage "; // A VOIR
+				_answer = ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " " + _cmd + " " + privMsg + "\r\n"; // A voir formatage pour envoyer un message
 				sender();
 			}
 		}
@@ -581,7 +580,9 @@ class IRCData
 			for ( strIt = _request->begin(); strIt != _request->end() && *strIt != ' '; strIt++ );
 			_dest = _request->substr( 0, strIt - _request->begin() );
 			_request->erase( 0, strIt - _request->begin() );
-
+			spaceTrimer();
+			if ( ( *_request )[0] != ':' )
+				*_request = ":" + *_request;
 			if ( _dest[0] == '#' )
 				OPENMSG();
 			else
@@ -590,16 +591,18 @@ class IRCData
 
 		void				PART( void )
 		{
-			strIt strIt;
-			str::string chanPart;
+			strIt argIt;
+			std::string chanPart;
 			clientIterator cliIt;
 			channelIterator chanIt;
 
-			for ( str)
-
-
+			for ( argIt = _request->begin(); argIt != _request->end()
+				&& *argIt != '\n' && *argIt != '\r' && *argIt != ' '; ++argIt );
+			chanPart = _request->substr( 0, argIt - _request->begin() );
+			_request->erase( 0, argIt - _request->begin() );
 			clearPostArgs();
-			for (chanIt = _channels.begin(); chanIt != _channels.end() && chanIt->getName() != *_request; chanIt++);
+
+			for (chanIt = _channels.begin(); chanIt != _channels.end() && chanIt->getName() != chanPart; chanIt++);
 			if (chanIt == _channels.end())
 			{
 				_destSD = ( *_clientIt )->getSocket();
@@ -608,14 +611,63 @@ class IRCData
 				throw(IRCErr("Channel doesnt exist."));
 			}
 			try
-			{ chanIt->eraseCli(*_clientIt); }
+			{
+				try
+				{ chanIt->eraseCli(*_clientIt); }
+				catch ( IRCErr const &err )
+				{
+					_destSD = ( *_clientIt )->getSocket();
+					_answer = "client isnt in the channel"; //A VOIR CODE ERREUR
+					throw( err );
+				}
+				_destSD = ( *_clientIt )->getSocket();
+				_answer = ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " PART " + chanPart + " :left away\r\n";
+				sender();
+				for ( constClientIterator chanCliIt = chanIt->getCli()->begin();
+					chanCliIt != chanIt->getCli()->end(); ++chanCliIt )
+				{
+					_destSD = ( *chanCliIt )->getSocket();
+					_answer = ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " PART " + chanPart + " :left away\r\n";
+					try
+					{ sender(); }
+					catch ( IRCErr const &err )
+					{ std::cerr << err.getError() << std::endl; }
+				}
+			}
 			catch ( IRCErr const &err)
 			{
-				_destSD = ( *_clientIt )->getSocket();
-				_answer = "client isnt in the channel"; //A VOIR CODE ERREUR
 				sender();
-				throw(err);
+				throw( err );
 			}
+		}
+
+		void				QUIT( void )
+		{
+			std::string		reQuit;
+			clearPostArgs();
+			_request = &reQuit;
+			for ( channelIterator chanIt = _channels.begin(); chanIt != _channels.end(); ++chanIt )
+			{
+				if ( chanIt->isCli( *_clientIt ) )
+				{
+					clearPostArgs();
+					*_request = chanIt->getName() + "\r\n";
+					try
+					{ PART(); }
+					catch ( IRCErr const &err )
+					{ std::cerr << err.getError() << std::endl; }
+				}
+			}
+			for ( clientIterator clientIt = _clients.begin(); clientIt != _clients.end(); ++clientIt )
+			{
+				_destSD = ( *clientIt )->getSocket();
+				_answer = ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " QUIT :left the server\r\n";
+				try
+				{ sender(); }
+				catch ( IRCErr const &err )
+				{ std::cerr << err.getError() << std::endl; }
+			}
+			closeEraseDeleteClient();
 		}
 
 		void				setAddress( void )
@@ -670,6 +722,7 @@ class IRCData
 			_listFctn.push_back( pairKV( "KILL", &IRCData::KILL ) );
 			_listFctn.push_back( pairKV( "KLINE", &IRCData::KLINE ) );
 			_listFctn.push_back( pairKV( "PART", &IRCData::PART ) );
+			_listFctn.push_back( pairKV( "QUIT", &IRCData::QUIT ) );
 //			_listFctn.push_back( pairKV( "MODE", &IRCData::MODE ) );	
 		}
 
@@ -724,6 +777,7 @@ class IRCData
 			gethostname( selfhost, sizeof( selfhost ) );
 			host_entry = gethostbyname( selfhost );
 			_selfIP = inet_ntoa( *( reinterpret_cast<struct in_addr*>( host_entry->h_addr_list[0] ) ) );
+			close(4);
 
 			std::cout << _selfIP << std::endl;
 
