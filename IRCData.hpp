@@ -397,11 +397,11 @@ class IRCData
 			}
 			chanIt->setCli( *_clientIt );
 
-			_answer = ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + "10.12.4.3" + " " + _cmd + " " + _channelTmp + "\r\n";
 			for ( constClientIterator chanCliIt = chanIt->getCli()->begin();
 					chanCliIt != chanIt->getCli()->end(); ++chanCliIt )
 			{
 				_destSD = ( *chanCliIt )->getSocket();
+				_answer = ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " " + _cmd + " " + _channelTmp + "\r\n";
 				try
 				{ sender(); }
 				catch ( IRCErr const &err )
