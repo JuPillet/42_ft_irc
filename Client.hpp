@@ -66,6 +66,8 @@ class Client
 												_pass = pass;
 										}
 		std::string const				getPass( void ) const { return _pass; }
+		void							setClip( std::string new_clip ) { _clIp = new_clip; }
+		std::string const				getClip( void ) const { return _clIp; }
 		void							setNick( std::string const &nick ) { _nick = nick; }
 		std::string const				getNick( void ) const { return _nick; }
 		void							setUser( std::string const &user ) { _user = user; }
