@@ -694,7 +694,7 @@ class IRCData
 			host_entry = gethostbyname( selfhost );
 			_selfIP = inet_ntoa( *( reinterpret_cast<struct in_addr*>( host_entry->h_addr_list[0] ) ) );
 
-			std::cout << host_entry << std::endl;
+			std::cout << _selfIP << std::endl;
 
 			initFct();
 
@@ -754,6 +754,7 @@ class IRCData
 			FD_SET( _new_socket, &_crntfds );
 			_clients.push_back( new Client( _new_socket ) );
 			_sd = _new_socket;
+			( *( --_clients.end() ) )->setClIp( inet_ntoa( _address.sin_addr ) );
 			std::cout << "New connection , socket fd is " << _new_socket << ", ip is : " << inet_ntoa( _address.sin_addr ) << ", port : " << ntohs( _address.sin_port ) << std::endl;
 		}
 
