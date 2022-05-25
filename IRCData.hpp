@@ -588,6 +588,36 @@ class IRCData
 				PRIVMSG();
 		}
 
+		void				PART( void )
+		{
+			strIt strIt;
+			str::string chanPart;
+			clientIterator cliIt;
+			channelIterator chanIt;
+
+			for ( str)
+
+
+			clearPostArgs();
+			for (chanIt = _channels.begin(); chanIt != _channels.end() && chanIt->getName() != *_request; chanIt++);
+			if (chanIt == _channels.end())
+			{
+				_destSD = ( *_clientIt )->getSocket();
+				_answer = "Avoir code channel innextiant"; //A VOIR CODE ERREUR
+				sender();
+				throw(IRCErr("Channel doesnt exist."));
+			}
+			try
+			{ chanIt->eraseCli(*_clientIt); }
+			catch ( IRCErr const &err)
+			{
+				_destSD = ( *_clientIt )->getSocket();
+				_answer = "client isnt in the channel"; //A VOIR CODE ERREUR
+				sender();
+				throw(err);
+			}
+		}
+
 		void				setAddress( void )
 		{
 			_address.sin_family = AF_INET;
@@ -639,6 +669,7 @@ class IRCData
 			_listFctn.push_back( pairKV( "PRIVMSG", &IRCData::MSG ) );
 			_listFctn.push_back( pairKV( "KILL", &IRCData::KILL ) );
 			_listFctn.push_back( pairKV( "KLINE", &IRCData::KLINE ) );
+			_listFctn.push_back( pairKV( "PART", &IRCData::PART ) );
 //			_listFctn.push_back( pairKV( "MODE", &IRCData::MODE ) );	
 		}
 

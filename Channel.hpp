@@ -86,14 +86,21 @@ class Channel
 		void							setOps( Client *tmp ) { _chanOps.push_back( tmp->getUser() ); }
 		std::list<std::string> const	*getOps( void ) const { return &_chanOps; }
 
-		bool							isCli( Client *tmp ) {
+		bool					isCli( Client *tmp ) {
 			for ( clientIterator tmpIt = _cliCrnt.begin(); tmpIt != _cliCrnt.end(); ++tmpIt ) {
 				if ( *tmpIt == tmp )
 					return (1);
 			}
 			return (0);
 		}
-
+		void							eraseCli( Client *tmp )
+		{ 
+			clientIterator cliIt;
+			for (cliIt = _cliCrnt.begin(); cliIt != _cliCrnt.end() && *cliIt != tmp; cliIt++);
+			if (cliIt == _cliCrnt.end())
+				throw(IRCErr("Client isnt in the channel: " + _name));
+			_cliCrnt.erase(cliIt);
+		}
 		void							setCli( Client *tmp ) { _cliCrnt.push_back( tmp ); }
 		std::list<Client *> const		*getCli( void ) const { return &_cliCrnt; }
 
