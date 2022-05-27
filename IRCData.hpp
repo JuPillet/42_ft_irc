@@ -37,7 +37,7 @@ class IRCData
 	std::string								_cmd;
 	std::string								_answer;
 	char									_buff[1024];
-	std::string 							_dest;
+	std::string 							_target;
 	int										_destSD;
 
 /////	Client Info /////
@@ -52,6 +52,10 @@ class IRCData
 
 /////	BanInfo /////
 	std::list< _pairBan >					_servBan;
+
+/////	ModeInfo /////
+	char									_flop;
+	std::string								_flag;
 
 							IRCData( IRCData &src );
 							IRCData	&operator=( IRCData &src );
@@ -509,21 +513,21 @@ class IRCData
 			for ( msgIt = _request->begin(); msgIt != _request->end() && *msgIt != '\n' && *msgIt != '\r'; ++msgIt );
 			std::string		privMsg( _request->substr( 0, msgIt - _request->begin() ) );
 			clearPostArgs();
-			for ( chanIt = _channels.begin(); chanIt != _channels.end() && _dest != chanIt->getName(); ++chanIt );
+			for ( chanIt = _channels.begin(); chanIt != _channels.end() && _target != chanIt->getName(); ++chanIt );
 			if ( chanIt == _channels.end() )
 			{
 				_destSD = (*_clientIt)->getSocket();
 				_answer = "A voir formattage message"; // A voir chanel innexistant
 				sender();
-				throw ( IRCErr( "PRIVMSG - Channel " + _dest + " doesn't exist" ) );
+				throw ( IRCErr( "PRIVMSG - Channel " + _target + " doesn't exist" ) );
 			}
 
-			if ( chanIt->isBan( *_clientIt ) )
+			if ( chanIt->isBan( ( *_clientIt )->getUser() ) )
 			{
 				_destSD = ( *_clientIt )->getSocket();
 				_answer = "A voir formattage message"; // A voir client banni du channel
 				sender();
-				throw ( IRCErr( "PRIVMSG - You have been banned of " + _dest ) );
+				throw ( IRCErr( "PRIVMSG - You have been banned of " + _target ) );
 			}
 
 			if ( chanIt->getExt() && !chanIt->isCli( *_clientIt ) )
@@ -531,7 +535,7 @@ class IRCData
 				_destSD = ( *_clientIt )->getSocket();
 				_answer = "A voir formattage message"; // A voir le channel est fermé aux message exterieur
 				sender();
-				throw ( IRCErr( "PRIVMSG - Channel " + _dest + " external restriction" ) );
+				throw ( IRCErr( "PRIVMSG - Channel " + _target + " external restriction" ) );
 			}
 
 			if ( chanIt->getMod() && !chanIt->isOps( *_clientIt ) && !chanIt->isVo( *_clientIt ) )
@@ -539,12 +543,12 @@ class IRCData
 				_destSD = ( *_clientIt )->getSocket();
 				_answer = "A voir formattage message"; // A voir le channel est restrin au moderateur
 				sender();
-				throw ( IRCErr( "PRIVMSG - Channel " + _dest + " moderation restriction" ) );
+				throw ( IRCErr( "PRIVMSG - Channel " + _target + " moderation restriction" ) );
 			}		
 
 			constClientIterator	clientIt;
 
-			_answer = ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " " + _cmd + " " + _dest + " " + privMsg + "\r\n"; // A voir formatage pour envoyer un message
+			_answer = ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " " + _cmd + " " + _target + " " + privMsg + "\r\n"; // A voir formatage pour envoyer un message
 			for ( clientIt = ( chanIt->getCli() )->cbegin() ; clientIt != ( chanIt->getCli() )->cend(); ++clientIt )
 			{
 				if ( ( *clientIt )->getUser() != ( *_clientIt )->getUser() )
@@ -565,11 +569,11 @@ class IRCData
 			for ( msgIt = _request->begin(); msgIt != _request->end() && *msgIt != '\n' && *msgIt != '\r'; ++msgIt );
 			std::string		privMsg( _request->substr( 0, msgIt - _request->begin() ) );
 			clearPostArgs();
-			for ( clientIt = _clients.begin(); clientIt != _clients.end() && _dest != (*clientIt)->getNick(); ++clientIt );
+			for ( clientIt = _clients.begin(); clientIt != _clients.end() && _target != (*clientIt)->getNick(); ++clientIt );
 			if ( clientIt != _clients.end() )
 			{
 				_destSD = (*clientIt)->getSocket();
-				_answer = ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " " + _cmd + " " + _dest + " " + privMsg + "\r\n"; // A voir formatage pour envoyer un message
+				_answer = ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " " + _cmd + " " + _target + " " + privMsg + "\r\n"; // A voir formatage pour envoyer un message
 				sender();
 			}
 		}
@@ -579,12 +583,12 @@ class IRCData
 			strIt strIt;
 			//ICI CREER UN CHECK AUTHENTIFICATION
 			for ( strIt = _request->begin(); strIt != _request->end() && *strIt != ' '; strIt++ );
-			_dest = _request->substr( 0, strIt - _request->begin() );
+			_target = _request->substr( 0, strIt - _request->begin() );
 			_request->erase( 0, strIt - _request->begin() );
 			spaceTrimer();
 			if ( ( *_request )[0] != ':' )
 				*_request = ":" + *_request;
-			if ( _dest[0] == '#' )
+			if ( _target[0] == '#' )
 				OPENMSG();
 			else
 				PRIVMSG();
@@ -730,7 +734,7 @@ class IRCData
 			_listFctn.push_back( pairKV( "KLINE", &IRCData::KLINE ) );
 			_listFctn.push_back( pairKV( "PART", &IRCData::PART ) );
 			_listFctn.push_back( pairKV( "QUIT", &IRCData::QUIT ) );
-//			_listFctn.push_back( pairKV( "MODE", &IRCData::MODE ) );	
+			_listFctn.push_back( pairKV( "MODE", &IRCData::MODE ) );	
 		}
 
 		void				init( std::string port, std::string password, char **ep )
@@ -884,4 +888,4 @@ class IRCData
 				{ std::cerr << err.getError() << std::endl; }
 			}
 		}
-};
+

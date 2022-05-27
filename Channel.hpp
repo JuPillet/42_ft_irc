@@ -114,14 +114,14 @@ class Channel
 		void							setVo( Client *tmp ) { _cliVo.push_back( tmp->getUser() ); }
 		std::list<std::string>			*getVo( void ) { return &_cliVo; }
 
-		bool							isBan( Client const *tmp ) {
+bool							isBan( std::string tmp ) {
 			for ( itBan tmpIt = _chanBan.begin(); tmpIt != _chanBan.end(); ++tmpIt )
 			{
-				if ( tmpIt->first == tmp->getUser() )
+				if ( tmpIt->first == tmp )
 				{
-					if (tmpIt->second && tmpIt->second <= std::time(nullptr))
+					if ( tmpIt->second && tmpIt->second <= std::time( nullptr ) )
 					{
-						_chanBan.erase(tmpIt);
+						_chanBan.erase( tmpIt );
 						break;
 					}
 					else
@@ -131,25 +131,38 @@ class Channel
 			return (0);
 		}
 
-//		bool					isBan (Client *cli)
-//		{
-//			itBan banIt;
-//			for ( banIt = _cliBan.begin(); banIt != _cliBan.end() && banIt->first != cli->getUser(); ++banIt );
-//
-//			if ( banIt == _cliBan.end() )
-//				return 0;
-//
-//			if ( !banIt->second || banIt->second > std::time(nullptr) )
-//				return 1;
-//
-//			_cliBan.erase( banIt );
-//			return 0;
-//		}
-
-		void					setBan( Client *tmp , unsigned int nb )
+		void					setBan( std::string tmp , unsigned int nb )
 		{
-			if (!isBan(tmp))
-				_chanBan.push_back( _pairBan(tmp->getUser(), std::time(nullptr) + nb ) );
+			if ( !isBan( tmp ) )
+			{
+				if ( nb == 0 )
+					_chanBan.push_back( _pairBan( tmp, 0 ) );
+				else
+					_chanBan.push_back( _pairBan( tmp, std::time( nullptr ) + nb ) );
+			}
+			else
+			{
+				itBan tmpIt;
+
+				for ( tmpIt = _chanBan.begin(); tmpIt->first != tmp; ++tmpIt );
+				if ( nb == 0 )
+					tmpIt->second = nb;
+				else
+					tmpIt->second = std::time( nullptr ) + nb;
+			}
 		}
+
+		void					unBan(std::string tmp)
+		{
+			itBan tmpIt;
+			if (!isBan(tmp))
+				throw (IRCErr("User isnt banned."));
+			else
+			{
+				for (tmpIt = _chanBan.begin(); tmpIt->first != tmp; tmpIt++);
+				_chanBan.erase(tmpIt);
+			}
+		}
+
 		std::list<pairBan> const		*getBan( void ) const { return &_chanBan; }
 };

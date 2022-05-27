@@ -1,4 +1,4 @@
-#include "IRCData.hpp"
+#include "IRCMode.hpp"
 
 int main( int ac, char **av, char **ep )
 {
