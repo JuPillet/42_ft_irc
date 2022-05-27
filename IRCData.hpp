@@ -505,7 +505,6 @@ class IRCData
 		void					OPENMSG( void )
 		{
 			channelIterator	chanIt;
-			clientIterator	clientIt;
 			strIt			msgIt;
 			for ( msgIt = _request->begin(); msgIt != _request->end() && *msgIt != '\n' && *msgIt != '\r'; ++msgIt );
 			std::string		privMsg( _request->substr( 0, msgIt - _request->begin() ) );
@@ -543,12 +542,14 @@ class IRCData
 				throw ( IRCErr( "PRIVMSG - Channel " + _dest + " moderation restriction" ) );
 			}		
 
-			for ( clientIt = ( const_cast< std::list<Client*>* >( chanIt->getCli() ) )->begin() ; clientIt != _clients.end(); ++clientIt )
+			constClientIterator	clientIt;
+
+			_answer = ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " " + _cmd + " " + _dest + " " + privMsg + "\r\n"; // A voir formatage pour envoyer un message
+			for ( clientIt = ( chanIt->getCli() )->cbegin() ; clientIt != ( chanIt->getCli() )->cend(); ++clientIt )
 			{
 				if ( ( *clientIt )->getUser() != ( *_clientIt )->getUser() )
 				{
 					_destSD = ( *clientIt )->getSocket();
-					_answer = ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " " + _cmd + " " + privMsg + "\r\n"; // A voir formatage pour envoyer un message
 					try
 					{ sender(); } //essaye d envoyer le message a l utilisateur
 					catch( IRCErr const &err )
@@ -564,11 +565,12 @@ class IRCData
 			for ( msgIt = _request->begin(); msgIt != _request->end() && *msgIt != '\n' && *msgIt != '\r'; ++msgIt );
 			std::string		privMsg( _request->substr( 0, msgIt - _request->begin() ) );
 			clearPostArgs();
+			stdc
 			for ( clientIt = _clients.begin(); clientIt != _clients.end() && _dest != (*clientIt)->getNick(); ++clientIt );
 			if ( clientIt != _clients.end() )
 			{
 				_destSD = (*clientIt)->getSocket();
-				_answer = ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " " + _cmd + " " + privMsg + "\r\n"; // A voir formatage pour envoyer un message
+				_answer = ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " " + _cmd + " " + _dest + " " + privMsg + "\r\n"; // A voir formatage pour envoyer un message
 				sender();
 			}
 		}
@@ -877,5 +879,4 @@ class IRCData
 				{ std::cerr << err.getError() << std::endl; }
 			}
 		}
-
 };
