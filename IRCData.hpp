@@ -565,7 +565,6 @@ class IRCData
 			for ( msgIt = _request->begin(); msgIt != _request->end() && *msgIt != '\n' && *msgIt != '\r'; ++msgIt );
 			std::string		privMsg( _request->substr( 0, msgIt - _request->begin() ) );
 			clearPostArgs();
-			stdc
 			for ( clientIt = _clients.begin(); clientIt != _clients.end() && _dest != (*clientIt)->getNick(); ++clientIt );
 			if ( clientIt != _clients.end() )
 			{
@@ -645,14 +644,20 @@ class IRCData
 
 		void				QUIT( void )
 		{
-			std::string		reQuit;
+			std::string		quitMsg( ":left the server" );
+			if ( ( *_request )[0] == ':' )
+			{
+				strIt quitMsgIt;
+				for ( quitMsgIt = _request->begin(); quitMsgIt != _request->end()
+					&& *quitMsgIt != '\n' && *quitMsgIt != '\r'; ++quitMsgIt );
+				quitMsg = std::string( *_request, 0, quitMsgIt - _request->begin() );
+			}
+
 			clearPostArgs();
-			_request = &reQuit;
 			for ( channelIterator chanIt = _channels.begin(); chanIt != _channels.end(); ++chanIt )
 			{
 				if ( chanIt->isCli( *_clientIt ) )
 				{
-					clearPostArgs();
 					*_request = chanIt->getName() + "\r\n";
 					try
 					{ PART(); }
@@ -663,7 +668,7 @@ class IRCData
 			for ( clientIterator clientIt = _clients.begin(); clientIt != _clients.end(); ++clientIt )
 			{
 				_destSD = ( *clientIt )->getSocket();
-				_answer = ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " QUIT :left the server\r\n";
+				_answer = ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " QUIT " + quitMsg + "\r\n";
 				try
 				{ sender(); }
 				catch ( IRCErr const &err )
