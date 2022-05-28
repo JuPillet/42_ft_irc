@@ -2,6 +2,16 @@
 
 #include "IRCData.hpp"
 
+		bool	isFlagChan( void )
+		{
+			
+		}
+
+		bool	isFlagUser( void )
+		{
+
+		}
+
 		void				MODE_B( channelIterator &channel )
 		{
 			strIt	   strIt;
@@ -17,9 +27,22 @@
 				channel->unBan(target);
 		}
 
-		bool	isFlagChan( void )
+		void                MODE_L( channelIterator &channel )
+        {
+            strIt   strIt;
+            if (_flop == '-')
+            {
+                channel->unsetPass();
+                return ;
+            }
+            for ( strIt = _request->begin(); strIt != _request->end()
+                && *strIt != '\n' && *strIt != '\r' && *strIt != ' '; ++strIt );
+            std::string mdp( _request->begin(), strIt );
+            _request->erase( _request->begin(), strIt );
+            spaceTrimer();
+            channel->setPass(mdp);
+        }
 
-		bool	isFlagUser( void )
 		void	CHANMODE( void )
 		{
 			for ( chanIt = _channels.begin(); chanIt != _channels.end() && _target != chanIt->getName(); ++chanIt )

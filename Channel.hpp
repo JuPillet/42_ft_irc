@@ -64,6 +64,7 @@ class Channel
 										~Channel( void ) {}
 		std::string						getName( void ) const { return _name; }
 		void							setPass ( std::string str ) { _mdp = str; }
+		void                            unsetPass ( void ) { _mdp.clear(); }
 		std::string						getPass( void ) const { return _mdp; }
 		void							setPriv( int sw ) { _priv = sw; }
 		bool							getPriv( void ) const { return _priv;}
@@ -76,64 +77,60 @@ class Channel
 		void							setLimit (unsigned int tmp) { _limit = tmp;}
 		unsigned int					getLimit ( void ) const { return _limit; }
 
-		bool							isOps( Client *tmp ) {
-			for ( itStr tmpIt = _chanOps.begin(); tmpIt != _chanOps.end(); ++tmpIt ) {
-				if ( *tmpIt == tmp->getUser() )
-					return (1);
-			}
-			return (0);
+		itStr							isOps( std::string user ) {
+			itStr opsIt;
+			for ( opsIt = _chanOps.begin(); opsIt != _chanOps.end() && user != *opsIt ; ++opsIt )
+			return ( opsIt );
 		}
 		void							setOps( Client *tmp ) { _chanOps.push_back( tmp->getUser() ); }
 		std::list<std::string> const	*getOps( void ) const { return &_chanOps; }
 
-		bool					isCli( Client *tmp ) {
-			for ( clientIterator tmpIt = _cliCrnt.begin(); tmpIt != _cliCrnt.end(); ++tmpIt ) {
-				if ( *tmpIt == tmp )
-					return (1);
-			}
-			return (0);
-		}
-		void							eraseCli( Client *tmp )
-		{ 
+		void							setCli( Client *tmp ) { _cliCrnt.push_back( tmp ); }
+		std::list<Client *> const		*getCli( void ) const { return &_cliCrnt; }
+		clientIterator					isCli( std::string user ) {
 			clientIterator cliIt;
-			for (cliIt = _cliCrnt.begin(); cliIt != _cliCrnt.end() && *cliIt != tmp; cliIt++);
-			if (cliIt == _cliCrnt.end())
+			for ( cliIt = _cliCrnt.begin(); cliIt != _cliCrnt.end() && user != ( *cliIt )->getUser(); ++cliIt );
+			return ( cliIt );
+		}
+		void							eraseCli( std::string user )
+		{
+			clientIterator cliIt ( isCli( user ) );
+			if ( cliIt == _cliCrnt.end() )
 				throw(IRCErr("Client isnt in the channel: " + _name));
 			_cliCrnt.erase(cliIt);
 		}
-		void							setCli( Client *tmp ) { _cliCrnt.push_back( tmp ); }
-		std::list<Client *> const		*getCli( void ) const { return &_cliCrnt; }
 
-		bool							isVo( Client *tmp ) {
-			for ( itStr tmpIt = _cliVo.begin(); tmpIt != _cliVo.end(); ++tmpIt ){
-				if ( *tmpIt == tmp->getUser() )
-					return (1);
-			}
-			return (0);
-		}
 		void							setVo( Client *tmp ) { _cliVo.push_back( tmp->getUser() ); }
 		std::list<std::string>			*getVo( void ) { return &_cliVo; }
+		itStr							isVo( std::string user ) {
+			itStr voIt;
+			for ( itStr voIt = _cliVo.begin(); voIt != _cliVo.end() && user != *voIt; ++voIt )
+			return voIt;
+		}
 
-bool							isBan( std::string tmp ) {
-			for ( itBan tmpIt = _chanBan.begin(); tmpIt != _chanBan.end(); ++tmpIt )
+		itBan							isBan( std::string user ) {
+			itBan banIt;
+			for ( banIt = _chanBan.begin(); banIt != _chanBan.end(); ++banIt )
 			{
-				if ( tmpIt->first == tmp )
+				if ( banIt->first == user )
 				{
-					if ( tmpIt->second && tmpIt->second <= std::time( nullptr ) )
+					if ( banIt->second && banIt->second <= std::time( nullptr ) )
 					{
-						_chanBan.erase( tmpIt );
-						break;
+						_chanBan.erase( banIt );
+						return _chanBan.end();
 					}
 					else
-						return 1;
+						return banIt;
 				}
 			}
-			return (0);
+			return banIt;
 		}
 
 		void					setBan( std::string tmp , unsigned int nb )
 		{
-			if ( !isBan( tmp ) )
+			itBan tmpIt ( isBan( tmp ) );
+
+			if ( tmpIt == _chanBan.end() )
 			{
 				if ( nb == 0 )
 					_chanBan.push_back( _pairBan( tmp, 0 ) );
@@ -142,9 +139,7 @@ bool							isBan( std::string tmp ) {
 			}
 			else
 			{
-				itBan tmpIt;
 
-				for ( tmpIt = _chanBan.begin(); tmpIt->first != tmp; ++tmpIt );
 				if ( nb == 0 )
 					tmpIt->second = nb;
 				else
@@ -154,14 +149,10 @@ bool							isBan( std::string tmp ) {
 
 		void					unBan(std::string tmp)
 		{
-			itBan tmpIt;
-			if (!isBan(tmp))
+			itBan tmpIt ( isBan( tmp ) );
+			if ( isBan(tmp) == _chanBan.end() )
 				throw (IRCErr("User isnt banned."));
-			else
-			{
-				for (tmpIt = _chanBan.begin(); tmpIt->first != tmp; tmpIt++);
-				_chanBan.erase(tmpIt);
-			}
+			_chanBan.erase(tmpIt);
 		}
 
 		std::list<pairBan> const		*getBan( void ) const { return &_chanBan; }
