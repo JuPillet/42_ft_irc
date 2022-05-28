@@ -2,95 +2,199 @@
 
 #include "IRCData.hpp"
 
-		bool	isFlagChan( void )
+		void				MODE_B( chanelIterator &chanel )
 		{
-			
-		}
-
-		bool	isFlagUser( void )
-		{
-
-		}
-
-		void				MODE_B( channelIterator &channel )
-		{
-			strIt	   strIt;
 			//char _flop egal a plus ou moins pour savoir si je dois ban ou unban
-			for ( strIt = _request->begin(); strIt != _request->end()
-				&& *strIt != '\n' && *strIt != '\r' && *strIt != ' '; ++strIt );
-			std::string target( _request->begin(), strIt );
-			_request->erase( _request->begin(), strIt );
-			spaceTrimer();
+			std::string target = getArg();
+			if ( !target.size() )
+			{
+				_destSD = ( *_clientIt )->getSocket();
+				_answer = "Voir ici code erreur argument manquant\r\n";
+				_request->clear();
+				sender();
+				throw( IRCErr( ( *_clientIt )->getUser + " foget argument for chanel mode " + _flop + "b" ) )
+			}
 			if ( _flop == '+' )
-				channel->setBan(target , 0);
+				chanel->setBan(target , 0);
 			else if (_flop == '-')
-				channel->unBan(target);
+				chanel->unBan(target);
 		}
 
-		void                MODE_K( channelIterator &channel )
-        {
-            strIt   strIt;
-            if (_flop == '-')
-            {
-                channel->unsetPass();
-                return ;
-            }
-            for ( strIt = _request->begin(); strIt != _request->end()
-                && *strIt != '\n' && *strIt != '\r' && *strIt != ' '; ++strIt );
-            std::string mdp( _request->begin(), strIt );
-            _request->erase( _request->begin(), strIt );
-            spaceTrimer();
-            channel->setPass(mdp);
-        }
+		void				MODE_K( chanelIterator &chanel )
+		{
+			if ( _flop == '-' )
+				chanel->unsetPass();
+			else
+			{
+				std::string mdp = getArg();
+				if ( !mdp.size() )
+				{
+					_destSD = ( *_clientIt )->getSocket();
+					_answer = "Voir ici code erreur argument manquant\r\n";
+					_request->clear();
+					sender();
+					throw( IRCErr( ( *_clientIt )->getUser + " foget argument for chanel mode " + _flop + "k" ) )
+				}
+				chanel->setPass(mdp);
+			}
+		}
+
+		void				MODE_M( chanelIterator &chanel )
+		{
+			if (_flop == '-')
+				chanel->setMod(0);
+			else
+				chanel->setMod(1);
+		}
+
+		void				MODE_N( chanelIterator &chanel )
+		{
+			if (_flop == '-')
+				chanel->setExt(0);
+			else
+				chanel->setExt(1);
+		}
+
+		void				MODE_O( chanelIterator &chanel )
+		{
+			strIt	  strIt;
+			//char _flop egal a plus ou moins pour savoir si je dois ban ou unban
+			std::string user = getArg();
+			if ( !user.size() )
+			{
+				_destSD = ( *_clientIt )->getSocket();
+				_answer = "Voir ici code erreur argument manquant\r\n";
+				_request->clear();
+				sender();
+				throw( IRCErr( ( *_clientIt )->getUser + " foget argument for chanel mode " + _flop + "o" ) )
+			}
+			if ( _flop == '+' && chanel->isOps(target) == ( *chanel->getOps() ).end() )
+				chanel->setOps( target );
+			else if (_flop == '-' && chanel->isOps(target) != ( *chanel->getOps() ).end() )
+				chanel->unsetOps( target );
+		}
+
+		void				MODE_P( chanelIterator &chanel )
+		{
+			if ( _flop == '-' )
+				chanel->setPriv(0);
+			else
+				chanel->setPriv(1);
+		}
+
+		void				MODE_S( chanelIterator &chanel )
+		{
+			if (_flop == '-')
+				chanel->setSecret(0);
+			else
+				chanel->setSecret(1);
+		}
+	
+		void				MODE_V( chanelIterator &chanel )
+		{
+			//char _flop egal a plus ou moins pour savoir si je dois ban ou unban
+			std::string target = getArg();
+			if ( !target.size() )
+			{
+				_destSD = ( *_clientIt )->getSocket();
+				_answer = "Voir ici code erreur argument manquant\r\n";
+				_request->clear();
+				sender();
+				throw( IRCErr( ( *_clientIt )->getUser + " foget argument for chanel mode " + _flop + "v" ) )
+			}
+			if ( _flop == '+' && chanel->isVo(target) != ( *chanel->getVo() ).end())
+				chanel->setVo(target);
+			else if (_flop == '-')
+				chanel->unsetVo(target);
+		}
+
+		void	wrongFlagChan( void )
+		{
+			std::string flagList( "bkmnopsv" );
+			strIt flagIt;
+			if ( _target[0] != '#' )
+				return 0;
+			for ( flagIt = _flag.begin(); flagIt != _flag.end(); ++flagIt )
+			{
+				strIt flagListIt;
+				for ( flagListIt = flagList.begin(); flagListIt != flagList.end() && *flagIt != *flagListIt; ++flagIt );
+				if ( flagListIt == flagList.end() )
+				{
+					_destSD = ( *_clientIt )->getSocket();
+					_answer = "Voir code erreur chanel incconu. :flag " + flag + " isn t flag of chanel Mode\r\n"; //A VOIR FORMATAGE CODE ERREUR FLAGMOD INNEXISTANT
+					_request->clear();
+					sender();
+					throw( IRCErr( "unvalid flag" ) );
+				}
+			}
+		}
+
+		void	wrongFlagUser( void )
+		{
+			std::string flagList( "acghiosw" );
+			strIt flagIt;
+			if ( _target[0] == '#' )
+				return 0;
+			for ( flagIt = _flag.begin(); flagIt != _flag.end(); ++flagIt )
+			{
+				strIt flagListIt;
+				for ( flagListIt = flagList.begin(); flagListIt != flagList.end() && *flagIt != *flagListIt; ++flagIt );
+				if ( flagListIt == flagList.end() )
+				{
+					_destSD = ( *_clientIt )->getSocket();
+					_answer = "Voir code erreur chanel incconu. :flag " + flag + " isn t flag of user Mode\r\n"; //A VOIR FORMATAGE CODE ERREUR FLAGMOD INNEXISTANT
+					_request->clear();
+					sender();
+					throw( IRCErr( "unvalid flag" ) );
+				}
+			}
+		}
 
 		void	CHANMODE( void )
 		{
-			for ( chanIt = _channels.begin(); chanIt != _channels.end() && _target != chanIt->getName(); ++chanIt )
-			if ( chanIt == _channels.end() )
+			wrongFlagChan();
+			chanelIterator chanIt = isChanel( _target );
+			if ( chanIt  == _chanels.end() )
 			{
 				_destSD = ( *_clientIt )->getSocket();
-				_answer = "Voir code erreur channel incconu\r\n"; //A VOIR FORMATAGE CODE ERREUR FLAGMOD INNEXISTANT
+				_answer = "Voir code erreur chanel incconu\r\n"; //A VOIR FORMATAGE CODE ERREUR FLAGMOD INNEXISTANT
 				_request->clear();
 				sender();
 				throw( IRCErr( "unvalid flag" ) )
 			}
 			for( strIt flagIt = _flag.begin(); flagIt != _flag.end(); fligIt )
+
 		}
 
 		void	MODE( void )
 		{
 			strIt			targIt;
-			channelIterator	chanIt;
+			chanelIterator	chanIt;
 			_flop = 0;
 			_flag.clear();
-			for ( targIt = _request->begin(); targIt != _request->end()
-				&& *targIt != '\n' && *targIt != '\r' && *targIt != ' '; ++targIt );
-			_target = std::string( *_request, 0, targIt - _request->begin() );
-			_request->erase( _request->begin(), targIt );
-			spaceTrimer();
+			_target = getArg();
 			for ( targIt = _request->begin(); targIt != _request->end()
 				&& ( *targIt = '+' || *targIt != '-' ); ++targIt )
 				_flop = *targIt;
 			_request->erase( _request->begin(), targIt );
 			spaceTrimer();
-			for ( targIt = _request->begin(); targIt != _request->end()
-				&& *targIt != '\n' && *targIt != '\r' && *targIt != ' '; ++targIt );
-			_flag = std::string( _request->begin(), targIt );
+			_flag = getArg();
 			if ( !_target.size() || ( _target.size() == 1 && _target[0] == '#' ) )
 			{
 				_destSD = ( *_clientIt )->getSocket();
 				_answer = "Voir code erreur target erroné\r\n"; //A VOIR FORMATAGE CODE ERREUR FLAGMOD INNEXISTANT
 				_request->clear();
 				sender();
-				throw( IRCErr( "unvalid flag" ) )
+				throw( IRCErr( "unvalid flag" ) );
 			}
-			if ( !_flop || _flage )
+			char flagErr;
+			if ( !_flop || ( flagErr = wrongFlagChan() ) || ( flagErr = wrongFlagUser() ) )
 			{
 				_destSD = ( *_clientIt )->getSocket();
-				_answer = "Voir code erreur flag erroné\r\n"; //A VOIR FORMATAGE CODE ERREUR FLAGMOD INNEXISTANT
+				_answer = "Voir code erreur operateur de flag\r\n"; //A VOIR FORMATAGE CODE ERREUR FLAGMOD INNEXISTANT
 				_request->clear();
 				sender();
-				throw( IRCErr( "unvalid flag" ) )
+				throw( IRCErr( "unvalid flag" ) );
 			}
 			if ( _target[0] == '#' )
 				CHANMODE();

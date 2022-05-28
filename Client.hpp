@@ -5,20 +5,28 @@
 #include "IRCErr.hpp"
 
 class	Client;
-class	Channel;
+class	Chanel;
 class	IRCData;
 
-typedef void(IRCData::*ptrfct)( void );
+
 typedef std::string::iterator					strIt;
-typedef std::pair<std::string, ptrfct>			pairKV;
-typedef std::list<pairKV>						listPair;
+
 typedef	std::list<Client*>::iterator			clientIterator;
 typedef	std::list<Client*>::const_iterator		constClientIterator;
-typedef std::list<Channel>::iterator			channelIterator;
-typedef std::list<std::string>::iterator		itStr;
+typedef std::list<Chanel>::iterator				chanelIterator;
+typedef std::list<std::string>::iterator		strIt;
 typedef std::list<std::string>::const_iterator	constItStr;
 typedef std::pair<std::string, time_t>			pairBan;
 typedef std::list<pairBan>::iterator			itBan;
+typedef void(IRCData::*ptrFctU)( clientIterator& );
+typedef void(IRCData::*ptrFctC)( chanelIterator& );
+typedef void(IRCData::*ptrfctI)( void );
+typedef std::pair<std::string, ptrFctU>			pairKVU;
+typedef std::pair<std::string, ptrFctC>			pairKVC;
+typedef std::pair<std::string, ptrfctI>			pairKVI;
+typedef std::list<pairKVU>						listPairU;
+typedef std::list<pairKVC>						listPairC;
+typedef std::list<pairKVI>						listPairI;
 
 class Client
 {
@@ -72,8 +80,8 @@ class Client
 		std::string const				getNick( void ) const { return _nick; }
 		void							setUser( std::string const &user ) { _user = user; }
 		std::string const				getUser( void ) const { return _user; }
-//		void							setChannel( std::string channel ) { _channels.push_back( channel ); }
-//		std::list<std::string> const	getChannels( void ) const { return _channels; }
+//		void							setChanel( std::string chanel ) { _chanels.push_back( chanel ); }
+//		std::list<std::string> const	getChanels( void ) const { return _chanels; }
 		void							setName( std::string const &name) { _name = name; }
 		std::string const				&getName( void ) const { return _name; }
 		std::string						const *getRequest( void ) const { return &_request; }
