@@ -120,23 +120,19 @@ class IRCData
 			_answer.clear();
 		}
 
-		bool	isCli( std::string const &userTmp ) {
-			for ( clientIterator cliIt = _clients.begin(); cliIt != _clients.end(); ++cliIt ) {
-				if ( userTmp == ( *cliIt )->getUser() )
-					return (1);
-			}
-			return (0);
+		clientIterator	isCli( std::string const &userTmp ) {
+			clientIterator cliIt;
+			for ( cliIt = _clients.begin(); cliIt != _clients.end() && userTmp != ( *cliIt )->getUser(); ++cliIt );
+			return cliIt;
 		}
 
-		bool	isOps( Client *userTmp ) {
-			for ( itStr opsIt = _servOps.begin(); opsIt != _servOps.end(); ++opsIt ) {
-				if ( *opsIt == userTmp->getUser() )
-					return (1);
-			}
-			return (0);
+		itStr	isOps( Client *userTmp ) {
+			itStr opsIt;
+			for ( opsIt = _servOps.begin(); opsIt != _servOps.end() && *opsIt == userTmp->getUser(); ++opsIt );
+			return opsIt;
 		}
 
-		bool	isBan ( std::string const cliUser  ) {
+		itBan	isBan ( std::string const cliUser  ) {
 			for ( itBan tmpIt = _servBan.begin(); tmpIt != _servBan.end(); ++tmpIt )
 			{
 				if ( tmpIt->first == cliUser )

@@ -110,23 +110,16 @@ class Channel
 
 		itBan							isBan( std::string user ) {
 			itBan banIt;
-			for ( banIt = _chanBan.begin(); banIt != _chanBan.end(); ++banIt )
+			for ( banIt = _chanBan.begin(); banIt != _chanBan.end() && banIt->first != user; ++banIt );
+			if ( banIt != _chanBan.end() && banIt->second && banIt->second <= std::time( nullptr ) )
 			{
-				if ( banIt->first == user )
-				{
-					if ( banIt->second && banIt->second <= std::time( nullptr ) )
-					{
-						_chanBan.erase( banIt );
-						return _chanBan.end();
-					}
-					else
-						return banIt;
-				}
+					_chanBan.erase( banIt );
+					banIt = _chanBan.end();
 			}
 			return banIt;
 		}
 
-		void					setBan( std::string tmp , unsigned int nb )
+		void						setBan( std::string tmp , unsigned int nb )
 		{
 			itBan tmpIt ( isBan( tmp ) );
 
@@ -147,7 +140,7 @@ class Channel
 			}
 		}
 
-		void					unBan(std::string tmp)
+		void						unBan(std::string tmp)
 		{
 			itBan tmpIt ( isBan( tmp ) );
 			if ( isBan(tmp) == _chanBan.end() )
@@ -155,5 +148,5 @@ class Channel
 			_chanBan.erase(tmpIt);
 		}
 
-		std::list<pairBan> const		*getBan( void ) const { return &_chanBan; }
+		std::list<pairBan> const	*getBan( void ) const { return &_chanBan; }
 };

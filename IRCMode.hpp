@@ -27,7 +27,7 @@
 				channel->unBan(target);
 		}
 
-		void                MODE_L( channelIterator &channel )
+		void                MODE_K( channelIterator &channel )
         {
             strIt   strIt;
             if (_flop == '-')
