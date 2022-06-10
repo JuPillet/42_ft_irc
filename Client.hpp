@@ -5,7 +5,7 @@
 #include "IRCErr.hpp"
 
 class	Client;
-class	Chanel;
+class	Channel;
 class	IRCData;
 
 
@@ -13,17 +13,17 @@ typedef std::string::iterator					strIt;
 
 typedef	std::list<Client*>::iterator			clientIterator;
 typedef	std::list<Client*>::const_iterator		constClientIterator;
-typedef std::list<Chanel>::iterator				chanelIterator;
-typedef std::list<std::string>::iterator		strIt;
-typedef std::list<std::string>::const_iterator	constItStr;
+typedef std::list<Channel>::iterator			channelIterator;
+typedef std::list<std::string>::iterator		strListIt;
+typedef std::list<std::string>::const_iterator	conStrListIt;
 typedef std::pair<std::string, time_t>			pairBan;
 typedef std::list<pairBan>::iterator			itBan;
 typedef void(IRCData::*ptrFctU)( clientIterator& );
-typedef void(IRCData::*ptrFctC)( chanelIterator& );
-typedef void(IRCData::*ptrfctI)( void );
-typedef std::pair<std::string, ptrFctU>			pairKVU;
-typedef std::pair<std::string, ptrFctC>			pairKVC;
-typedef std::pair<std::string, ptrfctI>			pairKVI;
+typedef void(IRCData::*ptrFctC)( channelIterator& );
+typedef void(IRCData::*ptrFctI)( void );
+typedef std::pair<char, ptrFctU>				pairKVU;
+typedef std::pair<char, ptrFctC>				pairKVC;
+typedef std::pair<std::string, ptrFctI>			pairKVI;
 typedef std::list<pairKVU>						listPairU;
 typedef std::list<pairKVC>						listPairC;
 typedef std::list<pairKVI>						listPairI;
@@ -31,7 +31,7 @@ typedef std::list<pairKVI>						listPairI;
 class Client
 {
 	int									_client_socket;
-	bool								_authentified;
+	bool								_authentified, _invisible;
 	std::string							_clIp;
 	std::string							_pass;
 	std::string							_nick;
@@ -80,9 +80,9 @@ class Client
 		std::string const				getNick( void ) const { return _nick; }
 		void							setUser( std::string const &user ) { _user = user; }
 		std::string const				getUser( void ) const { return _user; }
-//		void							setChanel( std::string chanel ) { _chanels.push_back( chanel ); }
-//		std::list<std::string> const	getChanels( void ) const { return _chanels; }
 		void							setName( std::string const &name) { _name = name; }
 		std::string const				&getName( void ) const { return _name; }
+		void							setInvisible(bool i) { _invisible = i; }
+		bool							getInvisible( void ) const { return _invisible; }
 		std::string						const *getRequest( void ) const { return &_request; }
 };

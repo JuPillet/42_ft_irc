@@ -2,7 +2,33 @@
 
 #include "IRCData.hpp"
 
-		void				MODE_B( chanelIterator &chanel )
+		void				U_MODE_O( clientIterator &target )
+		{
+			if ( _flop == '+' && channel->isOps(target) != ( *channel->getOps() ).end())
+				_servOps.push_back(target->getName());
+			else if (_flop == '-')
+			{
+				clientIterator tmpIt;
+				for (tmpIt = _servOps.begin(); tmpIt != _servOps.end(); tmpIt++)
+				{
+					if (*tmpIt == *target)
+					{
+						_servOps.erase(tmpIt);
+						return ;
+					}
+				}
+			}
+		}
+
+		void				U_MODE_I( clientIterator &target )
+		{
+			if ( _flop == '+')
+				target->setInvisible (1);
+			else if (_flop == '-')
+				target->setInvisible (0);
+		}
+
+		void				C_MODE_B( channelIterator &channel )
 		{
 			//char _flop egal a plus ou moins pour savoir si je dois ban ou unban
 			std::string target = getArg();
@@ -12,18 +38,18 @@
 				_answer = "Voir ici code erreur argument manquant\r\n";
 				_request->clear();
 				sender();
-				throw( IRCErr( ( *_clientIt )->getUser + " foget argument for chanel mode " + _flop + "b" ) )
+				throw( IRCErr( ( *_clientIt )->getUser + " foget argument for channel mode " + _flop + "b" ) )
 			}
 			if ( _flop == '+' )
-				chanel->setBan(target , 0);
+				channel->setBan(target , 0);
 			else if (_flop == '-')
-				chanel->unBan(target);
+				channel->unBan(target);
 		}
 
-		void				MODE_K( chanelIterator &chanel )
+		void				C_MODE_K( channelIterator &channel )
 		{
 			if ( _flop == '-' )
-				chanel->unsetPass();
+				channel->unsetPass();
 			else
 			{
 				std::string mdp = getArg();
@@ -33,29 +59,29 @@
 					_answer = "Voir ici code erreur argument manquant\r\n";
 					_request->clear();
 					sender();
-					throw( IRCErr( ( *_clientIt )->getUser + " foget argument for chanel mode " + _flop + "k" ) )
+					throw( IRCErr( ( *_clientIt )->getUser + " foget argument for channel mode " + _flop + "k" ) )
 				}
-				chanel->setPass(mdp);
+				channel->setPass(mdp);
 			}
 		}
 
-		void				MODE_M( chanelIterator &chanel )
+		void				C_MODE_M( channelIterator &channel )
 		{
 			if (_flop == '-')
-				chanel->setMod(0);
+				channel->setMod(0);
 			else
-				chanel->setMod(1);
+				channel->setMod(1);
 		}
 
-		void				MODE_N( chanelIterator &chanel )
+		void				C_MODE_N( channelIterator &channel )
 		{
 			if (_flop == '-')
-				chanel->setExt(0);
+				channel->setExt(0);
 			else
-				chanel->setExt(1);
+				channel->setExt(1);
 		}
 
-		void				MODE_O( chanelIterator &chanel )
+		void				C_MODE_O( channelIterator &channel )
 		{
 			strIt	  strIt;
 			//char _flop egal a plus ou moins pour savoir si je dois ban ou unban
@@ -66,31 +92,31 @@
 				_answer = "Voir ici code erreur argument manquant\r\n";
 				_request->clear();
 				sender();
-				throw( IRCErr( ( *_clientIt )->getUser + " foget argument for chanel mode " + _flop + "o" ) )
+				throw( IRCErr( ( *_clientIt )->getUser + " foget argument for channel mode " + _flop + "o" ) )
 			}
-			if ( _flop == '+' && chanel->isOps(target) == ( *chanel->getOps() ).end() )
-				chanel->setOps( target );
-			else if (_flop == '-' && chanel->isOps(target) != ( *chanel->getOps() ).end() )
-				chanel->unsetOps( target );
+			if ( _flop == '+' && channel->isOps(target) == ( *channel->getOps() ).end() )
+				channel->setOps( target );
+			else if (_flop == '-' && channel->isOps(target) != ( *channel->getOps() ).end() )
+				channel->unsetOps( target );
 		}
 
-		void				MODE_P( chanelIterator &chanel )
+		void				MODE_P( channelIterator &channel )
 		{
 			if ( _flop == '-' )
-				chanel->setPriv(0);
+				channel->setPriv(0);
 			else
-				chanel->setPriv(1);
+				channel->setPriv(1);
 		}
 
-		void				MODE_S( chanelIterator &chanel )
+		void				C_MODE_S( channelIterator &channel )
 		{
 			if (_flop == '-')
-				chanel->setSecret(0);
+				channel->setSecret(0);
 			else
-				chanel->setSecret(1);
+				channel->setSecret(1);
 		}
 	
-		void				MODE_V( chanelIterator &chanel )
+		void				C_MODE_V( channelIterator &channel )
 		{
 			//char _flop egal a plus ou moins pour savoir si je dois ban ou unban
 			std::string target = getArg();
@@ -100,15 +126,15 @@
 				_answer = "Voir ici code erreur argument manquant\r\n";
 				_request->clear();
 				sender();
-				throw( IRCErr( ( *_clientIt )->getUser + " foget argument for chanel mode " + _flop + "v" ) )
+				throw( IRCErr( ( *_clientIt )->getUser + " foget argument for channel mode " + _flop + "v" ) )
 			}
-			if ( _flop == '+' && chanel->isVo(target) != ( *chanel->getVo() ).end())
-				chanel->setVo(target);
+			if ( _flop == '+' && channel->isVo(target) != ( *channel->getVo() ).end())
+				channel->setVo(target);
 			else if (_flop == '-')
-				chanel->unsetVo(target);
+				channel->unsetVo(target);
 		}
 
-		void	wrongFlagChan( void )
+		void	wrongChannelFlag( void )
 		{
 			std::string flagList( "bkmnopsv" );
 			strIt flagIt;
@@ -121,7 +147,7 @@
 				if ( flagListIt == flagList.end() )
 				{
 					_destSD = ( *_clientIt )->getSocket();
-					_answer = "Voir code erreur chanel incconu. :flag " + flag + " isn t flag of chanel Mode\r\n"; //A VOIR FORMATAGE CODE ERREUR FLAGMOD INNEXISTANT
+					_answer = "Voir code erreur channel incconu. :flag " + flag + " isn t flag of channel Mode\r\n"; //A VOIR FORMATAGE CODE ERREUR FLAGMOD INNEXISTANT
 					_request->clear();
 					sender();
 					throw( IRCErr( "unvalid flag" ) );
@@ -129,9 +155,9 @@
 			}
 		}
 
-		void	wrongFlagUser( void )
+		void	wrongUserFlag( void )
 		{
-			std::string flagList( "acghiosw" );
+			std::string flagList( "io" );
 			strIt flagIt;
 			if ( _target[0] == '#' )
 				return 0;
@@ -142,7 +168,7 @@
 				if ( flagListIt == flagList.end() )
 				{
 					_destSD = ( *_clientIt )->getSocket();
-					_answer = "Voir code erreur chanel incconu. :flag " + flag + " isn t flag of user Mode\r\n"; //A VOIR FORMATAGE CODE ERREUR FLAGMOD INNEXISTANT
+					_answer = "Voir code erreur channel incconu. :flag " + flag + " isn t flag of user Mode\r\n"; //A VOIR FORMATAGE CODE ERREUR FLAGMOD INNEXISTANT
 					_request->clear();
 					sender();
 					throw( IRCErr( "unvalid flag" ) );
@@ -150,26 +176,49 @@
 			}
 		}
 
+		void	USERMODE( void )
+		{
+
+		}
+
+		void				execChannelMode( void )
+		{
+			std::cout << "CHANNEL MODE start" << std::endl;
+			listPair::iterator	_listPairIt;
+
+			for ( _listPairIt = _listFctn.begin(); _listPairIt != _listFctn.end() && _listPairIt->first != _cmd; ++_listPairIt );
+			if ( _listPairIt != _listFctn.end() )
+			{
+				std::cout << _cmd << std::endl;
+				ptrfct ptrFct = _listPairIt->second;
+				(this->*ptrFct)();
+			}
+			else
+				clearPostArgs();
+			std::cout << "CHANNEL MODE exit" << std::endl;
+		}
+
 		void	CHANMODE( void )
 		{
-			wrongFlagChan();
-			chanelIterator chanIt = isChanel( _target );
-			if ( chanIt  == _chanels.end() )
+			channelIterator chanIt = isChannel( _target );
+			if ( chanIt  == _channels.end() )
 			{
 				_destSD = ( *_clientIt )->getSocket();
-				_answer = "Voir code erreur chanel incconu\r\n"; //A VOIR FORMATAGE CODE ERREUR FLAGMOD INNEXISTANT
+				_answer = "Voir code erreur channel incconu\r\n"; //A VOIR FORMATAGE CODE ERREUR FLAGMOD INNEXISTANT
 				_request->clear();
 				sender();
 				throw( IRCErr( "unvalid flag" ) )
 			}
-			for( strIt flagIt = _flag.begin(); flagIt != _flag.end(); fligIt )
+			for( strIt flagIt = _flag.begin(); flagIt != _flag.end(); ++fligIt )
+			{
 
+			}
 		}
 
 		void	MODE( void )
 		{
 			strIt			targIt;
-			chanelIterator	chanIt;
+			channelIterator	chanIt;
 			_flop = 0;
 			_flag.clear();
 			_target = getArg();

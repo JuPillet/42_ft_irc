@@ -77,14 +77,19 @@ class Channel
 		void							setLimit (unsigned int tmp) { _limit = tmp;}
 		unsigned int					getLimit ( void ) const { return _limit; }
 
-		itStr							isOps( std::string user ) {
-			itStr opsIt;
+		strListIt							isOps( std::string user ) {
+			strListIt opsIt;
 			for ( opsIt = _chanOps.begin(); opsIt != _chanOps.end() && user != *opsIt ; ++opsIt )
 			return ( opsIt );
 		}
-		void							setOps( Client *tmp ) { _chanOps.push_back( tmp->getUser() ); }
+		void                            setOps( std::string ops) { _chanOps.push_back( ops ); }
+		void                            unsetOps( std::string user )
+        {
+            strListIt opsIt = isOps( user );
+            if ( opsIt != _chanOps.end() )
+				_chanOps.erase( opsIt );
+        }
 		std::list<std::string> const	*getOps( void ) const { return &_chanOps; }
-
 		void							setCli( Client *tmp ) { _cliCrnt.push_back( tmp ); }
 		std::list<Client *> const		*getCli( void ) const { return &_cliCrnt; }
 		clientIterator					isCli( std::string user ) {
@@ -100,13 +105,20 @@ class Channel
 			_cliCrnt.erase(cliIt);
 		}
 
-		void							setVo( Client *tmp ) { _cliVo.push_back( tmp->getUser() ); }
+		void							setVo( std::string tmp ) { _cliVo.push_back( tmp ); }
 		std::list<std::string>			*getVo( void ) { return &_cliVo; }
-		itStr							isVo( std::string user ) {
-			itStr voIt;
-			for ( itStr voIt = _cliVo.begin(); voIt != _cliVo.end() && user != *voIt; ++voIt )
+		strListIt							isVo( std::string user ) {
+			strListIt voIt;
+			for ( voIt = _cliVo.begin(); voIt != _cliVo.end() && user != *voIt; ++voIt );
 			return voIt;
 		}
+
+		void                            unsetVo( std::string user )
+        {
+			strListIt voIt = isVo( user );
+            if ( voIt != _cliVo.end() )
+				_cliVo.erase( voIt );
+        }
 
 		itBan							isBan( std::string user ) {
 			itBan banIt;
@@ -121,7 +133,7 @@ class Channel
 
 		void						setBan( std::string tmp , unsigned int nb )
 		{
-			itBan tmpIt ( isBan( tmp ) );
+			itBan tmpIt = isBan( tmp );
 
 			if ( tmpIt == _chanBan.end() )
 			{

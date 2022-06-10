@@ -39,6 +39,5 @@ int main( int ac, char **av, char **ep )
 		usleep( 500000 );
 		std::cout << "END OF IOListener" << std::endl;
 	}
-	reprendre A LIGNE 166 IRCMODE.hpp
 	return 0;
 }
