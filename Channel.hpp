@@ -53,6 +53,7 @@ class Channel
 		unsigned int					_limit; // limite d utilisateurs sur le channel, 0 pour pas de limite.
 		const std::string				_name;
 		std::string						_mdp;
+		std::string						_topic;
 		std::list<Client *>				_cliCrnt;
 		std::list<std::string>			_chanOps;
 		std::list<std::string>			_cliVo;
@@ -74,10 +75,11 @@ class Channel
 		bool							getSecret( void ) const { return _secret; }
 		void							setExt ( int sw ) { _extMsg = sw; }
 		bool							getExt( void ) const { return _extMsg; }
-		void							setLimit (unsigned int tmp) { _limit = tmp;}
+		void							setLimit ( unsigned int tmp ) { _limit = tmp;}
 		unsigned int					getLimit ( void ) const { return _limit; }
-
-		strListIt							isOps( std::string user ) {
+		void							setTopic ( std::string topic ) { _topic = topic; }
+		std::string						getTopic ( void ) { return _topic; }
+		strListIt						isOps( std::string user ) {
 			strListIt opsIt;
 			for ( opsIt = _chanOps.begin(); opsIt != _chanOps.end() && user != *opsIt ; ++opsIt )
 			return ( opsIt );

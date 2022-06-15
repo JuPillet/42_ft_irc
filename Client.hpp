@@ -18,15 +18,12 @@ typedef std::list<std::string>::iterator		strListIt;
 typedef std::list<std::string>::const_iterator	conStrListIt;
 typedef std::pair<std::string, time_t>			pairBan;
 typedef std::list<pairBan>::iterator			itBan;
-typedef void(IRCData::*ptrFctU)( clientIterator& );
-typedef void(IRCData::*ptrFctC)( channelIterator& );
-typedef void(IRCData::*ptrFctI)( void );
-typedef std::pair<char, ptrFctU>				pairKVU;
-typedef std::pair<char, ptrFctC>				pairKVC;
-typedef std::pair<std::string, ptrFctI>			pairKVI;
-typedef std::list<pairKVU>						listPairU;
-typedef std::list<pairKVC>						listPairC;
-typedef std::list<pairKVI>						listPairI;
+typedef void(IRCData::*ptrFct)( void );
+typedef std::pair<char, ptrFct>					pairKVM;
+typedef std::pair<std::string, ptrFct>			pairKVC;
+typedef std::list<pairKVM>						listPairU;
+typedef std::list<pairKVM>						listPairC;
+typedef std::list<pairKVC>						listPairI;
 
 class Client
 {
