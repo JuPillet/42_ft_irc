@@ -1107,7 +1107,7 @@ class IRCData
 				}
 			}
 		}
-
+		IIIIICCCCCCIIIIIIIIIII
 		Mode	*setListFlagCmd( void )
 		{
 			std::list<Mode> mods;
@@ -1117,6 +1117,7 @@ class IRCData
 				newMode.client;
 			}
 		}
+
 		void	CHANMODE( void )
 		{
 			channelIterator chanIt = isChannel( _target );
