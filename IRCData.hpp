@@ -17,18 +17,17 @@ class Channel;
 class IRCData
 {
 /////   struct chained mode /////
-	typedef class c_mode Mode;
-	class c_mode
+	class Mode
 	{
 		public :
 			ptrFct		*ftcn;
 			std::string	channel;
 			std::string client;
 			std::string arg;
-			c_mode( void ) { return; }
-			~c_mode( void ) { return; }
+			Mode( void ) { return; }
+			~Mode( void ) { return; }
 	};
-
+	typedef std::list<Mode>::iterator		listModeIt;
 /////	Server Info /////
 	std::string								_selfIP;
 	int										_port;
@@ -376,43 +375,41 @@ class IRCData
 
 		void				JOIN( void )
 		{
-			strIt	channelIt;
-			//ICI CREER UN CHECK AUTHENTIFICATION
-			for ( channelIt = _request->begin(); channelIt != _request->end()
-				&& *channelIt != '\n' && *channelIt != '\r' && !std::isspace(*channelIt); ++channelIt );
-			_channelTmp = std::string( *_request, 0, channelIt - _request->begin() );
+			_channelTmp = getArg();
 			
+			if ( _channelTmp == "-invite" )
+				_channelTmp = ( *_clientIt )->getInvitation();
 			if ( *_channelTmp.begin() != '#' )
 				_channelTmp = "#" + _channelTmp;
 
-			_request->erase( 0, channelIt - _request->begin() );
-			spaceTrimer();
-
 			_chanPassTmp = getLastArg();
-
 			channelIterator	chanIt;
-
 			if ( ( chanIt = isChannel( _channelTmp ) ) == _channels.end() )
 			{
 				_channels.push_back( _channelTmp );
 				chanIt = _channels.end();
 				--chanIt;
 			}
-			constClientIterator chanCliIt = chanIt->isCli( ( *_clientIt )->getUser() );
-			if ( chanCliIt == ( chanIt->getCli() )->end() )
+
+			constClientIterator chanCliIt = chanIt->isCli( ( *_clientIt )->getNick() );
+			if ( chanCliIt != ( chanIt->getCli() )->end() )
 			{
 				_destSD = _sd;
 				_answer = "a voir!!!";
 				sender();
 				throw( IRCErr( "Is already in the channel" ) );
 			}
+			if ( chanIt->getPass() != "" && chanIt->getPass() != _chanPassTmp )
+			{
+				_destSD = ( *chanCliIt )->getSocket();
+				_answer = ":*." + _selfIP + " 475 " + ( *_clientIt )->getNick() + " " + _channelTmp + " :Cannot join channel (incorrect channel key)\n\r";
+				sender();
+				throw( "bad password" );
+			}
 			chanIt->setCli( *_clientIt );
 			_destSD = ( *chanCliIt )->getSocket();
 			_answer = ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " " + _cmd + " " + _channelTmp + "\r\n";
-			try
-			{ sender(); }
-			catch ( IRCErr const &err )
-			{ std::cerr << err.getError() << std::endl; }
+			sender();
 		}
 
 		void			KILLING( clientIterator const &cliIt, std::string const reason )
@@ -634,6 +631,46 @@ class IRCData
 			}
 		}
 
+		void				INVITE( void )
+		{
+			std::string user = ( *_clientIt )->getNick();
+			_target = getArg();
+			clientIterator cliTarget = isCli( _target );
+			_channelTmp = getLastArg();
+			channelIterator channel = isChannel( _channelTmp );
+			if ( cliTarget == _clients.end() )
+			{
+				_request->clear();
+				_destSD = ( *_clientIt )->getSocket();
+				_answer = "format client cible n existe pas";
+				sender();
+				throw( _target + " not server client" );
+			}
+			if ( channel == _channels.end() || channel->isOps( user ) == channel->getOps()->end() )
+			{
+				_request->clear();
+				_destSD = ( *_clientIt )->getSocket();
+				_answer = "format n est pas operateur channel du channel visé";
+				sender();
+				throw( user + " not '" + _channelTmp + "' channel operator" );
+			}
+			if ( channel->isCli( _target ) == channel->getCli()->end() )
+			{
+				_request->clear();
+				_destSD = ( *_clientIt )->getSocket();
+				_answer =  ":*." + _selfIP + " 443 " + user + " " + _target + " :" + _channelTmp + " :is already on channel\r\n";
+				sender();
+				throw( _target + " allready on '" + _channelTmp + "' channel" );
+			}
+			_destSD = ( *cliTarget )->getSocket();
+			_answer = ":" + _target + "!~" + ( *cliTarget )->getUser() + "@" + ( *cliTarget )->getClIp() + " " + _cmd + " " + ( *cliTarget )->getUser() + " :" + _channelTmp + "\r\n";
+			sender();
+			( *cliTarget )->setInvitation( _channelTmp );
+			_destSD = ( *_clientIt )->getSocket();
+			_answer = ":*." + _selfIP + " 341 " + user + " " + _target + " :" + _channelTmp + "\r\n";
+			sender();
+		}
+
 		void				QUIT( void )
 		{
 			std::string		quitMsg;
@@ -713,6 +750,7 @@ class IRCData
 			_listFctI.push_back( pairKVC( "PING", &IRCData::PONG ) );
 			_listFctI.push_back( pairKVC( "JOIN", &IRCData::JOIN ) );
 			_listFctI.push_back( pairKVC( "PRIVMSG", &IRCData::MSG ) );
+			_listFctI.push_back( pairKVC( "INVITE", &IRCData::INVITE ) );
 			_listFctI.push_back( pairKVC( "KILL", &IRCData::KILL ) );
 			_listFctI.push_back( pairKVC( "KLINE", &IRCData::KLINE ) );
 			_listFctI.push_back( pairKVC( "PART", &IRCData::PART ) );
@@ -730,7 +768,6 @@ class IRCData
 			_listFctC.push_back( pairKVM( 'v', &IRCData::C_MODE_V ) );
 			////	listPtrFctnModeUser
 			_listFctU.push_back( pairKVM( 'o', &IRCData::U_MODE_O ) );
-			_listFctU.push_back( pairKVM( 'i', &IRCData::U_MODE_I ) );
 		}
 
 		void				init( std::string port, std::string password, char **ep )
@@ -917,14 +954,6 @@ class IRCData
 			}
 		}
 
-		void				U_MODE_I( void )
-		{
-			if ( _flop == '+')
-				target->setInvisible (1);
-			else if (_flop == '-')
-				target->setInvisible (0);
-		}
-
 		void				C_MODE_B( void )
 		{
 			//char _flop egal a plus ou moins pour savoir si je dois ban ou unban
@@ -999,8 +1028,9 @@ class IRCData
 
 		void				C_MODE_P( void )
 		{
+			channelIterator channel = isChannel( _target )
 			if ( _flop == '-' )
-				channel->setPriv(0);
+				->setPriv(0);
 			else
 				channel->setPriv(1);
 		}
@@ -1071,19 +1101,19 @@ class IRCData
 			std::cout << "CHANNEL MODE exit" << std::endl;
 		}
 
-		int		nbChannelArgs( void )
+		bool		tooMuchArgs( void )
 		{
 			strIt argIt;
 			for ( argIt = _request->begin() ; argIt != _request->end() && *argIt != '\n' && *argIt != '\r' && !std::isspace( *argIt ); ++argIt );
 			for ( ; argIt != _request->end()  && std::isspace( *argIt ); ++argIt );
 			if ( argIt == _request->end() )
-				return 3;
-			return 4;
+				return false;
+			return true;
 		}
 
 		void	wrongChannelFlag( void )
 		{
-			std::string flagList( "bkmnopsv" );
+			std::string flagList( "opsitnmlbvk" );
 			strIt flagIt;
 			for ( flagIt = _flag.begin(); flagIt != _flag.end(); ++flagIt )
 			{
@@ -1097,7 +1127,7 @@ class IRCData
 					sender();
 					throw( IRCErr( "unvalid flag" ) );
 				}
-				if( ( *flagIt == 'b' || *flagIt == 'o' ) && nbChannelArgs() > 3)
+				if( ( *flagIt == 'b' || *flagIt == 'o' ) && tooMuchArgs() )
 				{
 					_destSD = ( *_clientIt )->getSocket();
 					_answer = std::string( "Voir code erreur nombre d argument :flag: '" + *flagIt ) + "' need maximum 3 arguments\r\n"; //A VOIR FORMATAGE CODE ERREUR FLAGMOD INNEXISTANT
@@ -1107,14 +1137,17 @@ class IRCData
 				}
 			}
 		}
-		IIIIICCCCCCIIIIIIIIIII
-		Mode	*setListFlagCmd( void )
+
+		std::list<Mode>	setListFlagCmdC( void )
 		{
 			std::list<Mode> mods;
 			for( strIt flagIt = _flag.begin(); flagIt != _flag.end(); ++flagIt )
 			{
-				Mode newMode;
-				newMode.client;
+				mods.push_back( Mode() );
+				listModeIt newMode = --( mods.end() );
+				listPairC::iterator	_listPairIt;
+				for ( _listPairIt = _listFctC.begin(); _listPairIt != _listFctC.end() && _listPairIt->first != *flagIt; ++_listPairIt );
+
 			}
 		}
 

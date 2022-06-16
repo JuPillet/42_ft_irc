@@ -28,13 +28,14 @@ typedef std::list<pairKVC>						listPairI;
 class Client
 {
 	int									_client_socket;
-	bool								_authentified, _invisible;
+	bool								_authentified;
 	std::string							_clIp;
 	std::string							_pass;
 	std::string							_nick;
 	std::string							_user;
 	std::string							_name;
 	std::string							_request;
+	std::string							_invitation;
 										Client( void ): _client_socket(0), _authentified( false ), _pass(), _nick(), _user() {};
 	public:
 		
@@ -79,7 +80,7 @@ class Client
 		std::string const				getUser( void ) const { return _user; }
 		void							setName( std::string const &name) { _name = name; }
 		std::string const				&getName( void ) const { return _name; }
-		void							setInvisible(bool i) { _invisible = i; }
-		bool							getInvisible( void ) const { return _invisible; }
 		std::string						const *getRequest( void ) const { return &_request; }
+		void							setInvitation( std::string invitation ) { _invitation = invitation; }
+		std::string						getInvitation( void ) const { return _invitation; }
 };
