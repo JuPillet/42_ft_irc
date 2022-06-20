@@ -30,6 +30,7 @@ class IRCData
 	};
 	typedef std::list<Mode>::iterator		listModeIt;
 	std::list<Mode>							_mods;
+	listModeIt								_modsIt;
 /////	Server Info /////
 	std::string								_selfIP;
 	int										_port;
@@ -1102,56 +1103,19 @@ class IRCData
 			}
 		}
 
-		void	USERMODE( void )
+		void	wrongFlag( void )
 		{
-
+			_destSD = ( *_clientIt )->getSocket();
+			_answer = std::string( "Voir code 472 :flag: '" + _modsIt->arg ) + "' is unvalid flag Mode\r\n"; //A VOIR FORMATAGE CODE ERREUR FLAGMOD INNEXISTANT
+			sender();
 		}
 
-		void	execChannelMode( char mode )
+		void	execMode( void )
 		{
 			std::cout << "CHANNEL MODE start" << std::endl;
-			listModeIt	modeIt;
-
-			for ( modeIt = _mods.begin(); modeIt != _mods.end(); ++modeIt )
-				( this->*modeIt->fctn )();
+			for ( _modsIt = _mods.begin(); _modsIt != _mods.end(); ++_modsIt )
+				( this->*_modsIt->fctn )();
 			std::cout << "CHANNEL MODE exit" << std::endl;
-		}
-
-		bool		tooMuchArgs( void )
-		{
-			strIt argIt;
-			for ( argIt = _request->begin() ; argIt != _request->end() && *argIt != '\n' && *argIt != '\r' && !std::isspace( *argIt ); ++argIt );
-			for ( ; argIt != _request->end()  && std::isspace( *argIt ); ++argIt );
-			if ( argIt == _request->end() )
-				return false;
-			return true;
-		}
-
-		void	wrongChannelFlag( void )
-		{
-			std::string flagList( "opsitnmlbvk" );
-			strIt flagIt;
-			for ( flagIt = _flag.begin(); flagIt != _flag.end(); ++flagIt )
-			{
-				strIt flagListIt;
-				for ( flagListIt = flagList.begin(); flagListIt != flagList.end() && *flagListIt != *flagIt; ++flagListIt );
-				if ( flagListIt == flagList.end() )
-				{
-					_destSD = ( *_clientIt )->getSocket();
-					_answer = std::string( "Voir code 472 :flag: '" + *flagIt ) + "' isn t flag of channel Mode\r\n"; //A VOIR FORMATAGE CODE ERREUR FLAGMOD INNEXISTANT
-					_request->clear();
-					sender();
-					throw( IRCErr( "unvalid flag" ) );
-				}
-				if( ( *flagIt == 'b' || *flagIt == 'o' ) && tooMuchArgs() )
-				{
-					_destSD = ( *_clientIt )->getSocket();
-					_answer = std::string( "Voir code erreur nombre d argument :flag: '" + *flagIt ) + "' need maximum 3 arguments\r\n"; //A VOIR FORMATAGE CODE ERREUR FLAGMOD INNEXISTANT
-					_request->clear();
-					sender();
-					throw( IRCErr( "unvalid number of argument" ) );
-				}
-			}
 		}
 
 		void	setListFlagCmdC( void )
@@ -1160,12 +1124,25 @@ class IRCData
 			for( strIt flagIt = _flag.begin(); flagIt != _flag.end(); ++flagIt )
 			{
 				_mods.push_back( Mode() );
-				listModeIt newMode = --( _mods.end() );
+				_modsIt = --( _mods.end() );
 				listPairC::iterator	_listPairIt;
 				for ( _listPairIt = _listFctC.begin(); _listPairIt != _listFctC.end() && _listPairIt->first != *flagIt; ++_listPairIt );
-				newMode->fctn = _listPairIt->second.first;
-				( this->*_listPairIt->second.second )();
+				if ( _listPairIt != _listFctC.end() )
+				{
+					_modsIt->fctn = _listPairIt->second.first;
+					( this->*_listPairIt->second.second )();
+				}
+				else
+				{
+					_modsIt->fctn = &IRCData::wrongFlag;
+					_modsIt->arg = *flagIt;
+				}
 			}
+		}
+
+		void	USERMODE( void )
+		{
+
 		}
 
 		void	CHANMODE( void )
@@ -1187,7 +1164,6 @@ class IRCData
 				sender();
 				throw( IRCErr( "Not channel operator" ) );
 			}
-			wrongChannelFlag();
 			setListFlagCmdC() ;
 		}
 
@@ -1208,5 +1184,6 @@ class IRCData
 				CHANMODE();
 			else
 				USERMODE();
+			execMode();
 		}
 };
