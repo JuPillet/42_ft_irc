@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include <cstring>
 #include <errno.h>
 #include <arpa/inet.h>
 #include <sys/types.h>
@@ -20,7 +21,7 @@ class IRCData
 	class Mode
 	{
 		public :
-			ptrFct		*ftcn;
+			ptrFct		fctn;
 			std::string	channel;
 			std::string client;
 			std::string arg;
@@ -28,6 +29,7 @@ class IRCData
 			~Mode( void ) { return; }
 	};
 	typedef std::list<Mode>::iterator		listModeIt;
+	std::list<Mode>							_mods;
 /////	Server Info /////
 	std::string								_selfIP;
 	int										_port;
@@ -35,6 +37,7 @@ class IRCData
 
 /////	PtrFctn /////
 	listPairU								_listFctU;
+	listPairC								_listPrsC;
 	listPairC								_listFctC;
 	listPairI								_listFctI;
 
@@ -114,7 +117,7 @@ class IRCData
 				std::cout << "_sd: " << _sd << " - readvalue: " << readvalue << " : " << _request->length() << " : " << std::endl << *_request << std::endl;
 			}
 			else
-				std::cout << strerror(errno) << std::endl;
+				std::cout << std::strerror(errno) << std::endl;
 			std::cout << "message exit" << std::endl;
 		}
 
@@ -758,16 +761,16 @@ class IRCData
 			_listFctI.push_back( pairKVC( "QUIT", &IRCData::QUIT ) );
 			_listFctI.push_back( pairKVC( "MODE", &IRCData::MODE ) );
 			////	listPtrFctnModeChannel
-			_listFctC.push_back( pairKVM( 'b', &IRCData::C_MODE_B ) );
-			_listFctC.push_back( pairKVM( 'k', &IRCData::C_MODE_K ) );
-			_listFctC.push_back( pairKVM( 'm', &IRCData::C_MODE_M ) );
-			_listFctC.push_back( pairKVM( 'n', &IRCData::C_MODE_N ) );
-			_listFctC.push_back( pairKVM( 'o', &IRCData::C_MODE_O ) );
-			_listFctC.push_back( pairKVM( 'p', &IRCData::C_MODE_P ) );
-			_listFctC.push_back( pairKVM( 's', &IRCData::C_MODE_S ) );
-			_listFctC.push_back( pairKVM( 'v', &IRCData::C_MODE_V ) );
+			_listFctC.push_back( pairKVM( 'o', pairFctsM( &IRCData::C_MODE_O,  ) ) );
+			_listFctC.push_back( pairKVM( 'p', pairFctsM( &IRCData::C_MODE_P,  ) ) );
+			_listFctC.push_back( pairKVM( 's', pairFctsM( &IRCData::C_MODE_S,  ) ) );
+			_listFctC.push_back( pairKVM( 'n', pairFctsM( &IRCData::C_MODE_N,  ) ) );
+			_listFctC.push_back( pairKVM( 'm', pairFctsM( &IRCData::C_MODE_M,  ) ) );
+			_listFctC.push_back( pairKVM( 'b', pairFctsM( &IRCData::C_MODE_B,  ) ) );
+			_listFctC.push_back( pairKVM( 'v', pairFctsM( &IRCData::C_MODE_V,  ) ) );
+			_listFctC.push_back( pairKVM( 'k', pairFctsM( &IRCData::C_MODE_K,  ) ) );
 			////	listPtrFctnModeUser
-			_listFctU.push_back( pairKVM( 'o', &IRCData::U_MODE_O ) );
+			_listFctU.push_back( pairKVM( 'o', pairFctsM( &IRCData::U_MODE_O,  ) ) );
 		}
 
 		void				init( std::string port, std::string password, char **ep )
@@ -839,7 +842,6 @@ class IRCData
 				if( _sd > _max_sd )
 					_max_sd = _sd;
 			}
-//			std::cout << "MAXSD: " << _max_sd <<std::endl;
 		}
 
 		void				activityListener( void )
@@ -869,7 +871,7 @@ class IRCData
 			{
 				std::cout << _cmd << std::endl;
 				ptrFct ptrFct = _listPairIt->second;
-				(this->*ptrFct)();
+				( this->*ptrFct )();
 			}
 			else
 				clearPostArgs();
@@ -934,8 +936,6 @@ class IRCData
 
 
 
-
-
 		void				U_MODE_O( void )
 		{
 			if ( _flop == '+' && channel->isOps( target ) != ( *channel->getOps() ).end())
@@ -952,6 +952,29 @@ class IRCData
 					}
 				}
 			}
+		}
+
+		bool				isNumber( std::string &arg )
+		{
+			for ( strIt argIt = arg.begin(); argIt != arg.end(); ++argIt )
+				if ( !std::isdigit( *argIt ) )
+					return false;
+			return true;
+		}
+
+		void				C_PARSE_NO_ARG( void ) { return; }
+		void				C_PARSE_NBR_ARG( void )
+		{
+			std::string arg = getArg();
+
+			if ( !arg.size() || !isNumber( arg ) )
+			{
+				_destSD = ( *_clientIt )->getSocket();
+				_answer = "voir erreur 461";
+				sender();
+				throw( IRCErr( "" ) )
+			}
+			( --_mods.end() )->arg = arg;
 		}
 
 		void				C_MODE_B( void )
@@ -1087,17 +1110,10 @@ class IRCData
 		void	execChannelMode( char mode )
 		{
 			std::cout << "CHANNEL MODE start" << std::endl;
-			listPairC::iterator	_listPairIt;
+			listModeIt	modeIt;
 
-			for ( _listPairIt = _listFctC.begin(); _listPairIt != _listFctC.end() && _listPairIt->first != mode; ++_listPairIt );
-			if ( _listPairIt != _listFctC.end() )
-			{
-				std::cout << _cmd << std::endl;
-				ptrFct ptrFctC = _listPairIt->second;
-				( this->*ptrFctC )();
-			}
-			else
-				clearPostArgs();
+			for ( modeIt = _mods.begin(); modeIt != _mods.end(); ++modeIt )
+				( this->*modeIt->fctn )();
 			std::cout << "CHANNEL MODE exit" << std::endl;
 		}
 
@@ -1122,7 +1138,7 @@ class IRCData
 				if ( flagListIt == flagList.end() )
 				{
 					_destSD = ( *_clientIt )->getSocket();
-					_answer = std::string( "Voir code erreur channel incconu. :flag: '" + *flagIt ) + "' isn t flag of channel Mode\r\n"; //A VOIR FORMATAGE CODE ERREUR FLAGMOD INNEXISTANT
+					_answer = std::string( "Voir code 472 :flag: '" + *flagIt ) + "' isn t flag of channel Mode\r\n"; //A VOIR FORMATAGE CODE ERREUR FLAGMOD INNEXISTANT
 					_request->clear();
 					sender();
 					throw( IRCErr( "unvalid flag" ) );
@@ -1138,16 +1154,17 @@ class IRCData
 			}
 		}
 
-		std::list<Mode>	setListFlagCmdC( void )
+		void	setListFlagCmdC( void )
 		{
-			std::list<Mode> mods;
+			_mods.clear();
 			for( strIt flagIt = _flag.begin(); flagIt != _flag.end(); ++flagIt )
 			{
-				mods.push_back( Mode() );
-				listModeIt newMode = --( mods.end() );
+				_mods.push_back( Mode() );
+				listModeIt newMode = --( _mods.end() );
 				listPairC::iterator	_listPairIt;
 				for ( _listPairIt = _listFctC.begin(); _listPairIt != _listFctC.end() && _listPairIt->first != *flagIt; ++_listPairIt );
-
+				newMode->fctn = _listPairIt->second.first;
+				( this->*_listPairIt->second.second )();
 			}
 		}
 
@@ -1171,7 +1188,7 @@ class IRCData
 				throw( IRCErr( "Not channel operator" ) );
 			}
 			wrongChannelFlag();
-			Mode *mods = setListFlagCmd();
+			setListFlagCmdC() ;
 		}
 
 		void	MODE( void )
