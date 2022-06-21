@@ -94,6 +94,14 @@ class Channel
 		std::list<std::string> const	*getOps( void ) const { return &_chanOps; }
 		void							setCli( Client *tmp ) { _cliCrnt.push_back( tmp ); }
 		std::list<Client *> const		*getCli( void ) const { return &_cliCrnt; }
+		std::string	getUserByNick( std::string &nickTarget ) 
+		{
+			clientIterator clientIt;
+			for ( clientIt = _cliCrnt.begin(); clientIt != _cliCrnt.end(); ++clientIt );
+				if ( ( *clientIt )->getNick() == nickTarget )
+					return ( *clientIt )->getUser();
+			return "";
+		}
 		clientIterator					isCli( std::string user ) {
 			clientIterator cliIt;
 			for ( cliIt = _cliCrnt.begin(); cliIt != _cliCrnt.end() && user != ( *cliIt )->getUser(); ++cliIt );

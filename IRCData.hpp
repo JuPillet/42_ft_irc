@@ -189,19 +189,22 @@ class IRCData
 			_answer.clear();
 		}
 
-		clientIterator	isCli( std::string const &userTmp ) {
+		clientIterator	isCli( std::string const &userTmp )
+		{
 			clientIterator cliIt;
 			for ( cliIt = _clients.begin(); cliIt != _clients.end() && userTmp != ( *cliIt )->getUser(); ++cliIt );
 			return cliIt;
 		}
 
-		strListIt	isOps( std::string userTmp ) {
+		strListIt	isOps( std::string userTmp )
+		{
 			strListIt opsIt;
 			for ( opsIt = _servOps.begin(); opsIt != _servOps.end() && *opsIt == userTmp; ++opsIt );
 			return opsIt;
 		}
 
-		itBan	isBan ( std::string const &user ) {
+		itBan	isBan ( std::string const &user )
+		{
 			itBan banIt;
 			for ( banIt = _servBan.begin(); banIt != _servBan.end() && banIt->first != user; ++banIt );
 			if ( banIt != _servBan.end() && banIt->second && banIt->second <= std::time( nullptr ) )
@@ -210,6 +213,15 @@ class IRCData
 				banIt = _servBan.end();
 			}
 			return banIt;
+		}
+
+		std::string	getUserByNick( std::string &nickTarget ) 
+		{
+			clientIterator clientIt;
+			for ( clientIt = _clients.begin(); clientIt != _clients.end(); ++clientIt );
+				if ( ( *clientIt )->getNick() == nickTarget )
+					return ( *clientIt )->getUser();
+			return "";
 		}
 
 		void	WELCOME( void )
@@ -283,19 +295,24 @@ class IRCData
 			if ( !std::isalpha( *nickIt ) )
 			{
 				_destSD = _sd;
-				_answer = "Nickerror - first char of nick must be an alphabetic character\r\n";
+				_answer = ":*." + _selfIP + " 432 " + nickTmp + " :Erroneous Nickname first character not an alphabetic character\r\n";
 				sender();
 				throw IRCErr( "Nick format - first char not an alphabetic character" );
 			}
 
-			for ( ; nickIt != nickTmp.end(); ++nickIt ){
-				for ( strIt rejectIt = _rejectChar.begin(); rejectIt != _rejectChar.end(); ++rejectIt ){				
-					if ( *nickIt == *rejectIt ){
+			for ( ; nickIt != nickTmp.end(); ++nickIt )
+			{
+				for ( strIt rejectIt = _rejectChar.begin(); rejectIt != _rejectChar.end(); ++rejectIt )
+				{
+					if ( *nickIt == *rejectIt )
+					{
 						_destSD = _sd;
-						_answer = "Nickerror\r\n";
+						_answer = ":*." + _selfIP + " 432 " + nickTmp + " :Erroneous Nickname, nick contain caracter '" + *nickIt + "'\r\n";
 						sender();
-						throw IRCErr( "Nick format" );
-			}	}	}
+						throw IRCErr( "Nick format, nick contain caracter '" + *nickIt + '\'' );
+					}
+				}
+			}
 
 			clientIterator	cliIt = _clients.begin();
 			for ( ; cliIt != _clients.end(); ++cliIt )
@@ -303,7 +320,7 @@ class IRCData
 				if ( ( *cliIt )->getNick() == nickTmp )
 				{
 					_destSD = _sd;
-					_answer = "Nick already in use\r\n"; // A verifier a deux, si j essaie de prendre le nick d un autre
+					_answer = ":*." + _selfIP + " 433 * " + nickTmp + " :Nickname already in use\r\n"; // A verifier a deux, si j essaie de prendre le nick d un autre
 					sender();
 					throw IRCErr( "Nick already in use" );
 				}
@@ -945,32 +962,14 @@ class IRCData
 		{
 			if ( _flop == '+' )
 			{
-				if ( !_target.size() )
-				{
-					_destSD = ( *_clientIt )->getSocket();
-					_answer = ":*." + _selfIP + " 696 " +  + "o * :You must specify a parameter for the op mode. Syntax: <nick>.\r\n";
-					sender();
-					throw( IRCErr( "argument isn't an unsigned number" ) );
-				}
 				if ( isOps( _target ) == _servOps.end() )
-				{
-					_destSD = ( *_clientIt )->getSocket();
-					_answer = "voir erreur 461";
-					sender();
-					throw( IRCErr( "argument isn't an unsigned number" ) );
-				}
-				_servOps.push_back( _target );
+					_servOps.push_back( _target );
 			}
 			else
 			{
-				clientIterator clientIt = 
-				for ( tmpIt = _servOps.begin(); tmpIt != _servOps.end(); tmpIt++ )
+				if ( ( strListIt servOpsIt = isOps( _target ) ) == _servOps.end() )
 				{
-					if ( *tmpIt == *target )
-					{
-						_servOps.erase( tmpIt );
-						return ;
-					}
+
 				}
 			}
 		}
