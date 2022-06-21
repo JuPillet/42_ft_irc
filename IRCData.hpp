@@ -957,21 +957,33 @@ class IRCData
 
 
 
-
+//	reprendre a partir de -> https://modern.ircdocs.horse/#errnosuchnick-401
+		reprendre a partir de modern.ircdocs.horse/#errnosuchnick-401
 		void				U_MODE_O( void )
 		{
+			std::string userTarget = getUserByNick( _target );
+			if ( userTarget == "" )
+			{
+				_destSD = ( *_clientIt )->getSocket();
+				_answer = ":*." + _selfIP + " 401 " + ( *_clientIt )->getNick() + " " + _target + " :No such nick\r\n";
+				sender();
+				throw( IRCErr( std::string( "No such nick " + _target ) ) );
+			}
 			if ( _flop == '+' )
 			{
-				if ( isOps( _target ) == _servOps.end() )
+				if ( isOps( userTarget ) == _servOps.end() )
 					_servOps.push_back( _target );
 			}
 			else
 			{
-				if ( ( strListIt servOpsIt = isOps( _target ) ) == _servOps.end() )
-				{
-
-				}
+				strListIt opsTarget = isOps( userTarget );
+				if ( opsTarget != _servOps.end() )
+					_servOps.erase( opsTarget );
 			}
+			:jpillet!~jpillet@freenode-a99.759.j1faas.IP MODE #jeteste -o :jpillet
+			_destSD = ( *_clientIt )->getSocket();
+			_answer = ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " " + _cmd + " " + _channelTmp + "\r\n";
+			sender();
 		}
 
 		void	isUnsignedNumber( void )
