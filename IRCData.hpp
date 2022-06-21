@@ -945,15 +945,25 @@ class IRCData
 		{
 			if ( _flop == '+' )
 			{
-				if ( isOps( _target ) != _servOps.end() )
+				if ( !_target.size() )
 				{
-
+					_destSD = ( *_clientIt )->getSocket();
+					_answer = ":*." + _selfIP + " 696 " +  + "o * :You must specify a parameter for the op mode. Syntax: <nick>.\r\n";
+					sender();
+					throw( IRCErr( "argument isn't an unsigned number" ) );
+				}
+				if ( isOps( _target ) == _servOps.end() )
+				{
+					_destSD = ( *_clientIt )->getSocket();
+					_answer = "voir erreur 461";
+					sender();
+					throw( IRCErr( "argument isn't an unsigned number" ) );
 				}
 				_servOps.push_back( _target );
 			}
-			else if ( _flop == '-' )
+			else
 			{
-				clientIterator tmpIt;
+				clientIterator clientIt = 
 				for ( tmpIt = _servOps.begin(); tmpIt != _servOps.end(); tmpIt++ )
 				{
 					if ( *tmpIt == *target )
@@ -1114,6 +1124,7 @@ class IRCData
 		{
 			_destSD = ( *_clientIt )->getSocket();
 			_answer = std::string( "Voir code 472 :flag: '" + _modsIt->arg ) + "' is unvalid flag Mode\r\n"; //A VOIR FORMATAGE CODE ERREUR FLAGMOD INNEXISTANT
+			_answer = ":*." + _selfIP + " 501 :Unknown " + _modsIt->arg + "\r\n";
 			sender();
 		}
 
@@ -1149,7 +1160,7 @@ class IRCData
 				else
 				{
 					_modsIt->fctn = &IRCData::wrongFlag;
-					_modsIt->arg = *flagIt;
+					_modsIt->arg = "user MODE " + *flagIt;
 				}
 			}
 		}
@@ -1173,7 +1184,7 @@ class IRCData
 				else
 				{
 					_modsIt->fctn = &IRCData::wrongFlag;
-					_modsIt->arg = *flagIt;
+					_modsIt->arg = "channel MODE " + *flagIt;
 				}
 			}
 		}
@@ -1214,14 +1225,23 @@ class IRCData
 			for ( flopIt = _request->begin(); flopIt != _request->end()
 				&& ( *flopIt == '+' || *flopIt == '-' ); ++flopIt )
 				_flop = *flopIt;
-			if ( !_flop )
-			{
-				_destSD = ( *_clientIt )->getSocket();
-				_answer = " 400 "
-			}
 			_request->erase( _request->begin(), flopIt );
 			spaceTrimer();
 			_flag = getArg();
+			if ( !_target.size() || _target[0] == '+' || _target[0] == '-' )
+			{
+				_destSD = ( *_clientIt )->getSocket();
+				_answer =  ":" + _selfIP + " 461 " + ( *_clientIt )->getNick()  + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " MODE : <channel|user> target forgotten\r\n";
+				sender();
+				throw( IRCErr( "MODE : <channel|user> target forgotten" ) );
+			}
+			if ( !_flop )
+			{
+				_destSD = ( *_clientIt )->getSocket();
+				_answer =  ":" + _selfIP + " 400 " + ( *_clientIt )->getNick()  + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " MODE :operator [+|-] for flag Mode forgotten\r\n";
+				sender();
+				throw( IRCErr( "MODE :operator [+|-] for flag Mode forgotten" ) );
+			}
 			if ( _target[0] == '#' )
 				CHANMODE();
 			else
