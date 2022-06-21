@@ -60,8 +60,8 @@ class Channel
 		std::list< _pairBan >			_chanBan;
 
 	public :
-										Channel( void ) : _mod (0), _priv (0), _secret(0), _limit (0), _extMsg(0) {}
-										Channel( std::string str ) : _name( str ), _mod (0), _priv(0), _secret(0), _limit(0), _extMsg(0) {}
+										Channel( void ) : _mod ( 0 ), _priv ( 0 ), _secret( 0 ), _limit ( 0 ), _extMsg( 0 ) {}
+										Channel( std::string str ) : _name( str ), _mod ( 0 ), _priv( 0 ), _secret( 0 ), _limit( 0 ), _extMsg( 0 ) {}
 										~Channel( void ) {}
 		std::string						getName( void ) const { return _name; }
 		void							setPass ( std::string str ) { _mdp = str; }
@@ -84,7 +84,7 @@ class Channel
 			for ( opsIt = _chanOps.begin(); opsIt != _chanOps.end() && user != *opsIt ; ++opsIt )
 			return ( opsIt );
 		}
-		void                            setOps( std::string ops) { _chanOps.push_back( ops ); }
+		void                            setOps( std::string ops ) { _chanOps.push_back( ops ); }
 		void                            unsetOps( std::string user )
         {
             strListIt opsIt = isOps( user );
@@ -103,8 +103,8 @@ class Channel
 		{
 			clientIterator cliIt ( isCli( user ) );
 			if ( cliIt == _cliCrnt.end() )
-				throw(IRCErr("Client isnt in the channel: " + _name));
-			_cliCrnt.erase(cliIt);
+				throw( IRCErr( "Client isnt in the channel: " + _name ) );
+			_cliCrnt.erase( cliIt );
 		}
 
 		void							setVo( std::string tmp ) { _cliVo.push_back( tmp ); }
@@ -154,12 +154,12 @@ class Channel
 			}
 		}
 
-		void						unBan(std::string tmp)
+		void						unBan( std::string tmp )
 		{
 			itBan tmpIt ( isBan( tmp ) );
-			if ( isBan(tmp) == _chanBan.end() )
-				throw (IRCErr("User isnt banned."));
-			_chanBan.erase(tmpIt);
+			if ( isBan( tmp ) == _chanBan.end() )
+				throw ( IRCErr( "User isnt banned." ) );
+			_chanBan.erase( tmpIt );
 		}
 
 		std::list<pairBan> const	*getBan( void ) const { return &_chanBan; }

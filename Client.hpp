@@ -18,13 +18,12 @@ typedef std::list<std::string>::iterator		strListIt;
 typedef std::list<std::string>::const_iterator	conStrListIt;
 typedef std::pair<std::string, time_t>			pairBan;
 typedef std::list<pairBan>::iterator			itBan;
-typedef void(IRCData::*ptrFct)( void );
+typedef void( IRCData::*ptrFct )( void );
 typedef std::pair<ptrFct, ptrFct>				pairFctsM;
 typedef std::pair<char, pairFctsM>				pairKVM;
-typedef std::pair<std::string, ptrFct>			pairKVC;
-typedef std::list<pairKVM>						listPairU;
-typedef std::list<pairKVM>						listPairC;
-typedef std::list<pairKVC>						listPairI;
+typedef std::pair<std::string, ptrFct>			pairKVI;
+typedef std::list<pairKVM>						listPairM;
+typedef std::list<pairKVI>						listPairI;
 
 class Client
 {
@@ -37,7 +36,7 @@ class Client
 	std::string							_name;
 	std::string							_request;
 	std::string							_invitation;
-										Client( void ): _client_socket(0), _authentified( false ), _pass(), _nick(), _user() {};
+										Client( void ): _client_socket( 0 ), _authentified( false ), _pass(), _nick(), _user() {};
 	public:
 		
 										Client( int const _new_socket ):
@@ -79,7 +78,7 @@ class Client
 		std::string const				getNick( void ) const { return _nick; }
 		void							setUser( std::string const &user ) { _user = user; }
 		std::string const				getUser( void ) const { return _user; }
-		void							setName( std::string const &name) { _name = name; }
+		void							setName( std::string const &name ) { _name = name; }
 		std::string const				&getName( void ) const { return _name; }
 		std::string						const *getRequest( void ) const { return &_request; }
 		void							setInvitation( std::string invitation ) { _invitation = invitation; }
