@@ -24,6 +24,7 @@ class IRCData
 			ptrFct			fctn;
 			channelIterator	chanIt;
 			std::string		client;
+			char			flop;
 			std::string		arg;
 			Mode( void )	{ return; }
 			~Mode( void )	{ return; }
@@ -957,8 +958,6 @@ class IRCData
 
 
 
-//	reprendre a partir de -> https://modern.ircdocs.horse/#errnosuchnick-401
-		reprendre a partir de modern.ircdocs.horse/#errnosuchnick-401
 		void				U_MODE_O( void )
 		{
 			std::string userTarget = getUserByNick( _target );
@@ -969,7 +968,7 @@ class IRCData
 				sender();
 				throw( IRCErr( std::string( "No such nick " + _target ) ) );
 			}
-			if ( _flop == '+' )
+			if ( _modsIt->flop == '+' )
 			{
 				if ( isOps( userTarget ) == _servOps.end() )
 					_servOps.push_back( _target );
@@ -980,9 +979,8 @@ class IRCData
 				if ( opsTarget != _servOps.end() )
 					_servOps.erase( opsTarget );
 			}
-			:jpillet!~jpillet@freenode-a99.759.j1faas.IP MODE #jeteste -o :jpillet
 			_destSD = ( *_clientIt )->getSocket();
-			_answer = ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " " + _cmd + " " + _channelTmp + "\r\n";
+			_answer = ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " MODE " + _target + " " + _modsIt->flop + "o :" + arg + "\r\n";
 			sender();
 		}
 
@@ -1178,24 +1176,31 @@ class IRCData
 
 		void	setListFlagCmdC( channelIterator &chanIt )
 		{
+			_flop = 0;
 			_mods.clear();
-			for( strIt flagIt = _flag.begin(); flagIt != _flag.end(); ++flagIt )
+			
+			for( strIt flagIt = _flag.begin(); flagIt != _flag.end(); )
 			{
-				_mods.push_back( Mode() );
-				_modsIt = --( _mods.end() );
-				listPairM::iterator	_listPairIt;
-				for ( _listPairIt = _listFctC.begin(); _listPairIt != _listFctC.end() && _listPairIt->first != *flagIt; ++_listPairIt );
-				if ( _listPairIt != _listFctC.end() )
+				_flop = *( flagIt++ );
+				for( ; flagIt != _flag.end() && *flagIt != '+' && *flagIt != '-'; ++flagIt )
 				{
-					_modsIt->chanIt = chanIt;
-					_modsIt->fctn = _listPairIt->second.first;
-					if ( _listPairIt->second.second )
-						( this->*_listPairIt->second.second )();
-				}
-				else
-				{
-					_modsIt->fctn = &IRCData::wrongFlag;
-					_modsIt->arg = "channel MODE " + *flagIt;
+					_mods.push_back( Mode() );
+					_modsIt = --( _mods.end() );
+					_modsIt->flop = _flop;
+					listPairM::iterator	_listPairIt;
+					for ( _listPairIt = _listFctC.begin(); _listPairIt != _listFctC.end() && _listPairIt->first != *flagIt; ++_listPairIt );
+					if ( _listPairIt != _listFctC.end() )
+					{
+						_modsIt->chanIt = chanIt;
+						_modsIt->fctn = _listPairIt->second.first;
+						if ( _listPairIt->second.second )
+							( this->*_listPairIt->second.second )();
+					}
+					else
+					{
+						_modsIt->fctn = &IRCData::wrongFlag;
+						_modsIt->arg = "channel MODE " + _flop + *flagIt;
+					}
 				}
 			}
 		}
@@ -1230,14 +1235,8 @@ class IRCData
 		void	MODE( void )
 		{
 			strIt			flopIt;
-			_flop = 0;
 			_flag.clear();
 			_target = getArg();
-			for ( flopIt = _request->begin(); flopIt != _request->end()
-				&& ( *flopIt == '+' || *flopIt == '-' ); ++flopIt )
-				_flop = *flopIt;
-			_request->erase( _request->begin(), flopIt );
-			spaceTrimer();
 			_flag = getArg();
 			if ( !_target.size() || _target[0] == '+' || _target[0] == '-' )
 			{
@@ -1246,7 +1245,7 @@ class IRCData
 				sender();
 				throw( IRCErr( "MODE : <channel|user> target forgotten" ) );
 			}
-			if ( !_flop )
+			if ( !_flag.size() || ( _flag[0] != '+' && _flag[0] != '-' ) )
 			{
 				_destSD = ( *_clientIt )->getSocket();
 				_answer =  ":" + _selfIP + " 400 " + ( *_clientIt )->getNick()  + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " MODE :operator [+|-] for flag Mode forgotten\r\n";
