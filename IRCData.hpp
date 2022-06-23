@@ -122,6 +122,20 @@ class IRCData
 			std::cout << "message exit" << std::endl;
 		}
 
+		void	isUnsignedNumber( void )
+		{
+			std::string arg = _modsIt->arg;
+			strIt argIt;
+			for ( argIt = arg.begin(); argIt != arg.end() && std::isdigit( *argIt ); ++argIt );
+			if ( !arg.size() || argIt != arg.end() )
+			{
+				_destSD = ( *_clientIt )->getSocket();
+				_answer = "voir erreur 461";
+				sender();
+				throw( IRCErr( "argument isn't an unsigned number" ) );
+			}
+		}
+
 		std::string const	getAllArg( void )
 		{
 			std::string argTmp;
@@ -763,7 +777,13 @@ class IRCData
 				throw( IRCErr( "Server need 2 arguments : port and password." ) );
 		}
 
-		void initFct( void )
+		void				MODE_GET_ARG( void )
+		{
+			std::string arg = getArg();
+			_modsIt->arg = arg;
+		}
+
+		void				initFct( void )
 		{
 			////	listPtrFctnIRC
 			_listFctI.push_back( pairKVI( "CAP", &IRCData::CAP ) );
@@ -984,25 +1004,7 @@ class IRCData
 			sender();
 		}
 
-		void	isUnsignedNumber( void )
-		{
-			std::string arg = _modsIt->arg;
-			strIt argIt;
-			for ( argIt = arg.begin(); argIt != arg.end() && std::isdigit( *argIt ); ++argIt );
-			if ( !arg.size() || argIt != arg.end() )
-			{
-				_destSD = ( *_clientIt )->getSocket();
-				_answer = "voir erreur 461";
-				sender();
-				throw( IRCErr( "argument isn't an unsigned number" ) );
-			}
-		}
 
-		void				MODE_GET_ARG( void )
-		{
-			std::string arg = getArg();
-			_modsIt->arg = arg;
-		}
 
 		void				C_MODE_B( void )
 		{
