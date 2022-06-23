@@ -245,7 +245,7 @@ class IRCData
 				&& ( *_clientIt )->getNick().size() && ( *_clientIt )->getUser().size() )
 			{
 				_destSD = _sd;
-				_answer = ":*." + _selfIP + " 001 " + ( *_clientIt )->getNick() + " :Welcome to the IRC_QJ_Server "
+				_answer = ":" + _selfIP + " 001 " + ( *_clientIt )->getNick() + " :Welcome to the IRC_QJ_Server "
 				+ ( *_clientIt )->getNick() + "!" + ( *_clientIt )->getUser() + "@" + inet_ntoa( _address.sin_addr ) + "\r\n";
 				std::cout << "_destSD: " << _destSD << std::endl;
 				sender();
@@ -444,6 +444,7 @@ class IRCData
 			}
 			if ( !( chanIt->getOps()->size() ) )
 				chanIt->setOps( ( *_clientIt )->getUser() );
+			if ( !chanIt->getLimit() || )
 			chanIt->setCli( *_clientIt );
 			_destSD = ( *chanCliIt )->getSocket();
 			_answer = ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " " + _cmd + " " + _channelTmp + "\r\n";
@@ -1051,7 +1052,6 @@ class IRCData
 				{
 					_destSD = ( *_clientIt )->getSocket();
 					_answer = ":*." + _selfIP + " 696 " + ( *_clientIt )->getNick() + _target + " k * :You must specify a parameter for the key mode. Syntax: <key>.\r\n";
-					_request->clear();
 					sender();
 					throw( IRCErr( ( *_clientIt )->getUser() + " forget argument for channel mode " + _flop + "k" ) );
 				}
@@ -1059,7 +1059,6 @@ class IRCData
 				{
 					_destSD = ( *_clientIt )->getSocket();
 					_answer = ":*." + _selfIP + " 467 " + ( *_clientIt )->getNick() + _target + " k * :Channel key already set.\r\n";
-					_request->clear();
 					sender();
 					throw( IRCErr( ( *_clientIt )->getUser() + " password already exist for channel mode " + _flop + "k" ) );
 				}
@@ -1073,8 +1072,10 @@ class IRCData
 				_modsIt->chanIt->setMod( 0 );
 			else if ( !_modsIt->chanIt->getMod() )
 			{
-				channel->setMod( 1 );
-				:jpillet!~jpillet@freenode-a99.759.j1faas.IP MODE #jeteste :+m
+				_destSD = ( *_clientIt )->getSocket();
+				_answer = ":" + _selfIP + " " + _cmd + " " + _target + " :+m\r\n";
+				sender();
+				_modsIt->chanIt->setMod( 1 );
 			}
 		}
 
@@ -1097,7 +1098,7 @@ class IRCData
 				_answer = "Voir ici code erreur argument manquant\r\n";
 				_request->clear();
 				sender();
-				throw( IRCErr( ( *_clientIt )->getUser() + " foget argument for channel mode " + _flop + "o" ) )
+				throw( IRCErr( ( *_clientIt )->getUser() + " foget argument for channel mode " + _flop + "o" ) );
 			}
 			if ( _flop == '+' && channel->isOps( target ) == ( *channel->getOps() ).end() )
 				channel->setOps( target );
