@@ -84,7 +84,10 @@ class Channel
 			for ( opsIt = _chanOps.begin(); opsIt != _chanOps.end() && user != *opsIt ; ++opsIt )
 			return ( opsIt );
 		}
-		void                            setOps( std::string ops ) { _chanOps.push_back( ops ); }
+		void                            setOps( std::string ops ) {
+			if ( isOps( ops ) == _chanOps.end() )
+				_chanOps.push_back( ops );
+		}
 		void                            unsetOps( std::string user )
         {
             strListIt opsIt = isOps( user );

@@ -1003,34 +1003,25 @@ class IRCData
 				sender();
 				throw( IRCErr( std::string( "No such nick " + _target ) ) );
 			}
-			if ( _modsIt->flop == '+' )
+
+			strListIt opsTarget = isOps( _target );
+			if ( ( _modsIt->flop == '+' && opsTarget == _servOps.end() ) || ( _modsIt->flop == '-' && opsTarget != _servOps.end() ) )
 			{
-				if ( isOps( _target ) == _servOps.end() )
+				if ( _modsIt->flop == '+' )
 					_servOps.push_back( _target );
-			}
-			else
-			{
-				strListIt opsTarget = isOps( _target );
-				if ( opsTarget != _servOps.end() )
+				else
 					_servOps.erase( opsTarget );
+				_destSD = ( *_clientIt )->getSocket();
+				_answer = ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " MODE " + _target + " " + _modsIt->flop + "o :" + _target + "\r\n";
+				sender();
 			}
-			_destSD = ( *_clientIt )->getSocket();
-			_answer = ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " MODE " + _target + " " + _modsIt->flop + "o :" + _target + "\r\n";
-			sender();
 		}
 
 		void				C_MODE_B( void )
 		{
 			//char _flop egal a plus ou moins pour savoir si je dois ban ou unban
 			std::string nickUser = getArg();
-			if ( nickUser.size() )
-			{
-				if ( _modsIt->flop == '+' )
-					_modsIt->chanIt->setBan( nickUser , 0 );
-				else
-					_modsIt->chanIt->unBan( nickUser );
-			}
-			else
+			if ( !nickUser.size() )
 			{
 				_destSD = ( *_clientIt )->getSocket();
 				std::list<pairBan> const	*channelBan = _modsIt->chanIt->getBan();
@@ -1041,6 +1032,18 @@ class IRCData
 				}
 				_answer = ":*." + _selfIP + " 368 " + ( *_clientIt )->getNick() + " " + _target + " :End of channel ban list\r\n";
 				sender();
+			}
+			else
+			{
+				////// REPRENDRE ICI //////
+				strListIt opsTarget = _modsIt->chanIt->isBan( _target );
+				if ( ( _modsIt->flop == '+' && opsTarget == _modsIt->chanIt->getBan()->end() ) || ( _modsIt->flop == '-' && opsTarget == _modsIt->chanIt->getBan()->end() ) )
+				{
+					if ( _modsIt->flop == '+' )
+						_modsIt->chanIt->setBan( nickUser , 0 );
+					else
+						_modsIt->chanIt->unBan( nickUser );
+				}
 			}
 		}
 
@@ -1075,23 +1078,34 @@ class IRCData
 
 		void				C_MODE_M( void )
 		{
-			if ( _flop == '-' )
-				_modsIt->chanIt->setMod( false );
-			else if ( !_modsIt->chanIt->getMod() )
+			bool mode = ( _modsIt->flop == '+' );
+
+			if ( _modsIt->chanIt->getMod() != mode )
 			{
-				_modsIt->chanIt->setMod( true );
+				if ( _modsIt->flop == '+' )
+					_modsIt->chanIt->setMod( true );
+				else
+					_modsIt->chanIt->setMod( false );
 				_destSD = ( *_clientIt )->getSocket();
-				_answer = ":" + _selfIP + " " + _cmd + " " + _target + " :+m\r\n";
+				_answer = ":" + _selfIP + " " + _cmd + " " + _target + " :" + _modsIt->flop + "m\r\n";
 				sender();
 			}
 		}
 
 		void				C_MODE_N( void )
 		{
-			if ( _flop == '-' )
-				channel->setExt( 0 );
-			else
-				channel->setExt( 1 );
+			bool mode = ( _modsIt->flop == '+' );
+
+			if ( _modsIt->chanIt->getMod() != mode )
+			{
+				if ( _modsIt->flop == '+' )
+					_modsIt->chanIt->setExt( true );
+				else
+					_modsIt->chanIt->setExt( false );
+				_destSD = ( *_clientIt )->getSocket();
+				_answer = ":" + _selfIP + " " + _cmd + " " + _target + " :" + _modsIt->flop + "n\r\n";
+				sender();
+			}
 		}
 
 		void				C_MODE_O( void )
@@ -1102,22 +1116,22 @@ class IRCData
 			if ( !user.size() )
 			{
 				_destSD = ( *_clientIt )->getSocket();
-				_answer = "Voir ici code erreur argument manquant\r\n";
-				_request->clear();
+				_answer = ":*." + _selfIP + " 696 " + ( *_clientIt )->getNick() + _target + " o * :You must specify a parameter for the op mode. Syntax: <nick>.\r\n";
 				sender();
-				throw( IRCErr( ( *_clientIt )->getUser() + " foget argument for channel mode " + _flop + "o" ) );
+				throw( IRCErr( ( *_clientIt )->getUser() + " forgotten argument <nick> for channel mode o" ) );
 			}
-			if ( _flop == '+' && channel->isOps( target ) == ( *channel->getOps() ).end() )
-				channel->setOps( target );
-			else if ( _flop == '-' && channel->isOps( target ) != ( *channel->getOps() ).end() )
-				channel->unsetOps( target );
+			if ( _flop == '+' )
+				_modsIt->chanIt->setOps( user );
+			else if ( _flop == '-' )
+				_modsIt->chanIt->unsetOps( user );
+				:jpillet!~jpillet@freenode-a99.759.j1faas.IP MODE #jeteste +o :jpillet_
 		}
 
 		void				C_MODE_P( void )
 		{
 			channelIterator channel = isChannel( _target )
 			if ( _flop == '-' )
-				->setPriv( 0 );
+				_modsIt->chanIt->setPriv( 0 );
 			else
 				channel->setPriv( 1 );
 		}
