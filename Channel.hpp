@@ -51,7 +51,6 @@ class Channel
 		bool							_secret;
 		bool							_extMsg; // bloque ou non les messages externes
 		unsigned long					_limit; // limite d utilisateurs sur le channel, 0 pour pas de limite.
-		unsigned long					_nbUser;
 		const std::string				_name;
 		std::string						_mdp;
 		std::string						_topic;
@@ -61,8 +60,8 @@ class Channel
 		std::list< _pairBan >			_chanBan;
 
 	public :
-										Channel( void ) : _mod ( 0 ), _priv ( 0 ), _secret( 0 ), _extMsg( 0 ), _limit ( 0 ), _nbUser( 0 ), _name(), _mdp(), _topic(), _cliCrnt(), _chanOps(), _cliVo(), _chanBan() {}
-										Channel( std::string name ) : _mod ( 0 ), _priv ( 0 ), _secret( 0 ), _extMsg( 0 ), _limit ( 0 ), _nbUser( 0 ), _name( name ), _mdp(), _topic(), _cliCrnt(), _chanOps(), _cliVo(), _chanBan() {}
+										Channel( void ) : _mod( 0 ), _priv( 0 ), _secret( 0 ), _extMsg( 0 ), _limit( 0 ), _name(), _mdp(), _topic(), _cliCrnt(), _chanOps(), _cliVo(), _chanBan() {}
+										Channel( std::string name ) : _mod( 0 ), _priv( 0 ), _secret( 0 ), _extMsg( 0 ), _limit( 0 ), _name( name ), _mdp(), _topic(), _cliCrnt(), _chanOps(), _cliVo(), _chanBan() {}
 										~Channel( void ) {}
 		std::string						getName( void ) const { return _name; }
 		void							setPass ( std::string str ) { _mdp = str; }

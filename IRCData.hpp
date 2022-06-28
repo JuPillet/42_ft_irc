@@ -440,12 +440,19 @@ class IRCData
 				_destSD = ( *chanCliIt )->getSocket();
 				_answer = ":*." + _selfIP + " 475 " + ( *_clientIt )->getNick() + " " + _channelTmp + " :Cannot join channel ( incorrect channel key )\r\n";
 				sender();
-				throw( "bad password" );
+				throw( IRCErr( "bad password" ) );
 			}
+			if ( chanIt->getLimit() && chanIt->getLimit() == chanIt->getCli()->size() )
+			{
+				_destSD = ( *chanCliIt )->getSocket();
+				_answer = ":*." + _selfIP + " 471 " + ( *_clientIt )->getNick() + " " + _channelTmp + " :Cannot join channel (channel is full)\r\n";
+				sender();
+				throw( IRCErr( "limit channel full" ) );
+			}
+
+			chanIt->setCli( *_clientIt );
 			if ( !( chanIt->getOps()->size() ) )
 				chanIt->setOps( ( *_clientIt )->getUser() );
-			if ( !chanIt->getLimit() || )
-			chanIt->setCli( *_clientIt );
 			_destSD = ( *chanCliIt )->getSocket();
 			_answer = ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " " + _cmd + " " + _channelTmp + "\r\n";
 			sender();
