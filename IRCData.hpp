@@ -1076,13 +1076,13 @@ class IRCData
 		void				C_MODE_M( void )
 		{
 			if ( _flop == '-' )
-				_modsIt->chanIt->setMod( 0 );
+				_modsIt->chanIt->setMod( false );
 			else if ( !_modsIt->chanIt->getMod() )
 			{
+				_modsIt->chanIt->setMod( true );
 				_destSD = ( *_clientIt )->getSocket();
 				_answer = ":" + _selfIP + " " + _cmd + " " + _target + " :+m\r\n";
 				sender();
-				_modsIt->chanIt->setMod( 1 );
 			}
 		}
 
