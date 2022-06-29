@@ -46,34 +46,41 @@ typedef std::pair< std::string, time_t >	_pairBan;
 
 class Channel
 {
-		bool							_mod; // is operator only mode enabled
+		bool							_moder; // is operator only mode enabled
 		bool							_priv;
 		bool							_secret;
 		bool							_extMsg; // bloque ou non les messages externes
+		bool							_invit;
 		unsigned long					_limit; // limite d utilisateurs sur le channel, 0 pour pas de limite.
 		const std::string				_name;
-		std::string						_mdp;
+		std::string						_mods;
+		std::string						_pass;
 		std::string						_topic;
 		std::list<Client *>				_cliCrnt;
 		std::list<std::string>			_chanOps;
 		std::list<std::string>			_cliVo;
-		std::list< _pairBan >			_chanBan;
+		std::list<std::string>			_guests;
+		std::list<_pairBan>				_chanBan;
 
 	public :
-										Channel( void ) : _mod( 0 ), _priv( 0 ), _secret( 0 ), _extMsg( 0 ), _limit( 0 ), _name(), _mdp(), _topic(), _cliCrnt(), _chanOps(), _cliVo(), _chanBan() {}
-										Channel( std::string name ) : _mod( 0 ), _priv( 0 ), _secret( 0 ), _extMsg( 0 ), _limit( 0 ), _name( name ), _mdp(), _topic(), _cliCrnt(), _chanOps(), _cliVo(), _chanBan() {}
+										Channel( void ) : _moder( false ), _priv( false ), _secret(false), _extMsg( false ), _invit( false ), _limit( 0 ), _name(), _mods(), _pass(), _topic(), _cliCrnt(), _chanOps(), _cliVo(), _chanBan() { return; }
+										Channel( std::string name ) : _moder( false ), _priv( false ), _secret(false), _extMsg( false ), _invit( false ), _limit( 0 ), _name( name ), _mods(), _pass(), _topic(), _cliCrnt(), _chanOps(), _cliVo(), _chanBan() { return; }
 										~Channel( void ) {}
 		std::string						getName( void ) const { return _name; }
-		void							setPass ( std::string str ) { _mdp = str; }
-		void                            unsetPass ( void ) { _mdp.clear(); }
-		std::string						getPass( void ) const { return _mdp; }
-		void							setPriv( int sw ) { _priv = sw; }
-		bool							getPriv( void ) const { return _priv;}
-		void							setMod( int sw ) { _mod = sw; }
-		bool							getMod( void ) const { return _mod; }
-		void							setSecret ( int sw ) { _secret = sw; }
+//		void							
+		std::string						getMods( void ) { return _mods; }
+		void							setPass ( std::string str ) { _pass = str; }
+		void                            unsetPass ( void ) { _pass.clear(); }
+		std::string						getPass( void ) const { return _pass; }
+		void							setPriv( bool priv ) { _priv = priv; }
+		bool							getPriv( void ) const { return _priv; }
+		void							setSecret( bool secret ) { _secret = secret; }
 		bool							getSecret( void ) const { return _secret; }
-		void							setExt ( int sw ) { _extMsg = sw; }
+		void							setInvit( bool invit ) { _invit = invit; }
+		bool							getInvit( void ) const { return _invit; }
+		void							setMod( bool mod ) { _moder = mod; }
+		bool							getMod( void ) const { return _moder; }
+		void							setExt ( bool extMsg ) { _extMsg = extMsg; }
 		bool							getExt( void ) const { return _extMsg; }
 		void							setLimit ( unsigned int tmp ) { _limit = tmp;}
 		unsigned int					getLimit ( void ) const { return _limit; }
@@ -97,7 +104,16 @@ class Channel
 		std::list<std::string> const	*getOps( void ) const { return &_chanOps; }
 		void							setCli( Client *tmp ) { _cliCrnt.push_back( tmp ); }
 		std::list<Client *> const		*getCli( void ) const { return &_cliCrnt; }
-		std::string	getUserByNick( std::string &nickTarget ) 
+		std::string						getNickList( void )
+		{
+			std::string	clients;
+			for ( clientIterator clientIt = _cliCrnt.begin(); clientIt != _cliCrnt.end(); ++clientIt )
+				clients.append( ( *clientIt )->getNick() + " " );
+			if ( clients.size() )
+				clients = std::string( clients, clients.size() - 1 );
+			return clients;
+		}
+		std::string						getUserByNick( std::string &nickTarget ) 
 		{
 			clientIterator clientIt;
 			for ( clientIt = _cliCrnt.begin(); clientIt != _cliCrnt.end(); ++clientIt );
@@ -132,6 +148,28 @@ class Channel
             if ( voIt != _cliVo.end() )
 				_cliVo.erase( voIt );
         }
+
+		strListIt						isGuest( std::string guest )
+		{
+			strListIt guestIt;
+			for ( guestIt = _guests.begin(); guestIt != _guests.end() && *guestIt != guest; ++guestIt );
+			return guestIt;
+		}
+
+		void							addGuests( std::string guest )
+		{
+			if ( isGuest( guest ) == _guests.end() )
+				_guests.push_back( guest );
+		}
+
+		void							removeGuests( std::string guest )
+		{
+			strListIt guestIt = isGuest( guest );
+			if ( guestIt != _guests.end() )
+				_guests.erase( guestIt );
+		}
+
+		std::list<std::string>			getGuests( void ) { return _guests; }
 
 		itBan							isBan( std::string user ) {
 			itBan banIt;

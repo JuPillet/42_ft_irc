@@ -1,5 +1,3 @@
---> lag pong
-<< PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
 << PING *.freenode.net
@@ -173,33 +171,394 @@
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
-<< JOIN #jeteste
->> :jpillet!~jpillet@freenode-a99.759.j1faas.IP JOIN :#jeteste
->> :*.freenode.net 353 jpillet = #jeteste :@jpillet
->> :*.freenode.net 366 jpillet #jeteste :End of /NAMES list.
-<< MODE #jeteste
->> :*.freenode.net 324 jpillet #jeteste :+nt
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< TOPIC 
+>> :*.freenode.net 461 jpillet TOPIC :Not enough parameters.
+>> :*.freenode.net 650 jpillet TOPIC :<channel> [:<topic>]
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< TOPIC 
+>> :*.freenode.net 461 jpillet TOPIC :Not enough parameters.
+>> :*.freenode.net 650 jpillet TOPIC :<channel> [:<topic>]
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< JOIN #physics
+>> :jpillet_!~jpillet@freenode-a99.759.j1faas.IP JOIN :#physics
+>> :*.freenode.net 332 jpillet_ #physics :Uncensored discussions about physics, and related natural and applied sciences dealing with the laws, properties and interactions of matter, energy and the forces acting upon it.
+>> :*.freenode.net 333 jpillet_ #physics FrancisBacon!~chatzilla@freenode-vjg.u3r.upfloo.IP :1624733244
+>> :*.freenode.net 353 jpillet_ = #physics :_sol__ Guest43575 jpillet_ Amaan
+>> :*.freenode.net 366 jpillet_ #physics :End of /NAMES list.
+<< MODE #physics
+>> :*.freenode.net 324 jpillet_ #physics :+Pnt
 --> chanquery mode
-<< WHO #jeteste
->> :*.freenode.net 329 jpillet #jeteste :1656433523
+<< WHO #physics
+>> :*.freenode.net 329 jpillet_ #physics :1623718930
 --> event 329
->> :*.freenode.net 352 jpillet #jeteste ~jpillet freenode-a99.759.j1faas.IP *.freenode.net jpillet H@s :0 Julien Pillet
+>> :*.freenode.net 352 jpillet_ #physics sid282649 freenode/user/-sol-x-93c52c1b742de1d7 *.freenode.net _sol__ Gs :0 DS
 --> silent event who
->> :*.freenode.net 315 jpillet #jeteste :End of /WHO list.
+>> :*.freenode.net 352 jpillet_ #physics ~lorebonu freenode-0r1.9t1.mkkanh.IP *.freenode.net Guest43575 Gs :0 lorebonu
+--> silent event who
+>> :*.freenode.net 352 jpillet_ #physics ~jpillet freenode-a99.759.j1faas.IP *.freenode.net jpillet_ Hs :0 Julien Pillet
+--> silent event who
+>> :*.freenode.net 352 jpillet_ #physics ~Amaan freenode-rd8.4o8.a263fo.IP *.freenode.net Amaan Gs :0 Amaan
+--> silent event who
+>> :*.freenode.net 315 jpillet_ #physics :End of /WHO list.
 --> chanquery who end
-<< MODE #jeteste b
->> :*.freenode.net 368 jpillet #jeteste :End of channel ban list
+<< MODE #physics b
+>> :*.freenode.net 368 jpillet_ #physics :End of channel ban list
 --> chanquery ban end
-<< MODE #jeteste +o
->> :*.freenode.net 696 jpillet #jeteste o * :You must specify a parameter for the op mode. Syntax: <nick>.
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
@@ -238,6 +597,7 @@
 --> lag pong
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
 --> lag pong
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
@@ -338,25 +698,64 @@
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
-<< JOIN #jeteste
->> :jpillet!~jpillet@freenode-a99.759.j1faas.IP JOIN :#jeteste
->> :*.freenode.net 353 jpillet = #jeteste :@jpillet
->> :*.freenode.net 366 jpillet #jeteste :End of /NAMES list.
-<< MODE #jeteste
->> :*.freenode.net 324 jpillet #jeteste :+nt
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< JOIN #physics
+>> :jpillet_!~jpillet@freenode-a99.759.j1faas.IP JOIN :#physics
+>> :*.freenode.net 332 jpillet_ #physics :Uncensored discussions about physics, and related natural and applied sciences dealing with the laws, properties and interactions of matter, energy and the forces acting upon it.
+>> :*.freenode.net 333 jpillet_ #physics FrancisBacon!~chatzilla@freenode-vjg.u3r.upfloo.IP :1624733244
+>> :*.freenode.net 353 jpillet_ = #physics :_sol__ Guest43575 jpillet_ Amaan
+>> :*.freenode.net 366 jpillet_ #physics :End of /NAMES list.
+<< MODE #physics
+>> :*.freenode.net 324 jpillet_ #physics :+Pnt
 --> chanquery mode
-<< WHO #jeteste
->> :*.freenode.net 329 jpillet #jeteste :1656433523
+<< WHO #physics
+>> :*.freenode.net 329 jpillet_ #physics :1623718930
 --> event 329
->> :*.freenode.net 352 jpillet #jeteste ~jpillet freenode-a99.759.j1faas.IP *.freenode.net jpillet H@s :0 Julien Pillet
+>> :*.freenode.net 352 jpillet_ #physics sid282649 freenode/user/-sol-x-93c52c1b742de1d7 *.freenode.net _sol__ Gs :0 DS
 --> silent event who
->> :*.freenode.net 315 jpillet #jeteste :End of /WHO list.
+>> :*.freenode.net 352 jpillet_ #physics ~lorebonu freenode-0r1.9t1.mkkanh.IP *.freenode.net Guest43575 Gs :0 lorebonu
+--> silent event who
+>> :*.freenode.net 352 jpillet_ #physics ~jpillet freenode-a99.759.j1faas.IP *.freenode.net jpillet_ Hs :0 Julien Pillet
+--> silent event who
+>> :*.freenode.net 352 jpillet_ #physics ~Amaan freenode-rd8.4o8.a263fo.IP *.freenode.net Amaan Gs :0 Amaan
+--> silent event who
+>> :*.freenode.net 315 jpillet_ #physics :End of /WHO list.
 --> chanquery who end
-<< MODE #jeteste b
->> :*.freenode.net 368 jpillet #jeteste :End of channel ban list
+<< MODE #physics b
+>> :*.freenode.net 368 jpillet_ #physics :End of channel ban list
 --> chanquery ban end
-<< MODE #jeteste +o
->> :*.freenode.net 696 jpillet #jeteste o * :You must specify a parameter for the op mode. Syntax: <nick>.
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
@@ -387,14 +786,15 @@
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
->> :jpillet_!~jpillet@freenode-a99.759.j1faas.IP JOIN :#jeteste
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
-<< MODE #jeteste -o jpillet_
-<< MODE #jeteste +o jpillet_
->> :jpillet!~jpillet@freenode-a99.759.j1faas.IP MODE #jeteste +o :jpillet_
-<< MODE #jeteste +o jpillet_
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
