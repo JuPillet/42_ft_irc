@@ -22,8 +22,7 @@ int main( int ac, char **av, char **ep )
 		{ server.activityListener(); }
 		catch ( IRCErr const &e )
 		{
-//			std::cerr << err.getError() << std::endl;
-			e.getError().size();
+			std::cerr << err.getError() << std::endl;
 			continue;
 		}
 		try

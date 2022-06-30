@@ -46,14 +46,15 @@ typedef std::pair< std::string, time_t >	_pairBan;
 
 class Channel
 {
-		bool							_moder; // is operator only mode enabled
+		bool							_mod; // is operator only mode enabled
 		bool							_priv;
 		bool							_secret;
 		bool							_extMsg; // bloque ou non les messages externes
 		bool							_invit;
+		bool							_protecTopic;
 		unsigned long					_limit; // limite d utilisateurs sur le channel, 0 pour pas de limite.
 		const std::string				_name;
-		std::string						_mods;
+		std::string						_flags;
 		std::string						_pass;
 		std::string						_topic;
 		std::list<Client *>				_cliCrnt;
@@ -63,27 +64,101 @@ class Channel
 		std::list<_pairBan>				_chanBan;
 
 	public :
-										Channel( void ) : _moder( false ), _priv( false ), _secret(false), _extMsg( false ), _invit( false ), _limit( 0 ), _name(), _mods(), _pass(), _topic(), _cliCrnt(), _chanOps(), _cliVo(), _chanBan() { return; }
-										Channel( std::string name ) : _moder( false ), _priv( false ), _secret(false), _extMsg( false ), _invit( false ), _limit( 0 ), _name( name ), _mods(), _pass(), _topic(), _cliCrnt(), _chanOps(), _cliVo(), _chanBan() { return; }
+										Channel( void ) : _mod( false ), _priv( false ), _secret(false), _extMsg( false ), _invit( false ), _limit( 0 ), _name(), _flags(), _pass(), _topic(), _cliCrnt(), _chanOps(), _cliVo(), _chanBan() { return; }
+										Channel( std::string name ) : _mod( false ), _priv( false ), _secret(false), _extMsg( false ), _invit( false ), _limit( 0 ), _name( name ), _flags(), _pass(), _topic(), _cliCrnt(), _chanOps(), _cliVo(), _chanBan() { return; }
 										~Channel( void ) {}
 		std::string						getName( void ) const { return _name; }
 //		void							
-		std::string						getMods( void ) { return _mods; }
-		void							setPass ( std::string str ) { _pass = str; }
-		void                            unsetPass ( void ) { _pass.clear(); }
+		std::string						getFlags( void ) { return _flags; }
+		void							addFlag( char flag )
+		{
+			strIt	flagIt;
+			for ( flagIt = _flags.begin(); flagIt != _flags.end() && *flagIt != flag ; ++flagIt );
+			if ( flagIt == _flags.end() )
+				_flags.push_back( flag );
+		}
+		void							delFlag( char flag )
+		{
+			strIt	flagIt;
+			for ( flagIt = _flags.begin(); flagIt != _flags.end() && *flagIt != flag ; ++flagIt );
+			if ( flagIt != _flags.end() )
+				_flags.erase( flagIt );
+		}
+
+		void							setPass ( std::string str )
+										{
+											_pass = str;
+											addFlag( 'k' );
+										}
+		void                            unsetPass ( void )
+										{
+											_pass.clear();
+											delFlag( 'k' );
+										}
 		std::string						getPass( void ) const { return _pass; }
-		void							setPriv( bool priv ) { _priv = priv; }
+		void							setPriv( bool priv )
+										{
+											_priv = priv;
+											if ( priv )
+												addFlag( 'p' );
+											else
+												delFlag( 'p' );
+										}
 		bool							getPriv( void ) const { return _priv; }
-		void							setSecret( bool secret ) { _secret = secret; }
+		void							setSecret( bool secret )
+										{
+											_secret = secret;
+											if ( secret )
+												addFlag( 's' );
+											else
+												delFlag( 's' );
+										}
 		bool							getSecret( void ) const { return _secret; }
-		void							setInvit( bool invit ) { _invit = invit; }
+		void							setInvit( bool invit )
+										{
+											_invit = invit;
+											if ( invit )
+												addFlag( 'i' );
+											else
+												delFlag( 'i' );
+										}
 		bool							getInvit( void ) const { return _invit; }
-		void							setMod( bool mod ) { _moder = mod; }
-		bool							getMod( void ) const { return _moder; }
-		void							setExt ( bool extMsg ) { _extMsg = extMsg; }
+		void							setMod( bool mod )
+										{
+											_mod = mod;
+											if ( mod )
+												addFlag( 'm' );
+											else
+												delFlag( 'm' );
+										}
+		bool							getMod( void ) const { return _mod; }
+		void							setExt ( bool extMsg )
+										{
+											_extMsg = extMsg;
+											if ( extMsg )
+												addFlag( 'n' );
+											else
+												delFlag( 'n' );
+										}
 		bool							getExt( void ) const { return _extMsg; }
-		void							setLimit ( unsigned int tmp ) { _limit = tmp;}
+		void							setLimit ( unsigned int limit )
+										{
+											_limit = limit;
+											if ( limit )
+												addFlag( 'l' );
+											else
+												delFlag( 'l' );
+										}
 		unsigned int					getLimit ( void ) const { return _limit; }
+		void							setProtecTopic ( unsigned int limit )
+										{
+											_limit = limit;
+											if ( limit )
+												addFlag( 't' );
+											else
+												delFlag( 't' );
+										}
+		unsigned int					getProtecTopic ( void ) const { return _limit; }
 		void							setTopic ( std::string topic ) { _topic = topic; }
 		std::string						getTopic ( void ) { return _topic; }
 		strListIt						isOps( std::string user ) {
