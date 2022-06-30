@@ -1379,7 +1379,7 @@ class IRCData
 			{
 				if ( chanIt->isOps( ( *_clientIt )->getUser() ) == chanIt->getOps()->end() )
 				{
-					_answer = "Voir code erreur pas operateur du channel\r\n"; //A VOIR FORMATAGE CODE ERREUR CHANNEL INNEXISTANT CMD MODE
+					_answer = ":*." + _selfIP + " 482 " + ( *_clientIt )->getNick() + " " + _target + " :You must have channel op access or above to set channel mode\r\n"; //A VOIR FORMATAGE CODE ERREUR CHANNEL INNEXISTANT CMD MODE
 					_request->clear();
 					sender();
 					throw( IRCErr( "Not channel operator" ) );
