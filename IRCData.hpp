@@ -1254,7 +1254,7 @@ class IRCData
 			}
 			bool plus = _modsIt->flop == '+' && _modsIt->chanIt->isVo( _modsIt->arg ) == ( *_modsIt->chanIt->getVo() ).end();
 			bool minus = _modsIt->flop == '-' && _modsIt->chanIt->isVo( _modsIt->arg ) != ( *_modsIt->chanIt->getVo() ).end();
-			if ( plus || minus )
+			if ( (plus || minus) && _modsIt->chanIt->isCli( _modsIt->arg ) != _modsIt->chanIt->getCli()->end() )
 			{
 				plus ? _modsIt->chanIt->setVo( _modsIt->arg ) : _modsIt->chanIt->unsetVo( _modsIt->arg );
 				_answer = ":"  + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " MODE " + _target + " " + _modsIt->flop + "v :" + _modsIt->arg + "!*@*\r\n";
@@ -1317,7 +1317,7 @@ class IRCData
 				else
 				{
 					_modsIt->fctn = &IRCData::wrongFlag;
-					_modsIt->arg = "user MODE " + *flagIt;
+					_modsIt->arg = "user MODE" + *flagIt;
 				}
 			}
 		}
@@ -1365,21 +1365,21 @@ class IRCData
 			_destSD = ( *_clientIt )->getSocket();
 			if ( chanIt == _channels.end() )
 			{
-				_answer = "Voir code erreur channel incconu\r\n"; //A VOIR FORMATAGE CODE ERREUR CHANNEL INNEXISTANT CMD MODE
+				_answer = "Voir code erreur channel incconu\r\n";
 				_request->clear();
 				sender();
 				throw( IRCErr( "unvalid flag" ) );
 			}
 			if ( !_flag.size() )
 			{
-				_answer = ":" + _selfIP + " 324 " + ( *_clientIt )->getNick()  + " " + _target + " :+" + chanIt->getFlags() + "\r\n";
+				_answer = ":" + _selfIP + " 324 " + ( *_clientIt )->getNick() + " " + _target + " :+" + chanIt->getFlags() + "\r\n";
 				sender();
 			}
 			else
 			{
 				if ( chanIt->isOps( ( *_clientIt )->getUser() ) == chanIt->getOps()->end() )
 				{
-					_answer = ":*." + _selfIP + " 482 " + ( *_clientIt )->getNick() + " " + _target + " :You must have channel op access or above to set channel mode\r\n"; //A VOIR FORMATAGE CODE ERREUR CHANNEL INNEXISTANT CMD MODE
+					_answer = ":*." + _selfIP + " 482 " + ( *_clientIt )->getNick() + " " + _target + " :You must have channel op access or above to set channel mode\r\n";
 					_request->clear();
 					sender();
 					throw( IRCErr( "Not channel operator" ) );
@@ -1397,13 +1397,13 @@ class IRCData
 			_destSD = ( *_clientIt )->getSocket();
 			if ( !_target.size() || _target[0] == '+' || _target[0] == '-' )
 			{
-				_answer =  ":" + _selfIP + " 461 " + ( *_clientIt )->getNick()  + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " MODE : <channel|user> target forgotten\r\n";
+				_answer =  ":" + _selfIP + " 461 " + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " MODE : <channel|user> target forgotten\r\n";
 				sender();
 				throw( IRCErr( "MODE : <channel|user> target forgotten" ) );
 			}
 			if ( ( !_flag.size() && _target[0] != '#' ) || ( _flag[0] != '+' && _flag[0] != '-' ) )
 			{
-				_answer =  ":" + _selfIP + " 400 " + ( *_clientIt )->getNick()  + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " MODE :operator [+|-] for flag Mode forgotten\r\n";
+				_answer =  ":" + _selfIP + " 400 " + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " MODE :operator [+|-] for flag Mode forgotten\r\n";
 				sender();
 				throw( IRCErr( "MODE :operator [+|-] for flag Mode forgotten" ) );
 			}
