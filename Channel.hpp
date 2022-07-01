@@ -161,18 +161,18 @@ class Channel
 		unsigned int					getProtecTopic ( void ) const { return _limit; }
 		void							setTopic ( std::string topic ) { _topic = topic; }
 		std::string						getTopic ( void ) { return _topic; }
-		strListIt						isOps( std::string user ) {
+		strListIt						isOps( std::string nick ) {
 			strListIt opsIt;
-			for ( opsIt = _chanOps.begin(); opsIt != _chanOps.end() && user != *opsIt ; ++opsIt )
+			for ( opsIt = _chanOps.begin(); opsIt != _chanOps.end() && nick != *opsIt ; ++opsIt )
 			return ( opsIt );
 		}
 		void                            setOps( std::string ops ) {
 			if ( isOps( ops ) == _chanOps.end() )
 				_chanOps.push_back( ops );
 		}
-		void                            unsetOps( std::string user )
+		void                            unsetOps( std::string nick )
         {
-            strListIt opsIt = isOps( user );
+            strListIt opsIt = isOps( nick );
             if ( opsIt != _chanOps.end() )
 				_chanOps.erase( opsIt );
         }
@@ -196,14 +196,14 @@ class Channel
 					return ( *clientIt )->getUser();
 			return "";
 		}
-		clientIterator					isCli( std::string user ) {
+		clientIterator					isCli( std::string nick ) {
 			clientIterator cliIt;
-			for ( cliIt = _cliCrnt.begin(); cliIt != _cliCrnt.end() && user != ( *cliIt )->getUser(); ++cliIt );
+			for ( cliIt = _cliCrnt.begin(); cliIt != _cliCrnt.end() && nick != ( *cliIt )->getNick(); ++cliIt );
 			return ( cliIt );
 		}
-		void							eraseCli( std::string user )
+		void							eraseCli( std::string nick )
 		{
-			clientIterator cliIt ( isCli( user ) );
+			clientIterator cliIt ( isCli( nick ) );
 			if ( cliIt == _cliCrnt.end() )
 				throw( IRCErr( "Client isnt in the channel: " + _name ) );
 			_cliCrnt.erase( cliIt );
@@ -211,15 +211,15 @@ class Channel
 
 		void							setVo( std::string tmp ) { _cliVo.push_back( tmp ); }
 		std::list<std::string>			*getVo( void ) { return &_cliVo; }
-		strListIt							isVo( std::string user ) {
+		strListIt							isVo( std::string nick ) {
 			strListIt voIt;
-			for ( voIt = _cliVo.begin(); voIt != _cliVo.end() && user != *voIt; ++voIt );
+			for ( voIt = _cliVo.begin(); voIt != _cliVo.end() && nick != *voIt; ++voIt );
 			return voIt;
 		}
 
-		void                            unsetVo( std::string user )
+		void                            unsetVo( std::string nick )
         {
-			strListIt voIt = isVo( user );
+			strListIt voIt = isVo( nick );
             if ( voIt != _cliVo.end() )
 				_cliVo.erase( voIt );
         }
@@ -246,9 +246,9 @@ class Channel
 
 		std::list<std::string>			getGuests( void ) { return _guests; }
 
-		itBan							isBan( std::string user ) {
+		itBan							isBan( std::string nick ) {
 			itBan banIt;
-			for ( banIt = _chanBan.begin(); banIt != _chanBan.end() && banIt->first != user; ++banIt );
+			for ( banIt = _chanBan.begin(); banIt != _chanBan.end() && banIt->first != nick; ++banIt );
 			if ( banIt != _chanBan.end() && banIt->second && banIt->second <= std::time( nullptr ) )
 			{
 					_chanBan.erase( banIt );
