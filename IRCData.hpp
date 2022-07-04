@@ -844,19 +844,10 @@ class IRCData
 		void				U_MODE_O( void )
 		{
 			if ( !_target.size() )
-			{
-				_destSD = ( *_clientIt )->getSocket();
-				_answer =  ":" + _selfIP + " 461 " + ( *_clientIt )->getNick()  + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " MODE :MODE user +o targetted user forgotten\r\n";
-				sender();
-				throw( IRCErr( "MODE user +o targeted user forgotten" ) );
-			}
+				sender(_sd, ":" + _selfIP + " 461 " + ( *_clientIt )->getNick()  + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " MODE :MODE user +o targetted user forgotten\r\n", 
+					&IRCErr("MODE user +o targeted user forgotten"));
 			if ( isCli( _target ) == _clients.end() )
-			{
-				_destSD = ( *_clientIt )->getSocket();
-				_answer = ":*." + _selfIP + " 401 " + ( *_clientIt )->getNick() + " " + _target + " :No such nick\r\n";
-				sender();
-				throw( IRCErr( std::string( "No such nick " + _target ) ) );
-			}
+				sender(_sd, ":*." + _selfIP + " 401 " + ( *_clientIt )->getNick() + " " + _target + " :No such nick\r\n", &IRCErr(std::string( "No such nick " + _target )));
 
 			strListIt opsTarget = isOps( _target );
 			if ( ( _modsIt->flop == '+' && opsTarget == _servOps.end() ) || ( _modsIt->flop == '-' && opsTarget != _servOps.end() ) )
@@ -865,9 +856,7 @@ class IRCData
 					_servOps.push_back( _target );
 				else
 					_servOps.erase( opsTarget );
-				_destSD = ( *_clientIt )->getSocket();
-				_answer = ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " MODE " + _target + " " + _modsIt->flop + "o :" + _target + "\r\n";
-				sender();
+				sender(_sd, ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " MODE " + _target + " " + _modsIt->flop + "o :" + _target + "\r\n", 0);
 			}
 		}
 
@@ -880,17 +869,12 @@ class IRCData
 		{
 			//char _flop egal a plus ou moins pour savoir si je dois ban ou unban
 			std::string nickBan = getArg();
-			_destSD = ( *_clientIt )->getSocket();
 			if ( !nickBan.size() )
 			{
 				std::list<pairBan> const	*channelBan = _modsIt->chanIt->getBan();
 				for ( std::list<pairBan>::const_iterator chanBanIt = channelBan->begin(); chanBanIt != channelBan->end(); ++chanBanIt )
-				{
-					_answer = ":*." + _selfIP + " 367 " + ( *_clientIt )->getNick() + " " + _target + " " + nickBan + "!*@*\r\n";
-					sender();
-				}
-				_answer = ":*." + _selfIP + " 368 " + ( *_clientIt )->getNick() + " " + _target + " :End of channel ban list\r\n";
-				sender();
+					sender(_sd, ":*." + _selfIP + " 367 " + ( *_clientIt )->getNick() + " " + _target + " " + nickBan + "!*@*\r\n", 0);
+				sender(_sd, ":*." + _selfIP + " 368 " + ( *_clientIt )->getNick() + " " + _target + " :End of channel ban list\r\n", 0);
 			}
 			else
 			{
@@ -899,22 +883,17 @@ class IRCData
 					_modsIt->chanIt->setBan( nickBan, 0 );
 				else
 					_modsIt->chanIt->unBan( nickBan );
-				_answer = ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " MODE " + _target + " " + _modsIt->flop + "b :" + nickBan + "!*@*\r\n";
-				sender();
+				sender(_sd,  ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " MODE " + _target + " " + _modsIt->flop + "b :" + nickBan + "!*@*\r\n", 0);
 			}
 		}
 
 		void				C_MODE_K( void )
 		{
-			_destSD = ( *_clientIt )->getSocket();
 			if ( _modsIt->flop == '-' )
 				_modsIt->arg = _modsIt->chanIt->getPass();
 			if ( !_chanPassTmp.size() )
-			{
-				_answer = ":*." + _selfIP + " 696 " + ( *_clientIt )->getNick() + _target + " k * :You must specify a parameter for the key mode. Syntax: <key>.\r\n";
-				sender();
-				throw( IRCErr( ( *_clientIt )->getUser() + " forget argument for channel mode " + _modsIt->flop + "k" ) );
-			}
+				sender(_sd, ":*." + _selfIP + " 696 " + ( *_clientIt )->getNick() + _target + " k * :You must specify a parameter for the key mode. Syntax: <key>.\r\n",
+					&IRCErr(( *_clientIt )->getUser() + " forget argument for channel mode " + _modsIt->flop + "k"));
 			if ( _modsIt->flop == '-' )
 				_modsIt->chanIt->unsetPass();
 			else
@@ -924,13 +903,12 @@ class IRCData
 				if ( _modsIt->chanIt->getPass().size() )
 				{
 					_answer = ":*." + _selfIP + " 467 " + ( *_clientIt )->getNick() + _target + " k * :Channel key already set.\r\n";
-					sender();
-					throw( IRCErr( ( *_clientIt )->getUser() + " password already exist for channel mode " + _modsIt->flop + "k" ) );
+					sender(_sd, _answer = ":*." + _selfIP + " 467 " + ( *_clientIt )->getNick() + _target + " k * :Channel key already set.\r\n",
+						&IRCErr(( *_clientIt )->getUser() + " password already exist for channel mode " + _modsIt->flop + "k"));
 				}
 				_modsIt->chanIt->setPass( _chanPassTmp );
 			}
-			_answer = ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " MODE " + _target + " " + _modsIt->flop + "b :" + _modsIt->arg + "!*@*\r\n";
-			sender();
+			sender(_sd, ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " MODE " + _target + " " + _modsIt->flop + "b :" + _modsIt->arg + "!*@*\r\n", 0);
 		}
 
 		void				C_MODE_M( void )
@@ -943,9 +921,7 @@ class IRCData
 					_modsIt->chanIt->setMod( true );
 				else
 					_modsIt->chanIt->setMod( false );
-				_destSD = ( *_clientIt )->getSocket();
-				_answer = ":" + _selfIP + " " + _cmd + " " + _target + " :" + _modsIt->flop + "m\r\n";
-				sender();
+				sender(_sd, ":" + _selfIP + " " + _cmd + " " + _target + " :" + _modsIt->flop + "m\r\n", 0);
 			}
 		}
 
@@ -956,9 +932,7 @@ class IRCData
 			if ( _modsIt->chanIt->getMod() != mode )
 			{
 				_modsIt->flop == '+' ? _modsIt->chanIt->setProtecTopic( true ) : _modsIt->chanIt->setProtecTopic( false );
-				_destSD = ( *_clientIt )->getSocket();
-				_answer = ":" + _selfIP + " " + _cmd + " " + _target + " :" + _modsIt->flop + "t\r\n";
-				sender();
+				sender(_sd, ":" + _selfIP + " " + _cmd + " " + _target + " :" + _modsIt->flop + "t\r\n", 0);
 			}
 		}
 
@@ -972,9 +946,7 @@ class IRCData
 					_modsIt->chanIt->setExt( true );
 				else
 					_modsIt->chanIt->setExt( false );
-				_destSD = ( *_clientIt )->getSocket();
-				_answer = ":" + _selfIP + " " + _cmd + " " + _target + " :" + _modsIt->flop + "n\r\n";
-				sender();
+				sender(_sd, ":" + _selfIP + " " + _cmd + " " + _target + " :" + _modsIt->flop + "n\r\n", 0);
 			}
 		}
 
@@ -982,22 +954,18 @@ class IRCData
 		{
 			strIt	  strIt;
 			//char _flop egal a plus ou moins pour savoir si je dois ban ou unban
-			_destSD = ( *_clientIt )->getSocket();
 			if ( !_modsIt->arg.size() )
 			{
-				_answer = ":*." + _selfIP + " 696 " + ( *_clientIt )->getNick() + _target + " o * :You must specify a parameter for the op mode. Syntax: <nick>.\r\n";
-				sender();
-				throw( IRCErr( ( *_clientIt )->getUser() + " forgotten argument <nick> for channel mode o" ) );
+				sender(_sd, ":*." + _selfIP + " 696 " + ( *_clientIt )->getNick() + _target + " o * :You must specify a parameter for the op mode. Syntax: <nick>.\r\n",
+					&IRCErr(( *_clientIt )->getUser() + " forgotten argument <nick> for channel mode o"));
 			}
 			if ( _modsIt->chanIt->isCli( _modsIt->arg ) == _modsIt->chanIt->getCli()->end() )
 			{
-				_answer = ":*." + _selfIP + " 696 " + ( *_clientIt )->getNick() + _target + " o * :You must specify a parameter for the op mode. Syntax: <nick>.\r\n";
-				sender();
-				throw( IRCErr( ( *_clientIt )->getUser() + " forgotten argument <nick> for channel mode o" ) );
+				sender(_sd, ":*." + _selfIP + " 696 " + ( *_clientIt )->getNick() + _target + " o * :You must specify a parameter for the op mode. Syntax: <nick>.\r\n", 
+					&IRCErr(( *_clientIt )->getUser() + " forgotten argument <nick> for channel mode o"));
 			}
 			_modsIt->flop == '+' ? _modsIt->chanIt->setOps( _modsIt->arg ) : _modsIt->chanIt->unsetOps( _modsIt->arg );
-			_answer = ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " MODE " + _target + " " + _modsIt->flop + "o :" + _modsIt->arg + "!*@*\r\n";
-			sender();
+			sender(_sd, ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " MODE " + _target + " " + _modsIt->flop + "o :" + _modsIt->arg + "!*@*\r\n", 0);
 		}
 
 		void				C_MODE_P( void )
@@ -1007,9 +975,7 @@ class IRCData
 			if ( _modsIt->chanIt->getMod() != mode )
 			{
 				_modsIt->flop == '+' ? _modsIt->chanIt->setPriv( true ) : _modsIt->chanIt->setPriv( false );
-				_destSD = ( *_clientIt )->getSocket();
-				_answer = ":" + _selfIP + " " + _cmd + " " + _target + " :" + _modsIt->flop + "p\r\n";
-				sender();
+				sender(_sd, ":" + _selfIP + " " + _cmd + " " + _target + " :" + _modsIt->flop + "p\r\n", 0);
 			}
 		}
 	
@@ -1020,9 +986,7 @@ class IRCData
 			if ( _modsIt->chanIt->getMod() != mode )
 			{
 				_modsIt->flop == '+' ? _modsIt->chanIt->setSecret( true ) : _modsIt->chanIt->setSecret( false );
-				_destSD = ( *_clientIt )->getSocket();
-				_answer = ":" + _selfIP + " " + _cmd + " " + _target + " :" + _modsIt->flop + "s\r\n";
-				sender();
+				sender(_sd, ":" + _selfIP + " " + _cmd + " " + _target + " :" + _modsIt->flop + "s\r\n", 0);
 			}
 		}
 
@@ -1033,9 +997,7 @@ class IRCData
 			if ( _modsIt->chanIt->getMod() != mode )
 			{
 				_modsIt->flop == '+' ? _modsIt->chanIt->setInvit( true ) : _modsIt->chanIt->setInvit( false );
-				_destSD = ( *_clientIt )->getSocket();
-				_answer = ":" + _selfIP + " " + _cmd + " " + _target + " :" + _modsIt->flop + "i\r\n";
-				sender();
+				sender(_sd, ":" + _selfIP + " " + _cmd + " " + _target + " :" + _modsIt->flop + "i\r\n", 0);
 			}
 		}
 
@@ -1043,19 +1005,16 @@ class IRCData
 		{
 			if ( !_modsIt->arg.size() )
 			{
-				_destSD = ( *_clientIt )->getSocket();
-				_answer = ":*." + _selfIP + " 696 " + ( *_clientIt )->getNick() + _target + " * :You must specify a parameter for the voice mode. Syntax: <nick>.\r\n";
 				_request->clear();
-				sender();
-				throw( IRCErr( ( *_clientIt )->getUser() + " foget argument for channel mode " + _modsIt->flop + "v" ) );
+				sender(_sd, ":*." + _selfIP + " 696 " + ( *_clientIt )->getNick() + _target + " * :You must specify a parameter for the voice mode. Syntax: <nick>.\r\n",
+					&IRCErr(( *_clientIt )->getUser() + " foget argument for channel mode " + _modsIt->flop + "v"));
 			}
 			bool plus = _modsIt->flop == '+' && _modsIt->chanIt->isVo( _modsIt->arg ) == ( *_modsIt->chanIt->getVo() ).end();
 			bool minus = _modsIt->flop == '-' && _modsIt->chanIt->isVo( _modsIt->arg ) != ( *_modsIt->chanIt->getVo() ).end();
 			if ( (plus || minus) && _modsIt->chanIt->isCli( _modsIt->arg ) != _modsIt->chanIt->getCli()->end() )
 			{
 				plus ? _modsIt->chanIt->setVo( _modsIt->arg ) : _modsIt->chanIt->unsetVo( _modsIt->arg );
-				_answer = ":"  + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " MODE " + _target + " " + _modsIt->flop + "v :" + _modsIt->arg + "!*@*\r\n";
-				sender();
+				sender(_sd, ":"  + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " MODE " + _target + " " + _modsIt->flop + "v :" + _modsIt->arg + "!*@*\r\n", 0);
 			}
 		}
 
@@ -1065,20 +1024,15 @@ class IRCData
 			for ( flagIt = _flag.begin(); flagIt != _flag.end(); ++flagIt )
 			{
 				if ( *flagIt != 'o' )
-				{
-					_destSD = ( *_clientIt )->getSocket();
-					_answer = ":*." + _selfIP + " 472 " + ( *_clientIt )->getNick() + " " + *flagIt + " :is not a recognised channel mode.\r\n";
-					sender();
-					throw( IRCErr( *flagIt + " :is not a recognised channel mode." ) );
-				}
+					sender(_sd, ":*." + _selfIP + " 472 " + ( *_clientIt )->getNick() + " " + *flagIt + " :is not a recognised channel mode.\r\n", &IRCErr(*flagIt + " :is not a recognised channel mode."));
 			}
 		}
 
 		void	wrongFlag( void )
 		{
 			_destSD = ( *_clientIt )->getSocket();
-			_answer = "Voir code 472 :flag: '" + _modsIt->arg + "' is unvalid flag Mode\r\n"; //A VOIR FORMATAGE CODE ERREUR FLAGMOD INNEXISTANT
-			_answer = ":*." + _selfIP + " 501 :Unknown " + _modsIt->arg + "\r\n";
+			_answer = "Voir code 472 :flag: '" + _modsIt->flag + "' is unvalid flag Mode\r\n"; //A VOIR FORMATAGE CODE ERREUR FLAGMOD INNEXISTANT
+			_answer = ":*." + _selfIP + " 501 :Unknown " + _modsIt->flag + "\r\n";
 			sender();
 		}
 
@@ -1114,7 +1068,7 @@ class IRCData
 				else
 				{
 					_modsIt->fctn = &IRCData::wrongFlag;
-					_modsIt->arg = "user MODE" + *flagIt;
+					_modsIt->arg = "user MODE " + *flagIt;
 				}
 			}
 		}

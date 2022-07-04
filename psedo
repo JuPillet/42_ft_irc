@@ -1,0 +1,15 @@
+list
+{
+	pour chaque element de lalist de channel
+	{
+		si il n est pas secret
+		{
+			_answer = ":*.freenode.net 322 jpillet_ #WeAreRecruiting 0 :" + getFlags 
+			si il n est pas prive
+			 	_answer += ( " " + getTopic )
+			sender ( _sd, _answer + "\r\n", 0 )
+		}
+		:*.freenode.net 323 jpillet_ :End of channel list.
+	}
+
+}
