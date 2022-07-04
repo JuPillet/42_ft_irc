@@ -13,9 +13,6 @@
 class Channel;
 
 
-REPRENDRE DE LA LIGNE 444
-
-
 class IRCData
 {
 /////   struct chained mode /////
@@ -438,27 +435,16 @@ class IRCData
 				sender( ( *_clientIt )->getSocket(), ":*." + _selfIP + " 403 " + ( *_clientIt )->getNick() + " " + _target + " :No such channel\r\n",
 				&IRCErr( "No such channel" ) );
 			if ( ( chanIt->isBan( ( *_clientIt )->getUser() ) ) == chanIt->getBan()->end() )
-			{
-				_answer = "A voir formattage message"; // A voir client banni du channel
 				sender( ( *_clientIt )->getSocket(), ":*." + _selfIP + " 474 " + ( *_clientIt )->getNick() + " " + _target + " :you are banned from channel\r\n",
-					&IRCErr( "banned" ) );
-			}
-
+					&IRCErr( ( *_clientIt )->getNick() + " banned from " + _target ) );
 			if ( chanIt->getExt() && chanIt->isCli( ( *_clientIt )->getUser() ) == chanIt->getCli()->end() )
-			{
 				sender( ( *_clientIt )->getSocket(), ,
 					&IRCErr( "PRIVMSG - Channel " + _target + " external restriction" ) );
-			}
-
-			if ( chanIt->getMod()															
+			if ( chanIt->getMod()
 				&& chanIt->isOps( ( *_clientIt )->getUser() ) == chanIt->getOps()->end()
 				&& chanIt->isVo( ( *_clientIt )->getUser() ) == chanIt->getVo()->end() )
-			{
-				_destSD = ( *_clientIt )->getSocket();
-				_answer = "A voir formattage message"; // A voir le channel est restrin au moderateur
-				sender();
-				throw ( IRCErr( "PRIVMSG - Channel " + _target + " moderation restriction" ) );
-			}		
+				sender( ( *_clientIt )->getSocket(), ":*." + _selfIP + " 404 " + ( *_clientIt )->getNick() + " " + _target + " You cannot send messages to this channel whilst the +m (moderated) mode is set.\r\n",
+					&IRCErr( "PRIVMSG - Channel " + _target + " moderation restriction" ) );
 
 			constClientIterator	clientIt;
 
@@ -481,11 +467,7 @@ class IRCData
 			std::string		privMsg = getMsgArg();
 			clientIterator clientIt = isCli( _target );
 			if ( clientIt != _clients.end() )
-			{
-				_destSD = ( *clientIt )->getSocket();
-				_answer = ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " " + _cmd + " " + _target + " " + privMsg + "\r\n"; // A voir formatage pour envoyer un message
-				sender();
-			}
+				sender( ( *clientIt )->getSocket(), ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " " + _cmd + " " + _target + " " + privMsg + "\r\n", 0 );
 		}
 
 		void				MSG( void )
