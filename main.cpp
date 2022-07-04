@@ -1,4 +1,4 @@
-#include "IRCMode.hpp"
+#include "IRCData.hpp"
 
 int main( int ac, char **av, char **ep )
 {
@@ -20,7 +20,7 @@ int main( int ac, char **av, char **ep )
 		server.addClearedMasterSocket(); //OK
 		try
 		{ server.activityListener(); }
-		catch ( IRCErr const &e )
+		catch ( IRCErr const &err )
 		{
 			std::cerr << err.getError() << std::endl;
 			continue;

@@ -1,4 +1,5 @@
 #pragma once
+#include <stdlib.h>
 #include <cstring>
 #include <errno.h>
 #include <arpa/inet.h>
@@ -213,6 +214,22 @@ class IRCData
 			}
 			return banIt;
 		}
+		
+		void	LIST(void)
+		{
+			for ( channelIterator chanIt = _channels.begin(); chanIt != _channels.end(); ++chanIt )
+			{
+				if ( !chanIt->getSecret() )
+				{
+					char *nbr;
+					_answer = ":*." + _selfIP + " 322 " + ( *_clientIt )->getNick() + " " + chanIt->getName() + " " + IRC::ultostr( chanIt->getCli()->size() ) + " :" + chanIt->getFlags();
+					if ( !chanIt->getPriv() )
+						_answer +=  " " + chanIt->getTopic();
+					sender( _sd, _answer + "\r\n", 0 );
+				}
+			}
+			sender( _sd, ":*." + _selfIP + " 323 " + ( *_clientIt )->getNick() +  " :End of channel list.\r\n", 0 );
+		}
 
 		void	WELCOME( void )
 		{
@@ -336,8 +353,9 @@ class IRCData
 			if ( ( chanIt = isChannel( _channelTmp ) ) == _channels.end() )
 			{
 				_channels.push_back( _channelTmp );
-				chanIt = _channels.end();
-				--chanIt;
+				chanIt = --_channels.end();
+				chanIt->setFondator( ( *_clientIt )->getNick() );
+				chanIt->setOps( ( *_clientIt )->getNick() );
 			}
 
 			if ( chanIt->getInvit() && chanIt->isGuest( ( *_clientIt )->getNick() ) == chanIt->getGuests().end() )
@@ -661,6 +679,7 @@ class IRCData
 			_listFctI.push_back( pairKVI( "JOIN", &IRCData::JOIN ) );
 			_listFctI.push_back( pairKVI( "PRIVMSG", &IRCData::MSG ) );
 			_listFctI.push_back( pairKVI( "INVITE", &IRCData::INVITE ) );
+			_listFctI.push_back( pairKVI( "LIST", &IRCData::LIST ) );
 			_listFctI.push_back( pairKVI( "KILL", &IRCData::KILL ) );
 			_listFctI.push_back( pairKVI( "KLINE", &IRCData::KLINE ) );
 			_listFctI.push_back( pairKVI( "PART", &IRCData::PART ) );
@@ -1028,12 +1047,19 @@ class IRCData
 			}
 		}
 
-		void	wrongFlag( void )
+		void	wrongFlag( void ) { sender( _sd, ":*." + _selfIP + " 472 " + ( *_clientIt )->getNick() + " " + _modsIt->arg + "' :is not a recognised channel mode.\r\n", 0); }
+
+		void	WHO( void )
 		{
-			_destSD = ( *_clientIt )->getSocket();
-			_answer = "Voir code 472 :flag: '" + _modsIt->flag + "' is unvalid flag Mode\r\n"; //A VOIR FORMATAGE CODE ERREUR FLAGMOD INNEXISTANT
-			_answer = ":*." + _selfIP + " 501 :Unknown " + _modsIt->flag + "\r\n";
-			sender();
+			_target = getLastArg();
+			if (!_target.size())
+				sender(_sd, ":" + _selfIP + " 461 " + ( *_clientIt )->getNick()  + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " WHO : WHO no target given\r\n", 
+					&IRCErr("WHO no target given"));
+			channelIterator chanIt = isChannel(_target) ;
+			if (chanIt == _channels.end())
+				sender( _sd, ":*." + _selfIP + " 403 " + ( *_clientIt )->getNick() + " " + _target + " :No such channel\r\n",
+				&IRCErr( "No such channel" ) );
+			chanIt->WHO( _clientIt, _selfIP, isOps((*_clientIt)->getNick()) != _servOps.end() );
 		}
 
 		void	execMode( void )
@@ -1143,11 +1169,11 @@ class IRCData
 
 			if ( !_target.size() || _target[0] == '+' || _target[0] == '-' )
 			{
-				sender( ( *_clientIt )->getSocket(), ":" + _selfIP + " 461 " + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " MODE : <channel|user> target forgotten\r\n",
+				sender( _sd, ":" + _selfIP + " 461 " + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " MODE : <channel|user> target forgotten\r\n",
 					&IRCErr( "MODE : <channel|user> target forgotten" ) );
 			}
 			if ( ( !_flag.size() && _target[0] != '#' ) || ( _flag[0] != '+' && _flag[0] != '-' ) )
-				sender( ( *_clientIt )->getSocket(), ":" + _selfIP + " 400 " + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " MODE :operator [+|-] for flag Mode forgotten\r\n", &IRCErr( "MODE :operator [+|-] for flag Mode forgotten" ) );
+				sender( _sd, ":" + _selfIP + " 400 " + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " MODE :operator [+|-] for flag Mode forgotten\r\n", &IRCErr( "MODE :operator [+|-] for flag Mode forgotten" ) );
 			if ( _target[0] == '#' )
 				CHANMODE();
 			else

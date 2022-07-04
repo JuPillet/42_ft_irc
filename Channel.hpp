@@ -7,9 +7,9 @@ namespace IRC
 {
 	int	stoi( const std::string &str, std::size_t *index = 0 )
 	{
-		char	posinega = 1;
-		size_t	ifnull;
-		int		result = 0;
+		char		posinega = 1;
+		std::size_t	ifnull;
+		int			result = 0;
 
 		if ( !index )
 			index = &ifnull;
@@ -21,12 +21,12 @@ namespace IRC
 		for ( ; *index < str.size() && std::isdigit( str[*index] ); ++( *index ) )
 			result = ( result * 10 ) + ( ( str[*index] - '0' ) * posinega );
 		return result;
-	}
+	};
 
 	long int	stol( const std::string &str, std::size_t *index = 0 )
 	{
 		char posinega = 1;
-		size_t	ifnull;
+		std::size_t	ifnull;
 		long int result = 0;
 
 		if ( !index )
@@ -39,6 +39,18 @@ namespace IRC
 		for ( ; *index < str.size() && std::isdigit( str[*index] ); ++( *index ) )
 			result = ( result * 10 ) + ( ( str[*index] - '0' ) * posinega );
 		return result;
+	};
+
+	std::string ultostr( std::size_t val )
+	{
+		std::string valStr;
+		do
+		{
+			char cToAdd = ( val % 10 ) + '0';
+			valStr = cToAdd + valStr;
+			val /= 10;
+		} while( val );
+		return valStr;
 	}
 };
 
@@ -54,6 +66,7 @@ class Channel
 		bool							_protecTopic;
 		unsigned long					_limit; // limite d utilisateurs sur le channel, 0 pour pas de limite.
 		const std::string				_name;
+		std::string						_fondator;
 		std::string						_flags;
 		std::string						_pass;
 		std::string						_topic;
@@ -68,7 +81,9 @@ class Channel
 										Channel( std::string name ) : _mod( false ), _priv( false ), _secret(false), _extMsg( false ), _invit( false ), _limit( 0 ), _name( name ), _flags(), _pass(), _topic(), _cliCrnt(), _chanOps(), _cliVo(), _chanBan() { return; }
 										~Channel( void ) {}
 		std::string						getName( void ) const { return _name; }
-//		void							
+		void							setFondator( std::string const &fondator ) { _fondator = fondator; }
+		void							delFondator( void ) { _fondator.clear(); }
+		std::string						getFondator() const { return _fondator; }
 		std::string						getFlags( void ) { return _flags; }
 		void							addFlag( char flag )
 		{
@@ -270,7 +285,6 @@ class Channel
 			}
 			else
 			{
-
 				if ( nb == 0 )
 					tmpIt->second = nb;
 				else
@@ -287,4 +301,17 @@ class Channel
 		}
 
 		std::list<pairBan> const	*getBan( void ) const { return &_chanBan; }
+		void WHO( clientIterator clientIt, std::string &servIP, bool isServOps )
+		{
+			for ( clientIterator userIt = _cliCrnt.begin(); clientIt != _cliCrnt.end(); ++userIt )
+				std::string answer = ":*." + servIP + " 352 " + ( *clientIt )->getNick() + " " + _name + " ";
+				if ( isServOps )
+					answer.push_back( '*' );
+				if ( isOps( (*clientIt)->getNick() ) != _chanOps.end() )
+					answer.push_back( '@' );
+				
+				sender( _sd,
+				":*." + _selfIP + " 352 " + jpillet + " " + #jeteste ~jpillet freenode-a99.759.j1faas.IP *.freenode.net jpillet H@s :0 Julien Pillet
+				:*.freenode.net 315 jpillet #jeteste :End of /WHO list.
+		}
 };

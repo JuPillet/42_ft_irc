@@ -107,7 +107,6 @@ class Client
 												std::string channelName = channel->getName();
 												_channels.push_back( channel );
 												channel->setCli( this );
-												channel->setOps( _nick );
 
 												constClientIterator	chanCliIt;
 												std::string			answer;
@@ -122,7 +121,8 @@ class Client
 														try
 														{
 															if ( channel->getTopic().size() )
-																sender( _client_socket, ":*." + servIP + " 332 " + _nick + " " + channelName + " :" + channel->getTopic() + "\r\n", 0 ); }
+																sender( _client_socket, ":*." + servIP + " 332 " + _nick + " " + channelName + " :" + channel->getTopic() + "\r\n", 0 );
+														}
 														catch ( IRCErr err )
 														{ std::cerr << err.getError() << std::endl; }
 														try

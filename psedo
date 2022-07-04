@@ -7,9 +7,11 @@ list
 			_answer = ":*.freenode.net 322 jpillet_ #WeAreRecruiting 0 :" + getFlags 
 			si il n est pas prive
 			 	_answer += ( " " + getTopic )
-			sender ( _sd, _answer + "\r\n", 0 )
+			try
+				sender ( _sd, _answer + "\r\n", 0 )
+			catch erreur du sender
+				print erreur du sender
 		}
-		:*.freenode.net 323 jpillet_ :End of channel list.
 	}
 
 }
