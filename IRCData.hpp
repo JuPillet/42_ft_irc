@@ -432,18 +432,18 @@ class IRCData
 			std::string		privMsg = getMsgArg();
 
 			if ( chanIt == _channels.end() )
-				sender( ( *_clientIt )->getSocket(), ":*." + _selfIP + " 403 " + ( *_clientIt )->getNick() + " " + _target + " :No such channel\r\n",
+				sender( _sd, ":*." + _selfIP + " 403 " + ( *_clientIt )->getNick() + " " + _target + " :No such channel\r\n",
 				&IRCErr( "No such channel" ) );
 			if ( ( chanIt->isBan( ( *_clientIt )->getUser() ) ) == chanIt->getBan()->end() )
-				sender( ( *_clientIt )->getSocket(), ":*." + _selfIP + " 474 " + ( *_clientIt )->getNick() + " " + _target + " :you are banned from channel\r\n",
+				sender( _sd, ":*." + _selfIP + " 474 " + ( *_clientIt )->getNick() + " " + _target + " :you are banned from channel\r\n",
 					&IRCErr( ( *_clientIt )->getNick() + " banned from " + _target ) );
 			if ( chanIt->getExt() && chanIt->isCli( ( *_clientIt )->getUser() ) == chanIt->getCli()->end() )
-				sender( ( *_clientIt )->getSocket(), ,
+				sender( _sd, ":*." + _selfIP + " 404 " + ( *_clientIt )->getNick() + " " + _target + " You cannot send messages to this channel whilst the +n (noextmsg) mode is set.\r\n",
 					&IRCErr( "PRIVMSG - Channel " + _target + " external restriction" ) );
 			if ( chanIt->getMod()
 				&& chanIt->isOps( ( *_clientIt )->getUser() ) == chanIt->getOps()->end()
 				&& chanIt->isVo( ( *_clientIt )->getUser() ) == chanIt->getVo()->end() )
-				sender( ( *_clientIt )->getSocket(), ":*." + _selfIP + " 404 " + ( *_clientIt )->getNick() + " " + _target + " You cannot send messages to this channel whilst the +m (moderated) mode is set.\r\n",
+				sender( _sd, ":*." + _selfIP + " 404 " + ( *_clientIt )->getNick() + " " + _target + " You cannot send messages to this channel whilst the +m (moderated) mode is set.\r\n",
 					&IRCErr( "PRIVMSG - Channel " + _target + " moderation restriction" ) );
 
 			constClientIterator	clientIt;
@@ -455,7 +455,7 @@ class IRCData
 				{
 					_destSD = ( *clientIt )->getSocket();
 					try
-					{ sender(); } //essaye d envoyer le message a l utilisateur
+					{ sender( _sd, _answer, 0 ); } //essaye d envoyer le message a l utilisateur
 					catch( IRCErr const &err )
 					{ std::cerr << err.getError() << std::endl; } //affiche ici si le message n a pas ete envoyé a un utilisateur
 				}
@@ -467,7 +467,7 @@ class IRCData
 			std::string		privMsg = getMsgArg();
 			clientIterator clientIt = isCli( _target );
 			if ( clientIt != _clients.end() )
-				sender( ( *clientIt )->getSocket(), ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " " + _cmd + " " + _target + " " + privMsg + "\r\n", 0 );
+				sender( _sd, ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " " + _cmd + " " + _target + " " + privMsg + "\r\n", 0 );
 		}
 
 		void				MSG( void )
@@ -487,40 +487,33 @@ class IRCData
 			channelIterator chanIt = isChannel( _target );
 
 			if ( chanIt == _channels.end() )
-			{
-				_destSD = ( *_clientIt )->getSocket();
-				_answer = "Avoir code channel innextiant"; //A VOIR CODE ERREUR
-				sender();
-				throw( IRCErr( "Channel doesnt exist." ) );
-			}
+				sender(_sd , ":*." + _selfIP + " 403 " + ( *_clientIt )->getNick() + " " + _target + " :No such channel\r\n",
+				 &IRCErr("Channel doesnt exist."));
 			try
 			{
 				try
 				{ chanIt->eraseCli( ( *_clientIt )->getUser() ); }
 				catch ( IRCErr const &err )
 				{
-					_destSD = ( *_clientIt )->getSocket();
-					_answer = "client isnt in the channel"; //A VOIR CODE ERREUR
-					sender();
-					throw( err );
+					sender(_sd , ":*." + _selfIP + " 442 " + ( *_clientIt )->getNick() + " " + _target + " :You're not on that channel\r\n",
+					 	&IRCErr("Client not on the channel."));
 				}
-				_destSD = ( *_clientIt )->getSocket();
 				_answer = ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " PART " + _target + " :left away\r\n";
-				sender();
+				sender(_sd, ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " PART " + _target + " :left away\r\n",
+					0);
 				for ( constClientIterator chanCliIt = chanIt->getCli()->begin();
 					chanCliIt != chanIt->getCli()->end(); ++chanCliIt )
 				{
 					_destSD = ( *chanCliIt )->getSocket();
-					_answer = ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " PART " + _target + " :left away\r\n";
 					try
-					{ sender(); }
+					{ sender(_destSD, ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " PART " + _target + " :left away\r\n",
+					0); }
 					catch ( IRCErr const &err )
 					{ std::cerr << err.getError() << std::endl; }
 				}
 			}
 			catch ( IRCErr const &err )
 			{
-				sender();
 				throw( err );
 			}
 		}
@@ -530,31 +523,20 @@ class IRCData
 			_target = getArg();
 			channelIterator channelIt = isChannel( _target );
 			if ( channelIt == _channels.end() )
-			{
-				_destSD = ( *_clientIt )->getSocket();
-				_answer = ":*." + _selfIP + " 403 " + ( *_clientIt )->getNick() + " " + _target + " :No such channel\r\n";//A VOIR CODE ERREUR
-				sender();
-				throw( "TOPIC: channel innexistant" );
-			}
+				sender(_sd, ":*." + _selfIP + " 403 " + ( *_clientIt )->getNick() + " " + _target + " :No such channel\r\n", &IRCErr("TOPIC: channel innexistant"));
 			std::string topic = getLastArg();
 			if ( topic.size() != 0 )
 			{
 				if ( channelIt->getProtecTopic() && channelIt->isOps( ( *_clientIt )->getNick() ) == channelIt->getOps()->end() )
 				{
 					_request->clear();
-					_destSD = ( *_clientIt )->getSocket();
-					_answer = ":*." + _selfIP + " 482 " + ( *_clientIt )->getNick() + " " + _channelTmp + " :You must be a channel half-operator\r\n";
-					sender();
-					throw( ( *_clientIt )->getNick() + " not '" + _channelTmp + "' channel operator" );
+					sender(_sd, ":*." + _selfIP + " 482 " + ( *_clientIt )->getNick() + " " + _channelTmp + " :You must be a channel half-operator\r\n", 
+						&IRCErr(( *_clientIt )->getNick() + " not '" + _channelTmp + "' channel operator"));
 				}
 				channelIt->setTopic( topic );
 			}
 			else
-			{
-				_destSD = ( *_clientIt )->getSocket();
-				_answer = ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " TOPIC " + _target + " :left away\r\n";
-				sender();
-			}
+				sender(_sd, ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " TOPIC " + _target + " :left away\r\n", 0);
 		}
 
 		void				INVITE( void )
@@ -567,45 +549,26 @@ class IRCData
 			if ( cliTarget == _clients.end() )
 			{
 				_request->clear();
-				_destSD = ( *_clientIt )->getSocket();
-				_answer = ":*." + _selfIP + " 401 " + ( *_clientIt )->getNick() + " " + _target + " :No such nick\r\n";
-				sender();
-				throw( _target + " not server client" );
+				sender(_sd, ":*." + _selfIP + " 401 " + ( *_clientIt )->getNick() + " " + _target + " :No such nick\r\n", &IRCErr(_target + " not server client"));
 			}
 			if ( channel == _channels.end() )
-			{
-				_destSD = ( *_clientIt )->getSocket();
-				_answer = ":*." + _selfIP + " 403 " + ( *_clientIt )->getNick() + " " + _target + " :No such channel\r\n";//A VOIR CODE ERREUR
-				sender();
-				throw( "TOPIC: channel innexistant" );
-			}
-
+				sender(_sd, ":*." + _selfIP + " 403 " + ( *_clientIt )->getNick() + " " + _target + " :No such channel\r\n", &IRCErr("TOPIC: channel innexistant"));
 			if ( channel->isOps( user ) == channel->getOps()->end() )
 			{
 				_request->clear();
-				_destSD = ( *_clientIt )->getSocket();
-				_answer = ":*." + _selfIP + " 482 " + ( *_clientIt )->getNick() + " " + _channelTmp + " :You must be a channel half-operator\r\n";
-				sender();
-				throw( user + " not '" + _channelTmp + "' channel operator" );
+				sender(_sd, ":*." + _selfIP + " 482 " + ( *_clientIt )->getNick() + " " + _channelTmp + " :You must be a channel half-operator\r\n",
+					&IRCErr(user + " not '" + _channelTmp + "' channel operator"));
 			}
-
 			if ( channel->isCli( _target ) == channel->getCli()->end() )
 			{
 				_request->clear();
-				_destSD = ( *_clientIt )->getSocket();
-				_answer =  ":*." + _selfIP + " 443 " + user + " " + _target + " :" + _channelTmp + " :is already on channel\r\n";
-				sender();
-				throw( _target + " allready on '" + _channelTmp + "' channel" );
+				sender(_sd, ":*." + _selfIP + " 443 " + user + " " + _target + " :" + _channelTmp + " :is already on channel\r\n", &IRCErr(_target + " allready on '" + _channelTmp + "' channel"));
 			}
 
 			channel->addGuests( _target );
-			_destSD = ( *cliTarget )->getSocket();
-			_answer = ":" + _target + "!~" + ( *cliTarget )->getUser() + "@" + ( *cliTarget )->getClIp() + " " + _cmd + " " + ( *cliTarget )->getUser() + " :" + _channelTmp + "\r\n";
-			sender();
+			sender((*cliTarget )->getSocket(), ":" + _target + "!~" + ( *cliTarget )->getUser() + "@" + ( *cliTarget )->getClIp() + " " + _cmd + " " + ( *cliTarget )->getUser() + " :" + _channelTmp + "\r\n", 0);
 			( *cliTarget )->setInvitation( _channelTmp );
-			_destSD = ( *_clientIt )->getSocket();
-			_answer = ":*." + _selfIP + " 341 " + user + " " + _target + " :" + _channelTmp + "\r\n";
-			sender();
+			sender(_sd, ":*." + _selfIP + " 341 " + user + " " + _target + " :" + _channelTmp + "\r\n", 0);
 		}
 
 		void				QUIT( void )
@@ -627,10 +590,8 @@ class IRCData
 			}
 			for ( clientIterator clientIt = _clients.begin(); clientIt != _clients.end(); ++clientIt )
 			{
-				_destSD = ( *clientIt )->getSocket();
-				_answer = ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " QUIT " + quitMsg + "\r\n";
 				try
-				{ sender(); }
+				{ sender( _sd, ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " QUIT " + quitMsg + "\r\n", 0); }
 				catch ( IRCErr const &err )
 				{ std::cerr << err.getError() << std::endl; }
 			}

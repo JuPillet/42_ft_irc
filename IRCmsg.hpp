@@ -17,5 +17,5 @@ void	sender( int dest, std::string answer, IRCErr *err )
 	if ( send( dest, answer.c_str(), answer.length(), 0 ) == -1 )
 		throw( IRCErr( "send" ) );
 	if ( err )
-		throw( err );
+		throw( *err );
 }
