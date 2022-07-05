@@ -6,30 +6,157 @@
 >> :*.freenode.net NOTICE * :*** Could not resolve your hostname: Domain not found; using your IP address (62.129.8.171) instead.
 >> :*.freenode.net CAP * LS :account-notify account-tag away-notify batch cap-notify chghost draft/relaymsg echo-message extended-join inspircd.org/poison inspircd.org/standard-replies invite-notify labeled-response message-tags multi-prefix sasl server-time setname userhost-in-names 
 << CAP REQ :multi-prefix
+>> PING :E@xIEfZCEB
+<< PONG :E@xIEfZCEB
+>> :*.freenode.net CAP jpillet ACK :multi-prefix
+<< CAP END
+>> :*.freenode.net NOTICE jpillet :*** Ident lookup timed out, using ~jpillet instead.
+>> :*.freenode.net 001 jpillet :Welcome to the freenode IRC Network jpillet!~jpillet@62.129.8.171
+<< MODE jpillet +i
+>> :*.freenode.net 002 jpillet :Your host is *.freenode.net, running version InspIRCd-3
+>> :*.freenode.net 003 jpillet :This server was created 00:20:08 Apr 21 2022
+>> :*.freenode.net 004 jpillet *.freenode.net InspIRCd-3 BDHILRSTWcdghikorswxz ABCDEFIJKLMNOPQRSTUWXYZbcdefhijklmnoprstuvwz :BEFIJLWXYZbdefhjklovw
+>> :*.freenode.net 005 jpillet ACCEPT=30 AWAYLEN=200 BOT=B CALLERID=g CASEMAPPING=ascii CHANLIMIT=#:20 CHANMODES=IXZbew,k,BEFJLWdfjl,ACDKMNOPQRSTUcimnprstuz CHANNELLEN=64 CHANTYPES=# ELIST=CMNTU ESILENCE=CcdiNnPpTtx EXCEPTS=e :are supported by this server
+>> :*.freenode.net 005 jpillet EXTBAN=,ACNOQRSTUacjmnpruwz HOSTLEN=64 INVEX=I KEYLEN=32 KICKLEN=255 LINELEN=512 MAXLIST=I:100,X:100,b:100,e:100,w:100 MAXTARGETS=20 MODES=20 MONITOR=30 NAMELEN=128 NAMESX NETWORK=freenode :are supported by this server
+>> :*.freenode.net 005 jpillet NICKLEN=30 PREFIX=(Yohv)!@%+ REMOVE SAFELIST SECURELIST=60 SILENCE=32 STATUSMSG=!@%+ TOPICLEN=390 UHNAMES USERIP USERLEN=10 USERMODES=,,s,BDHILRSTWcdghikorwxz VBANLIST :are supported by this server
+>> :*.freenode.net 005 jpillet VLIST=b WATCH=32 WHOX :are supported by this server
+>> :*.freenode.net 251 jpillet :There are 19 users and 10438 invisible on 9 servers
+>> :*.freenode.net 252 jpillet 7 :operator(s) online
+>> :*.freenode.net 253 jpillet 15 :unknown connections
+>> :*.freenode.net 254 jpillet 14203 :channels formed
+>> :*.freenode.net 255 jpillet :I have 3381 clients and 1 servers
+>> :*.freenode.net 265 jpillet :Current local users: 3381  Max: 3478
+>> :*.freenode.net 266 jpillet :Current global users: 10457  Max: 10916
+>> :*.freenode.net 375 jpillet :*.freenode.net message of the day
+>> :*.freenode.net 372 jpillet :  Hello, World!
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Welcome to the
+>> :*.freenode.net 372 jpillet :          __                               _
+>> :*.freenode.net 372 jpillet :         / _|_ __ ___  ___ _ __   ___   __| | ___
+>> :*.freenode.net 372 jpillet :        | |_| '__/ _ \/ _ \ '_ \ / _ \ / _` |/ _ \
+>> :*.freenode.net 372 jpillet :        |  _| | |  __/  __/ | | | (_) | (_| |  __/
+>> :*.freenode.net 372 jpillet :        |_| |_|  \___|\___|_| |_|\___/ \__,_|\___|
+>> :*.freenode.net 372 jpillet :                                   AUTONOMOUS ZONE
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Connect to us on:
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Hostname: irc.freenode.net / chat.freenode.net
+>> :*.freenode.net 372 jpillet :  Plaintext: 6660-6669
+>> :*.freenode.net 372 jpillet :  TLS/SSL: 6697,7000,7070
+>> :*.freenode.net 372 jpillet :  Webchat: https://webchat.freenode.net
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  By connecting to freenode you indicate that you have read and accept our
+>> :*.freenode.net 372 jpillet :  policies and guidelines as set out on https://freenode.net and agree to
+>> :*.freenode.net 372 jpillet :  be scanned for an open proxy.
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  If you are looking for assistance, please try:
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  #help                    - Help with general IRC and Services.
+>> :*.freenode.net 372 jpillet :  #chanhelp                - Help with channels and channel services.
+>> :*.freenode.net 372 jpillet :  #IRC                     - Help with the IRC.com by freenode app.
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Checkout some of our communities and services:
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  #freenode-bbs            - BBS [https://bbs.freenode.net/]
+>> :*.freenode.net 372 jpillet :  #freenode-bbs-discussion - BBS Discussion
+>> :*.freenode.net 372 jpillet :  #freenode-jobs           - Jobs [https://jobs.freenode.net/]
+>> :*.freenode.net 372 jpillet :  #freenode                - Chat about freenode.
+>> :*.freenode.net 372 jpillet :  #anonchan                - Chat anonymously.
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Type /join #<channel>
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Thank you for using freenode!
+>> :*.freenode.net 376 jpillet :End of message of the day.
+>> :*.freenode.net 396 jpillet freenode-a99.759.j1faas.IP :is now your displayed host
+>> :jpillet!~jpillet@freenode-a99.759.j1faas.IP MODE jpillet :+wRix
+>> :*.freenode.net NOTICE jpillet :*** You are connected to chat.freenode.net using TLS (SSL) cipher 'TLSv1.3-TLS_AES_256_GCM_SHA384'
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< JOIN #jeteste2
+>> :jpillet!~jpillet@freenode-a99.759.j1faas.IP JOIN :#jeteste2
+>> :*.freenode.net 353 jpillet = #jeteste2 :@qbrillai jpillet
+>> :*.freenode.net 366 jpillet #jeteste2 :End of /NAMES list.
+<< MODE #jeteste2
+>> :*.freenode.net 324 jpillet #jeteste2 :+nt
+--> chanquery mode
+<< WHO #jeteste2
+>> :*.freenode.net 329 jpillet #jeteste2 :1657035769
+--> event 329
+>> :*.freenode.net 352 jpillet #jeteste2 ~qbrillai freenode-a99.759.j1faas.IP *.freenode.net qbrillai H@s :0 Quentin Brillais
+--> silent event who
+>> :*.freenode.net 352 jpillet #jeteste2 ~jpillet freenode-a99.759.j1faas.IP *.freenode.net jpillet Hs :0 Julien Pillet
+--> silent event who
+>> :*.freenode.net 315 jpillet #jeteste2 :End of /WHO list.
+--> chanquery who end
+<< MODE #jeteste2 b
+>> :*.freenode.net 368 jpillet #jeteste2 :End of channel ban list
+--> chanquery ban end
+>> :qbrillai!~qbrillai@freenode-a99.759.j1faas.IP KICK #jeteste2 jpillet :
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< JOIN #jeteste
+>> :jpillet!~jpillet@freenode-a99.759.j1faas.IP JOIN :#jeteste
+>> :*.freenode.net 353 jpillet = #jeteste :@jpillet
+>> :*.freenode.net 366 jpillet #jeteste :End of /NAMES list.
+<< MODE #jeteste
+>> :*.freenode.net 324 jpillet #jeteste :+nt
+--> chanquery mode
+<< WHO #jeteste
+>> :*.freenode.net 329 jpillet #jeteste :1657035945
+--> event 329
+>> :*.freenode.net 352 jpillet #jeteste ~jpillet freenode-a99.759.j1faas.IP *.freenode.net jpillet H@s :0 Julien Pillet
+--> silent event who
+>> :*.freenode.net 315 jpillet #jeteste :End of /WHO list.
+--> chanquery who end
+<< MODE #jeteste b
+>> :*.freenode.net 368 jpillet #jeteste :End of channel ban list
+--> chanquery ban end
+>> :qbrillai!~qbrillai@freenode-a99.759.j1faas.IP JOIN :#jeteste
+<< KICK #jeteste qbrillai :
+>> :jpillet!~jpillet@freenode-a99.759.j1faas.IP KICK #jeteste qbrillai :
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< CAP LS
+<< NICK jpillet
+<< USER jpillet jpillet chat.freenode.net :Julien Pillet
+>> :*.freenode.net NOTICE * :*** Looking up your ident...
+>> :*.freenode.net NOTICE * :*** Looking up your hostname...
+>> :*.freenode.net NOTICE * :*** Could not resolve your hostname: Domain not found; using your IP address (62.129.8.171) instead.
+>> :*.freenode.net CAP * LS :account-notify account-tag away-notify batch cap-notify chghost draft/relaymsg echo-message extended-join inspircd.org/poison inspircd.org/standard-replies invite-notify labeled-response message-tags multi-prefix sasl server-time setname userhost-in-names 
+<< CAP REQ :multi-prefix
 >> :*.freenode.net 433 * jpillet :Nickname is already in use.
 << NICK jpillet_
 >> :*.freenode.net CAP * ACK :multi-prefix
 << CAP END
->> PING :znnibygMOQ
-<< PONG :znnibygMOQ
+>> PING :fCB]ZWerZS
+<< PONG :fCB]ZWerZS
 >> :*.freenode.net NOTICE jpillet_ :*** Ident lookup timed out, using ~jpillet instead.
 >> :*.freenode.net 001 jpillet_ :Welcome to the freenode IRC Network jpillet_!~jpillet@62.129.8.171
 << MODE jpillet_ +i
 << WHOIS jpillet
 >> :*.freenode.net 002 jpillet_ :Your host is *.freenode.net, running version InspIRCd-3
->> :*.freenode.net 003 jpillet_ :This server was created 00:20:08 Apr 21 2022
+>> :*.freenode.net 003 jpillet_ :This server was created 23:06:04 Apr 20 2022
 >> :*.freenode.net 004 jpillet_ *.freenode.net InspIRCd-3 BDHILRSTWcdghikorswxz ABCDEFIJKLMNOPQRSTUWXYZbcdefhijklmnoprstuvwz :BEFIJLWXYZbdefhjklovw
 >> :*.freenode.net 005 jpillet_ ACCEPT=30 AWAYLEN=200 BOT=B CALLERID=g CASEMAPPING=ascii CHANLIMIT=#:20 CHANMODES=IXZbew,k,BEFJLWdfjl,ACDKMNOPQRSTUcimnprstuz CHANNELLEN=64 CHANTYPES=# ELIST=CMNTU ESILENCE=CcdiNnPpTtx EXCEPTS=e :are supported by this server
 >> :*.freenode.net 005 jpillet_ EXTBAN=,ACNOQRSTUacjmnpruwz HOSTLEN=64 INVEX=I KEYLEN=32 KICKLEN=255 LINELEN=512 MAXLIST=I:100,X:100,b:100,e:100,w:100 MAXTARGETS=20 MODES=20 MONITOR=30 NAMELEN=128 NAMESX NETWORK=freenode :are supported by this server
 >> :*.freenode.net 005 jpillet_ NICKLEN=30 PREFIX=(Yohv)!@%+ REMOVE SAFELIST SECURELIST=60 SILENCE=32 STATUSMSG=!@%+ TOPICLEN=390 UHNAMES USERIP USERLEN=10 USERMODES=,,s,BDHILRSTWcdghikorwxz VBANLIST :are supported by this server
 >> :*.freenode.net 005 jpillet_ VLIST=b WATCH=32 WHOX :are supported by this server
->> :*.freenode.net 251 jpillet_ :There are 20 users and 10411 invisible on 9 servers
+>> :*.freenode.net 251 jpillet_ :There are 19 users and 10380 invisible on 9 servers
 >> :*.freenode.net 252 jpillet_ 7 :operator(s) online
->> :*.freenode.net 253 jpillet_ 20 :unknown connections
->> :*.freenode.net 254 jpillet_ 14158 :channels formed
->> :*.freenode.net 255 jpillet_ :I have 3393 clients and 1 servers
->> :*.freenode.net 265 jpillet_ :Current local users: 3393  Max: 3478
->> :*.freenode.net 266 jpillet_ :Current global users: 10431  Max: 10916
+>> :*.freenode.net 253 jpillet_ 19 :unknown connections
+>> :*.freenode.net 254 jpillet_ 14185 :channels formed
+>> :*.freenode.net 255 jpillet_ :I have 2987 clients and 1 servers
+>> :*.freenode.net 265 jpillet_ :Current local users: 2987  Max: 3262
+>> :*.freenode.net 266 jpillet_ :Current global users: 10399  Max: 10916
 >> :*.freenode.net 375 jpillet_ :*.freenode.net message of the day
 >> :*.freenode.net 372 jpillet_ :  Hello, World!
 >> :*.freenode.net 372 jpillet_ : 
@@ -84,17 +211,17 @@
 >> :*.freenode.net 318 jpillet_ jpillet :End of /WHOIS list.
 --> event empty
 << PING *.freenode.net
+<< JOIN #jeteste
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
-<< JOIN #jeteste
 >> :jpillet_!~jpillet@freenode-a99.759.j1faas.IP JOIN :#jeteste
 >> :*.freenode.net 353 jpillet_ = #jeteste :@jpillet jpillet_
 >> :*.freenode.net 366 jpillet_ #jeteste :End of /NAMES list.
 << MODE #jeteste
->> :*.freenode.net 324 jpillet_ #jeteste :+mnt
+>> :*.freenode.net 324 jpillet_ #jeteste :+nt
 --> chanquery mode
 << WHO #jeteste
->> :*.freenode.net 329 jpillet_ #jeteste :1656919973
+>> :*.freenode.net 329 jpillet_ #jeteste :1657035945
 --> event 329
 >> :*.freenode.net 352 jpillet_ #jeteste ~jpillet freenode-a99.759.j1faas.IP *.freenode.net jpillet H@s :0 Julien Pillet
 --> silent event who
@@ -105,1735 +232,34 @@
 << MODE #jeteste b
 >> :*.freenode.net 368 jpillet_ #jeteste :End of channel ban list
 --> chanquery ban end
-<< PRIVMSG #jeteste :salut
->> :*.freenode.net 404 jpillet_ #jeteste :You cannot send messages to this channel whilst the +m (moderated) mode is set.
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
->> :*.freenode.net 322 jpillet #dtn 1 :[+nt] 
->> :*.freenode.net 322 jpillet #gds 1 :[+nt] 
->> :*.freenode.net 322 jpillet ##bikes 1 :[+nt] 
->> :*.freenode.net 322 jpillet #dui 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet #kw 1 :[+nt] 
->> :*.freenode.net 322 jpillet ##apex 1 :[+nt] 
->> :*.freenode.net 322 jpillet #MM 2 :[+Pnrt] 
->> :*.freenode.net 322 jpillet #smf 1 :[+nt] 
->> :*.freenode.net 322 jpillet #uap 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet #magicjudges-policy 3 :[+nt] 
->> :*.freenode.net 322 jpillet ##makelovegreatagain 1 :[+nt] 
->> :*.freenode.net 322 jpillet #transchat-nsfw 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet #garlicoin 1 :[+nt] 
->> :*.freenode.net 322 jpillet #sysnux 1 :[+Pnrt] www.sysnux.pf
->> :*.freenode.net 322 jpillet #ChatAlias 2 :[+nt] 
->> :*.freenode.net 322 jpillet #wizard 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet #nodejitsu 1 :[+nt] 
->> :*.freenode.net 322 jpillet #afra 8 :[+nt] 
->> :*.freenode.net 322 jpillet #bootstrap 1 :[+Pnrt] bootstrap ui works well on phones, 
->> :*.freenode.net 322 jpillet #grisp 1 :[+nt] 
->> :*.freenode.net 322 jpillet #vocaloid 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet ##deals 1 :[+nt] 
->> :*.freenode.net 322 jpillet #GamerTalk 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet #physics 3 :[+Pnt] Uncensored discussions about physics, and related natural and applied sciences dealing with the laws, properties and interactions of matter, energy and the forces acting upon it.
->> :*.freenode.net 322 jpillet #mcsteve 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet #btct-ad-group 1 :[+nt] 
->> :*.freenode.net 322 jpillet #ctfcompetition 2 :[+nt] 
->> :*.freenode.net 322 jpillet #vsidofringe 1 :[+nt] 
->> :*.freenode.net 322 jpillet #csh 1 :[+nt] 
->> :*.freenode.net 322 jpillet #rmll-2018 1 :[+nt] 
->> :*.freenode.net 322 jpillet #webtech 3 :[+nrt] 
->> :*.freenode.net 322 jpillet #Vshell 1 :[+Pnrt] 
->> :*.freenode.net 322 jpillet #gentoo-zh 3 :[+nt] 
->> :*.freenode.net 322 jpillet #freenode-abuse 1 :[+Pnt] 
->> :*.freenode.net 322 jpillet #dextra-sw 1 :[+nt] 
->> :*.freenode.net 322 jpillet ##gtk-gnutella 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet #bl1 1 :[+nt] 
->> :*.freenode.net 322 jpillet #tiguinet 1 :[+nt] 
->> :*.freenode.net 322 jpillet #bbc 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet #worldbuilding 0 :[+Pnt] "Imaginary worlds and other cool stuff."
->> :*.freenode.net 322 jpillet #octoprint 6 :[+nt] 
->> :*.freenode.net 322 jpillet #galacticfederation 0 :[+Pnt] Welcome citizens of earth and (sigh) the freenode autonomous zone.
->> :*.freenode.net 322 jpillet #unity-gentoo 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet #rozmowy-kontrolowane 1 :[+nt] 
->> :*.freenode.net 322 jpillet #Garuda 4 :[+MPdnrt 120] 
->> :*.freenode.net 322 jpillet #defichain 0 :[+Pnt] DeFiChain https://defichain.com | Native decentralized finance for Bitcoin | $DFI | DEX: https://dex.defichain.com
->> :*.freenode.net 322 jpillet #rails 1 :[+Pnt] Ruby on Rails hang out.
->> :*.freenode.net 322 jpillet #glowing-bear 6 :[+nt] 
->> :*.freenode.net 322 jpillet #ouchnet 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet ##grapheneos 0 :[+Pint] 
->> :*.freenode.net 322 jpillet #potcoin 3 :[+Pnrt] www.potcoin.com | www.potwallet.com
->> :*.freenode.net 322 jpillet #tuempel 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet ##documentliberation-dev 1 :[+nt] 
->> :*.freenode.net 322 jpillet #GovIsrael 0 :[+Pnt] 7,7 2,2 0,0 0,2 0,5 12,8 Israel Ministry of Foreign Affairs https://mfa.gov.il/ 7,7 2,2 0,0 0,2 0,5
->> :*.freenode.net 322 jpillet #ceylonlang 1 :[+nt] 
->> :*.freenode.net 322 jpillet #vikidia 0 :[+Pcint] 
->> :*.freenode.net 322 jpillet #technet 0 :[+Pnt] TechNet IRC Network |
->> :*.freenode.net 322 jpillet #freight 1 :[+nt] 
->> :*.freenode.net 322 jpillet #DragonBallChat 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet #restic 4 :[+Pnt] Please see https://restic.net/#contact for other ways to get help and chat with fellow restic users! :3
->> :*.freenode.net 322 jpillet #Earth 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet #th1s1sn0t4ch4nn3l 0 :[+Pikmnt <key>] free4all
->> :*.freenode.net 322 jpillet #help-es 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet #digitalcoin 3 :[+nt] 
->> :*.freenode.net 322 jpillet #miraheze 3 :[+Pnrt] 
->> :*.freenode.net 322 jpillet #protozoa 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet ##vocaloid 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet #docker-ir 0 :[+LPilnt #technotux 1] 
->> :*.freenode.net 322 jpillet #joy 0 :[+Pnt] a place to be miserable
->> :*.freenode.net 322 jpillet ##bromkle 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet #eskeleto 0 :[+Pnt] -=(oOo)=- https://www.eskeleto.com.br/ -=(oOo)=-
->> :*.freenode.net 322 jpillet #sps2 0 :[+Pnt] The website is dead.  If you find this place, know that some of us are still interested in programming the Linux kit.
->> :*.freenode.net 322 jpillet #extend-luogu 0 :[+Pt] (此频道已废弃，请使用libera.chat的#extend-luogu)
->> :*.freenode.net 322 jpillet #? 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet ##alternativni_kanal 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet #discord-api 2 :[+nt] 
->> :*.freenode.net 322 jpillet #serbia 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet #fedora-iot 1 :[+nt] 
->> :*.freenode.net 322 jpillet #wedewdewd 1 :[+nt] 
->> :*.freenode.net 322 jpillet ##nerds 0 :[+Pint] 
->> :*.freenode.net 322 jpillet ##dns 9 :[+nt] 
->> :*.freenode.net 322 jpillet ##css 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet ##pgd 1 :[+nt] 
->> :*.freenode.net 322 jpillet #legend 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet #RDA 0 :[+Pint] 
->> :*.freenode.net 322 jpillet #ajax 1 :[+nt] 
->> :*.freenode.net 322 jpillet #oberon 1 :[+Pnrt] Discussions related to the Oberon Operating System(s), Programming Language(s) and Philosophy. -- http://people.inf.ethz.ch/wirth/
->> :*.freenode.net 322 jpillet #exercism 0 :[+Pint] 
->> :*.freenode.net 322 jpillet #integrity 1 :[+nt] 
->> :*.freenode.net 322 jpillet #Singapore 6 :[+Pnrt] Welcome to Singapore Freenode. For Channel Help join #OPerator Thank you.
->> :*.freenode.net 322 jpillet #drivechain-dev 1 :[+nt] 
->> :*.freenode.net 322 jpillet #r-wsb-rich_people 1 :[+nt] 
->> :*.freenode.net 322 jpillet #Yako17 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet ##GamePlayer-Minetest-Server 1 :[+nt] 
->> :*.freenode.net 322 jpillet #labomedia 1 :[+nt] 
->> :*.freenode.net 322 jpillet #/join 2 :[+Pnt] 
->> :*.freenode.net 322 jpillet #gohla 2 :[+nt] 
->> :*.freenode.net 322 jpillet #debian 168 :[+Pnrt] [#Linux for more support] Welcome to #debian | Home of the freenode debian community | debian/linux discussion and support
->> :*.freenode.net 322 jpillet #wikipedia-de-phys 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet #skychatz 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet ##starcraft 3 :[+nt] 
->> :*.freenode.net 322 jpillet #hrwiki-rc 0 :[+Pmnt] http://hrwiki.org
->> :*.freenode.net 322 jpillet #kubernetes-ir 0 :[+LPilnt #technotux 1] 
->> :*.freenode.net 322 jpillet #ClashRoyale 0 :[+Pnt] 8,6 Enter #ClashRoyale the Arena! From the creators of Clash of Clans comes a real-time multiplayer game starring the Royales, your favorite Clash characters and much, much ...Rating: 4.2 · ?30,986,657 votes · ?Free · ?Android · Game https://play.google.com/store/apps/details?id=com.supercell.clashroyale&hl=en&gl=US
->> :*.freenode.net 322 jpillet #daalatest 1 :[+nt] 
->> :*.freenode.net 322 jpillet * 0 :
->> :*.freenode.net 322 jpillet #shipyard 1 :[+nt] 
->> :*.freenode.net 322 jpillet ##slovenian 2 :[+Pnrt] 
->> :*.freenode.net 322 jpillet #communism 1 :[+Pnt] 
->> :*.freenode.net 322 jpillet #mtd 1 :[+nt] 
->> :*.freenode.net 322 jpillet #Cappucc|no 0 :[+BCEFJPTWfjnt block:20:80 ~1:10 3:3 10 u4:3 *3:2 5:2] 
->> :*.freenode.net 322 jpillet #openhmd-unreg 1 :[+nt] 
->> :*.freenode.net 322 jpillet #slackware-br 3 :[+Pnrt] In memorian...
->> :*.freenode.net 322 jpillet ##winapi 1 :[+LPlnt #winapi 1] 
->> :*.freenode.net 322 jpillet #squeak 2 :[+nt] 
->> :*.freenode.net 322 jpillet #testchannel2 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet #hydrabusteam 1 :[+nt] 
->> :*.freenode.net 322 jpillet ##nginx 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet #haskell.nix 4 :[+nt] 
->> :*.freenode.net 322 jpillet #grue 2 :[+nt] 
->> :*.freenode.net 322 jpillet #freenode-services 4 :[+Pnt] 
->> :*.freenode.net 322 jpillet #ubuntu-unity 1 :[+nt] 
->> :*.freenode.net 322 jpillet #placedan 1 :[+nt] 
->> :*.freenode.net 322 jpillet ##chat 1 :[+Pnt] 
->> :*.freenode.net 322 jpillet #cicadasecrets 1 :[+nt] 
->> :*.freenode.net 322 jpillet #dimsumlabs 5 :[+Pnrt] we have all moved
->> :*.freenode.net 322 jpillet ##cooking 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet #wmhack 2 :[+nt] 
->> :*.freenode.net 322 jpillet #xshellz 28 :[+nt] [ www.xShellz.com ] - [INFO]: We have moved to irc.libera.chat #xshellz / Shell provider / Free & paid plans can file a support ticket at: https://www.xshellz.com/contact / Main channel language: English
->> :*.freenode.net 322 jpillet ##archlinux 1 :[+Pnt] 
->> :*.freenode.net 322 jpillet #STNYLUG 1 :[+nt] 
->> :*.freenode.net 322 jpillet #v 2 :[+Pnrt] 
->> :*.freenode.net 322 jpillet #Demons 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet ##vc 2 :[+nt] 
->> :*.freenode.net 322 jpillet ##imagevault 1 :[+Pnrt] ImageVault DAM | imagevault.se
->> :*.freenode.net 322 jpillet #coffee 10 :[+nt] 
->> :*.freenode.net 322 jpillet #PlanaltoPresidetBr 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet #codelite 0 :[+Pnt] CodeLite IDE. Current release 15.0 || Long irc messages? http://pastebin.com/
->> :*.freenode.net 322 jpillet #antergos 4 :[+nt] 
->> :*.freenode.net 322 jpillet #bitbot 7 :[+Pnrt] 
->> :*.freenode.net 322 jpillet #nocproject.org 1 :[+nt] 
->> :*.freenode.net 322 jpillet #avenoel 1 :[+nt] 
->> :*.freenode.net 322 jpillet ##Jamiehangout 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet #reactos-dev 8 :[+nt] 
->> :*.freenode.net 322 jpillet #admin 1 :[+Pnrt] nt....
->> :*.freenode.net 322 jpillet ##religion 3 :[+r] /!\ This network is depreciated please connect to irc.letspiss.net on 6667 or 6697 (TLS) /!\
->> :*.freenode.net 322 jpillet #wikimedia-pipeline 2 :[+nt] 
->> :*.freenode.net 322 jpillet #networking 140 :[+Pnrt] 
->> :*.freenode.net 322 jpillet #cdaisi 1 :[+nt] 
->> :*.freenode.net 322 jpillet #linoder 1 :[+nt] 
->> :*.freenode.net 322 jpillet #x 4 :[+nt] 
->> :*.freenode.net 322 jpillet #nodely 1 :[+nt] 
->> :*.freenode.net 322 jpillet #Almajd 0 :[+Pnt] We are a company that provides some computer services:  Typing, Video Editing, Graphic Design, Building Websites, and Technical Support. https://computeralmajd.is-best.net
->> :*.freenode.net 322 jpillet #thecamp 2 :[+nt] 
->> :*.freenode.net 322 jpillet #test334 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet #coreos-dev 1 :[+nt] 
->> :*.freenode.net 322 jpillet #coinswap 2 :[+Pnrt] 
->> :*.freenode.net 322 jpillet ##nodered 1 :[+nt] 
->> :*.freenode.net 322 jpillet #domogik 1 :[+nt] 
->> :*.freenode.net 322 jpillet ##javascript-offtopic 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet ##contribex 1 :[+nt] 
->> :*.freenode.net 322 jpillet #tails 1 :[+nt] See https://tails.boum.org/support for official Tails support
->> :*.freenode.net 322 jpillet #pg_charlie_foxtrot 1 :[+nt] 
->> :*.freenode.net 322 jpillet #Theology 8 :[+Plnrt 16] 
->> :*.freenode.net 322 jpillet #on 1 :[+nt] 
->> :*.freenode.net 322 jpillet ##couchdb 1 :[+nt] 
->> :*.freenode.net 322 jpillet #cedrus 6 :[+nt] 
->> :*.freenode.net 322 jpillet * 1 :
->> :*.freenode.net 322 jpillet #stlouis 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet ##research 1 :[+nt] 
->> :*.freenode.net 322 jpillet #gaygeeks-asl 7 :[+nrt] 
->> :*.freenode.net 322 jpillet #lolhunt 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet #ubuntu 190 :[+Pdnrt 30] Ubuntu Community Channel. -- Mostly idle, please join #linux
->> :*.freenode.net 322 jpillet ##pyra 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet #zdaemon-ops 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet #openrheinruhr 1 :[+nt] 
->> :*.freenode.net 322 jpillet #Bible-Trivia-Quiz 27 :[+lnrt 34] Welcome to #Bible-Trivia-Quiz / Care to test your skills at biblical trivia? Type !trivia3 to start and stop a game, type #3help for other trivia games and categeories. Please do not start a new game if another one is already running. https://is.gd/howwelldoyouknowhim Our Website: https://www.christian-chat-chalice.com
->> :*.freenode.net 322 jpillet #debian.org.sv 1 :[+Pnrt] 
->> :*.freenode.net 322 jpillet #cycling-activism 1 :[+nt] 
->> :*.freenode.net 322 jpillet #vuldev 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet #techrights 21 :[+nt] 
->> :*.freenode.net 322 jpillet #security 126 :[+nrt] Computer and Network Security discussion channel - The only secure computer is one that's unplugged, locked in safe, and buried 20 feet under the ground in a secret location...and i'm not even too sure about that one.
->> :*.freenode.net 322 jpillet #tulungagung 1 :[+nt] 
->> :*.freenode.net 322 jpillet ##osdev 3 :[+nt] 
->> :*.freenode.net 322 jpillet #body 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet #gtk+ 1 :[+nt] 
->> :*.freenode.net 322 jpillet #waschinendeck 2 :[+nt] 
->> :*.freenode.net 322 jpillet #spirit 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet #openvideo 1 :[+nt] 
->> :*.freenode.net 322 jpillet #eole 3 :[+nt] 
->> :*.freenode.net 322 jpillet #WeAreRecruiting 0 :[+Pnt] OffSec Alt - We specialize in MS And Linux. Looking for all black (and White) hackers looking for services for hire. Penetration testing at its best, something the world needs right now.
->> :*.freenode.net 322 jpillet #fosshost 7 :[+Pnrt] 
->> :*.freenode.net 323 jpillet :End of channel list.
-<< PART eole
->> :*.freenode.net 403 jpillet eole :No such channel
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PART #eole
->> :*.freenode.net 442 jpillet #eole :You're not on that channel
-<< CAP LS
-<< NICK jpillet
-<< USER jpillet jpillet chat.freenode.net :Julien Pillet
->> :*.freenode.net NOTICE * :*** Looking up your ident...
->> :*.freenode.net NOTICE * :*** Looking up your hostname...
->> :*.freenode.net NOTICE * :*** Could not resolve your hostname: Domain not found; using your IP address (62.129.8.171) instead.
->> :*.freenode.net CAP * LS :account-notify account-tag away-notify batch cap-notify chghost draft/relaymsg echo-message extended-join inspircd.org/poison inspircd.org/standard-replies invite-notify labeled-response message-tags multi-prefix sasl server-time setname userhost-in-names 
-<< CAP REQ :multi-prefix
->> :*.freenode.net 433 * jpillet :Nickname is already in use.
-<< NICK jpillet_
->> :*.freenode.net CAP * ACK :multi-prefix
-<< CAP END
->> PING :T|d}QTmVA\
-<< PONG :T|d}QTmVA\
->> :*.freenode.net NOTICE jpillet_ :*** Ident lookup timed out, using ~jpillet instead.
->> :*.freenode.net 001 jpillet_ :Welcome to the freenode IRC Network jpillet_!~jpillet@62.129.8.171
-<< MODE jpillet_ +i
-<< WHOIS jpillet
->> :*.freenode.net 002 jpillet_ :Your host is *.freenode.net, running version InspIRCd-3
->> :*.freenode.net 003 jpillet_ :This server was created 00:17:59 Apr 21 2022
->> :*.freenode.net 004 jpillet_ *.freenode.net InspIRCd-3 BDHILRSTWcdghikorswxz ABCDEFIJKLMNOPQRSTUWXYZbcdefhijklmnoprstuvwz :BEFIJLWXYZbdefhjklovw
->> :*.freenode.net 005 jpillet_ ACCEPT=30 AWAYLEN=200 BOT=B CALLERID=g CASEMAPPING=ascii CHANLIMIT=#:20 CHANMODES=IXZbew,k,BEFJLWdfjl,ACDKMNOPQRSTUcimnprstuz CHANNELLEN=64 CHANTYPES=# ELIST=CMNTU ESILENCE=CcdiNnPpTtx EXCEPTS=e :are supported by this server
->> :*.freenode.net 005 jpillet_ EXTBAN=,ACNOQRSTUacjmnpruwz HOSTLEN=64 INVEX=I KEYLEN=32 KICKLEN=255 LINELEN=512 MAXLIST=I:100,X:100,b:100,e:100,w:100 MAXTARGETS=20 MODES=20 MONITOR=30 NAMELEN=128 NAMESX NETWORK=freenode :are supported by this server
->> :*.freenode.net 005 jpillet_ NICKLEN=30 PREFIX=(Yohv)!@%+ REMOVE SAFELIST SECURELIST=60 SILENCE=32 STATUSMSG=!@%+ TOPICLEN=390 UHNAMES USERIP USERLEN=10 USERMODES=,,s,BDHILRSTWcdghikorwxz VBANLIST :are supported by this server
->> :*.freenode.net 005 jpillet_ VLIST=b WATCH=32 WHOX :are supported by this server
->> :*.freenode.net 251 jpillet_ :There are 20 users and 10505 invisible on 9 servers
->> :*.freenode.net 252 jpillet_ 7 :operator(s) online
->> :*.freenode.net 253 jpillet_ 22 :unknown connections
->> :*.freenode.net 254 jpillet_ 14221 :channels formed
->> :*.freenode.net 255 jpillet_ :I have 3380 clients and 1 servers
->> :*.freenode.net 265 jpillet_ :Current local users: 3380  Max: 6046
->> :*.freenode.net 266 jpillet_ :Current global users: 10525  Max: 10916
->> :*.freenode.net 375 jpillet_ :*.freenode.net message of the day
->> :*.freenode.net 372 jpillet_ :  Hello, World!
->> :*.freenode.net 372 jpillet_ : 
->> :*.freenode.net 372 jpillet_ :  Welcome to the
->> :*.freenode.net 372 jpillet_ :          __                               _
->> :*.freenode.net 372 jpillet_ :         / _|_ __ ___  ___ _ __   ___   __| | ___
->> :*.freenode.net 372 jpillet_ :        | |_| '__/ _ \/ _ \ '_ \ / _ \ / _` |/ _ \
->> :*.freenode.net 372 jpillet_ :        |  _| | |  __/  __/ | | | (_) | (_| |  __/
->> :*.freenode.net 372 jpillet_ :        |_| |_|  \___|\___|_| |_|\___/ \__,_|\___|
->> :*.freenode.net 372 jpillet_ :                                   AUTONOMOUS ZONE
->> :*.freenode.net 372 jpillet_ : 
->> :*.freenode.net 372 jpillet_ :  Connect to us on:
->> :*.freenode.net 372 jpillet_ : 
->> :*.freenode.net 372 jpillet_ :  Hostname: irc.freenode.net / chat.freenode.net
->> :*.freenode.net 372 jpillet_ :  Plaintext: 6660-6669
->> :*.freenode.net 372 jpillet_ :  TLS/SSL: 6697,7000,7070
->> :*.freenode.net 372 jpillet_ :  Webchat: https://webchat.freenode.net
->> :*.freenode.net 372 jpillet_ : 
->> :*.freenode.net 372 jpillet_ :  By connecting to freenode you indicate that you have read and accept our
->> :*.freenode.net 372 jpillet_ :  policies and guidelines as set out on https://freenode.net and agree to
->> :*.freenode.net 372 jpillet_ :  be scanned for an open proxy.
->> :*.freenode.net 372 jpillet_ : 
->> :*.freenode.net 372 jpillet_ :  If you are looking for assistance, please try:
->> :*.freenode.net 372 jpillet_ : 
->> :*.freenode.net 372 jpillet_ :  #help                    - Help with general IRC and Services.
->> :*.freenode.net 372 jpillet_ :  #chanhelp                - Help with channels and channel services.
->> :*.freenode.net 372 jpillet_ :  #IRC                     - Help with the IRC.com by freenode app.
->> :*.freenode.net 372 jpillet_ : 
->> :*.freenode.net 372 jpillet_ :  Checkout some of our communities and services:
->> :*.freenode.net 372 jpillet_ : 
->> :*.freenode.net 372 jpillet_ :  #freenode-bbs            - BBS [https://bbs.freenode.net/]
->> :*.freenode.net 372 jpillet_ :  #freenode-bbs-discussion - BBS Discussion
->> :*.freenode.net 372 jpillet_ :  #freenode-jobs           - Jobs [https://jobs.freenode.net/]
->> :*.freenode.net 372 jpillet_ :  #freenode                - Chat about freenode.
->> :*.freenode.net 372 jpillet_ :  #anonchan                - Chat anonymously.
->> :*.freenode.net 372 jpillet_ : 
->> :*.freenode.net 372 jpillet_ :  Type /join #<channel>
->> :*.freenode.net 372 jpillet_ : 
->> :*.freenode.net 372 jpillet_ :  Thank you for using freenode!
->> :*.freenode.net 376 jpillet_ :End of message of the day.
->> :*.freenode.net 396 jpillet_ freenode-a99.759.j1faas.IP :is now your displayed host
->> :jpillet_!~jpillet@freenode-a99.759.j1faas.IP MODE jpillet_ :+wRix
->> :*.freenode.net NOTICE jpillet_ :*** You are connected to chat.freenode.net using TLS (SSL) cipher 'TLSv1.3-TLS_AES_256_GCM_SHA384'
->> :*.freenode.net 311 jpillet_ jpillet ~jpillet freenode-a99.759.j1faas.IP * :Julien Pillet
---> nickfind event whois
->> :*.freenode.net 319 jpillet_ jpillet :@#jeteste 
---> event empty
->> :*.freenode.net 312 jpillet_ jpillet *.freenode.net :freenode
---> event empty
->> :*.freenode.net 671 jpillet_ jpillet :is using a secure connection
---> event empty
->> :*.freenode.net 318 jpillet_ jpillet :End of /WHOIS list.
---> event empty
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PRIVMSG #jeteste :test
->> :*.freenode.net 404 jpillet_ #jeteste :You cannot send external messages to this channel whilst the +n (noextmsg) mode is set.
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< CAP LS
-<< NICK jpillet
-<< USER jpillet jpillet chat.freenode.net :Julien Pillet
->> :*.freenode.net NOTICE * :*** Looking up your ident...
->> :*.freenode.net NOTICE * :*** Looking up your hostname...
->> :*.freenode.net NOTICE * :*** Could not resolve your hostname: Domain not found; using your IP address (62.129.8.171) instead.
->> :*.freenode.net CAP * LS :account-notify account-tag away-notify batch cap-notify chghost draft/relaymsg echo-message extended-join inspircd.org/poison inspircd.org/standard-replies invite-notify labeled-response message-tags multi-prefix sasl server-time setname userhost-in-names 
-<< CAP REQ :multi-prefix
->> :*.freenode.net 433 * jpillet :Nickname is already in use.
-<< NICK jpillet_
->> :*.freenode.net CAP * ACK :multi-prefix
-<< CAP END
->> PING :T|d}QTmVA\
-<< PONG :T|d}QTmVA\
->> :*.freenode.net NOTICE jpillet_ :*** Ident lookup timed out, using ~jpillet instead.
->> :*.freenode.net 001 jpillet_ :Welcome to the freenode IRC Network jpillet_!~jpillet@62.129.8.171
-<< MODE jpillet_ +i
-<< WHOIS jpillet
->> :*.freenode.net 002 jpillet_ :Your host is *.freenode.net, running version InspIRCd-3
->> :*.freenode.net 003 jpillet_ :This server was created 00:17:59 Apr 21 2022
->> :*.freenode.net 004 jpillet_ *.freenode.net InspIRCd-3 BDHILRSTWcdghikorswxz ABCDEFIJKLMNOPQRSTUWXYZbcdefhijklmnoprstuvwz :BEFIJLWXYZbdefhjklovw
->> :*.freenode.net 005 jpillet_ ACCEPT=30 AWAYLEN=200 BOT=B CALLERID=g CASEMAPPING=ascii CHANLIMIT=#:20 CHANMODES=IXZbew,k,BEFJLWdfjl,ACDKMNOPQRSTUcimnprstuz CHANNELLEN=64 CHANTYPES=# ELIST=CMNTU ESILENCE=CcdiNnPpTtx EXCEPTS=e :are supported by this server
->> :*.freenode.net 005 jpillet_ EXTBAN=,ACNOQRSTUacjmnpruwz HOSTLEN=64 INVEX=I KEYLEN=32 KICKLEN=255 LINELEN=512 MAXLIST=I:100,X:100,b:100,e:100,w:100 MAXTARGETS=20 MODES=20 MONITOR=30 NAMELEN=128 NAMESX NETWORK=freenode :are supported by this server
->> :*.freenode.net 005 jpillet_ NICKLEN=30 PREFIX=(Yohv)!@%+ REMOVE SAFELIST SECURELIST=60 SILENCE=32 STATUSMSG=!@%+ TOPICLEN=390 UHNAMES USERIP USERLEN=10 USERMODES=,,s,BDHILRSTWcdghikorwxz VBANLIST :are supported by this server
->> :*.freenode.net 005 jpillet_ VLIST=b WATCH=32 WHOX :are supported by this server
->> :*.freenode.net 251 jpillet_ :There are 20 users and 10505 invisible on 9 servers
->> :*.freenode.net 252 jpillet_ 7 :operator(s) online
->> :*.freenode.net 253 jpillet_ 22 :unknown connections
->> :*.freenode.net 254 jpillet_ 14221 :channels formed
->> :*.freenode.net 255 jpillet_ :I have 3380 clients and 1 servers
->> :*.freenode.net 265 jpillet_ :Current local users: 3380  Max: 6046
->> :*.freenode.net 266 jpillet_ :Current global users: 10525  Max: 10916
->> :*.freenode.net 375 jpillet_ :*.freenode.net message of the day
->> :*.freenode.net 372 jpillet_ :  Hello, World!
->> :*.freenode.net 372 jpillet_ : 
->> :*.freenode.net 372 jpillet_ :  Welcome to the
->> :*.freenode.net 372 jpillet_ :          __                               _
->> :*.freenode.net 372 jpillet_ :         / _|_ __ ___  ___ _ __   ___   __| | ___
->> :*.freenode.net 372 jpillet_ :        | |_| '__/ _ \/ _ \ '_ \ / _ \ / _` |/ _ \
->> :*.freenode.net 372 jpillet_ :        |  _| | |  __/  __/ | | | (_) | (_| |  __/
->> :*.freenode.net 372 jpillet_ :        |_| |_|  \___|\___|_| |_|\___/ \__,_|\___|
->> :*.freenode.net 372 jpillet_ :                                   AUTONOMOUS ZONE
->> :*.freenode.net 372 jpillet_ : 
->> :*.freenode.net 372 jpillet_ :  Connect to us on:
->> :*.freenode.net 372 jpillet_ : 
->> :*.freenode.net 372 jpillet_ :  Hostname: irc.freenode.net / chat.freenode.net
->> :*.freenode.net 372 jpillet_ :  Plaintext: 6660-6669
->> :*.freenode.net 372 jpillet_ :  TLS/SSL: 6697,7000,7070
->> :*.freenode.net 372 jpillet_ :  Webchat: https://webchat.freenode.net
->> :*.freenode.net 372 jpillet_ : 
->> :*.freenode.net 372 jpillet_ :  By connecting to freenode you indicate that you have read and accept our
->> :*.freenode.net 372 jpillet_ :  policies and guidelines as set out on https://freenode.net and agree to
->> :*.freenode.net 372 jpillet_ :  be scanned for an open proxy.
->> :*.freenode.net 372 jpillet_ : 
->> :*.freenode.net 372 jpillet_ :  If you are looking for assistance, please try:
->> :*.freenode.net 372 jpillet_ : 
->> :*.freenode.net 372 jpillet_ :  #help                    - Help with general IRC and Services.
->> :*.freenode.net 372 jpillet_ :  #chanhelp                - Help with channels and channel services.
->> :*.freenode.net 372 jpillet_ :  #IRC                     - Help with the IRC.com by freenode app.
->> :*.freenode.net 372 jpillet_ : 
->> :*.freenode.net 372 jpillet_ :  Checkout some of our communities and services:
->> :*.freenode.net 372 jpillet_ : 
->> :*.freenode.net 372 jpillet_ :  #freenode-bbs            - BBS [https://bbs.freenode.net/]
->> :*.freenode.net 372 jpillet_ :  #freenode-bbs-discussion - BBS Discussion
->> :*.freenode.net 372 jpillet_ :  #freenode-jobs           - Jobs [https://jobs.freenode.net/]
->> :*.freenode.net 372 jpillet_ :  #freenode                - Chat about freenode.
->> :*.freenode.net 372 jpillet_ :  #anonchan                - Chat anonymously.
->> :*.freenode.net 372 jpillet_ : 
->> :*.freenode.net 372 jpillet_ :  Type /join #<channel>
->> :*.freenode.net 372 jpillet_ : 
->> :*.freenode.net 372 jpillet_ :  Thank you for using freenode!
->> :*.freenode.net 376 jpillet_ :End of message of the day.
->> :*.freenode.net 396 jpillet_ freenode-a99.759.j1faas.IP :is now your displayed host
->> :jpillet_!~jpillet@freenode-a99.759.j1faas.IP MODE jpillet_ :+wRix
->> :*.freenode.net NOTICE jpillet_ :*** You are connected to chat.freenode.net using TLS (SSL) cipher 'TLSv1.3-TLS_AES_256_GCM_SHA384'
->> :*.freenode.net 311 jpillet_ jpillet ~jpillet freenode-a99.759.j1faas.IP * :Julien Pillet
---> nickfind event whois
->> :*.freenode.net 319 jpillet_ jpillet :@#jeteste 
---> event empty
->> :*.freenode.net 312 jpillet_ jpillet *.freenode.net :freenode
---> event empty
->> :*.freenode.net 671 jpillet_ jpillet :is using a secure connection
---> event empty
->> :*.freenode.net 318 jpillet_ jpillet :End of /WHOIS list.
---> event empty
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PRIVMSG #jeteste :test
->> :*.freenode.net 404 jpillet_ #jeteste :You cannot send external messages to this channel whilst the +n (noextmsg) mode is set.
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PRIVMSG #jeteste :test
->> :*.freenode.net 404 jpillet_ #jeteste :You cannot send messages to this channel whilst the +m (moderated) mode is set.
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< MODE #jeteste +t
-<< MODE #jeteste -t
->> :jpillet!~jpillet@freenode-a99.759.j1faas.IP MODE #jeteste :-t
-<< MODE #jeteste +j
->> :*.freenode.net 696 jpillet #jeteste j * :You must specify a parameter for the joinflood mode. Syntax: <joins>:<seconds>.
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< MODE #jeteste +t
-<< MODE #jeteste -t
->> :jpillet!~jpillet@freenode-a99.759.j1faas.IP MODE #jeteste :-t
-<< MODE #jeteste +j
->> :*.freenode.net 696 jpillet #jeteste j * :You must specify a parameter for the joinflood mode. Syntax: <joins>:<seconds>.
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< MODE #jeteste +z
->> :jpillet!~jpillet@freenode-a99.759.j1faas.IP MODE #jeteste :+z
-<< MODE #jeteste -z
->> :jpillet!~jpillet@freenode-a99.759.j1faas.IP MODE #jeteste :-z
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< MODE #jeteste +h
->> :*.freenode.net 696 jpillet #jeteste h * :You must specify a parameter for the halfop mode. Syntax: <nick>.
-<< MODE #jeteste +&
->> :*.freenode.net 472 jpillet & :is not a recognised channel mode.
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< MODE #jeteste +t
-<< MODE #jeteste -t
->> :jpillet!~jpillet@freenode-a99.759.j1faas.IP MODE #jeteste :-t
-<< MODE #jeteste +j
->> :*.freenode.net 696 jpillet #jeteste j * :You must specify a parameter for the joinflood mode. Syntax: <joins>:<seconds>.
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< MODE #jeteste +z
->> :jpillet!~jpillet@freenode-a99.759.j1faas.IP MODE #jeteste :+z
-<< MODE #jeteste -z
->> :jpillet!~jpillet@freenode-a99.759.j1faas.IP MODE #jeteste :-z
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< MODE #jeteste +h
->> :*.freenode.net 696 jpillet #jeteste h * :You must specify a parameter for the halfop mode. Syntax: <nick>.
-<< MODE #jeteste +&
->> :*.freenode.net 472 jpillet & :is not a recognised channel mode.
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< WHO #jeteste
->> :*.freenode.net 352 jpillet #jeteste ~jpillet freenode-a99.759.j1faas.IP *.freenode.net jpillet H@s :0 Julien Pillet
->> :*.freenode.net 315 jpillet #jeteste :End of /WHO list.
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< MODE #jeteste +t
-<< MODE #jeteste -t
->> :jpillet!~jpillet@freenode-a99.759.j1faas.IP MODE #jeteste :-t
-<< MODE #jeteste +j
->> :*.freenode.net 696 jpillet #jeteste j * :You must specify a parameter for the joinflood mode. Syntax: <joins>:<seconds>.
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< MODE #jeteste +z
->> :jpillet!~jpillet@freenode-a99.759.j1faas.IP MODE #jeteste :+z
-<< MODE #jeteste -z
->> :jpillet!~jpillet@freenode-a99.759.j1faas.IP MODE #jeteste :-z
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< MODE #jeteste +h
->> :*.freenode.net 696 jpillet #jeteste h * :You must specify a parameter for the halfop mode. Syntax: <nick>.
-<< MODE #jeteste +&
->> :*.freenode.net 472 jpillet & :is not a recognised channel mode.
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< WHO #jeteste
->> :*.freenode.net 352 jpillet #jeteste ~jpillet freenode-a99.759.j1faas.IP *.freenode.net jpillet H@s :0 Julien Pillet
->> :*.freenode.net 315 jpillet #jeteste :End of /WHO list.
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< MODE #jeteste +t
-<< MODE #jeteste -t
->> :jpillet!~jpillet@freenode-a99.759.j1faas.IP MODE #jeteste :-t
-<< MODE #jeteste +j
->> :*.freenode.net 696 jpillet #jeteste j * :You must specify a parameter for the joinflood mode. Syntax: <joins>:<seconds>.
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< MODE #jeteste +z
->> :jpillet!~jpillet@freenode-a99.759.j1faas.IP MODE #jeteste :+z
-<< MODE #jeteste -z
->> :jpillet!~jpillet@freenode-a99.759.j1faas.IP MODE #jeteste :-z
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< MODE #jeteste +h
->> :*.freenode.net 696 jpillet #jeteste h * :You must specify a parameter for the halfop mode. Syntax: <nick>.
-<< MODE #jeteste +&
->> :*.freenode.net 472 jpillet & :is not a recognised channel mode.
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< WHO #jeteste
->> :*.freenode.net 352 jpillet #jeteste ~jpillet freenode-a99.759.j1faas.IP *.freenode.net jpillet H@s :0 Julien Pillet
->> :*.freenode.net 315 jpillet #jeteste :End of /WHO list.
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< WHO #jeteste
->> :*.freenode.net 352 jpillet #jeteste ~jpillet freenode-a99.759.j1faas.IP *.freenode.net jpillet H@s :0 Julien Pillet
->> :*.freenode.net 315 jpillet #jeteste :End of /WHO list.
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< WHO #jeteste
->> :*.freenode.net 352 jpillet #jeteste ~jpillet freenode-a99.759.j1faas.IP *.freenode.net jpillet H@s :0 Julien Pillet
->> :*.freenode.net 315 jpillet #jeteste :End of /WHO list.
-<< CAP LS
-<< NICK jpillet
-<< USER jpillet jpillet chat.freenode.net :Julien Pillet
->> :*.freenode.net NOTICE * :*** Looking up your ident...
->> :*.freenode.net NOTICE * :*** Looking up your hostname...
->> :*.freenode.net NOTICE * :*** Could not resolve your hostname: Domain not found; using your IP address (62.129.8.171) instead.
->> :*.freenode.net CAP * LS :account-notify account-tag away-notify batch cap-notify chghost draft/relaymsg echo-message extended-join inspircd.org/poison inspircd.org/standard-replies invite-notify labeled-response message-tags multi-prefix sasl server-time setname userhost-in-names 
-<< CAP REQ :multi-prefix
->> PING :Gng`|WmFg_
-<< PONG :Gng`|WmFg_
->> :*.freenode.net CAP jpillet ACK :multi-prefix
-<< CAP END
->> :*.freenode.net NOTICE jpillet :*** Ident lookup timed out, using ~jpillet instead.
->> :*.freenode.net 001 jpillet :Welcome to the freenode IRC Network jpillet!~jpillet@62.129.8.171
-<< MODE jpillet +i
->> :*.freenode.net 002 jpillet :Your host is *.freenode.net, running version InspIRCd-3
->> :*.freenode.net 003 jpillet :This server was created 00:17:59 Apr 21 2022
->> :*.freenode.net 004 jpillet *.freenode.net InspIRCd-3 BDHILRSTWcdghikorswxz ABCDEFIJKLMNOPQRSTUWXYZbcdefhijklmnoprstuvwz :BEFIJLWXYZbdefhjklovw
->> :*.freenode.net 005 jpillet ACCEPT=30 AWAYLEN=200 BOT=B CALLERID=g CASEMAPPING=ascii CHANLIMIT=#:20 CHANMODES=IXZbew,k,BEFJLWdfjl,ACDKMNOPQRSTUcimnprstuz CHANNELLEN=64 CHANTYPES=# ELIST=CMNTU ESILENCE=CcdiNnPpTtx EXCEPTS=e :are supported by this server
->> :*.freenode.net 005 jpillet EXTBAN=,ACNOQRSTUacjmnpruwz HOSTLEN=64 INVEX=I KEYLEN=32 KICKLEN=255 LINELEN=512 MAXLIST=I:100,X:100,b:100,e:100,w:100 MAXTARGETS=20 MODES=20 MONITOR=30 NAMELEN=128 NAMESX NETWORK=freenode :are supported by this server
->> :*.freenode.net 005 jpillet NICKLEN=30 PREFIX=(Yohv)!@%+ REMOVE SAFELIST SECURELIST=60 SILENCE=32 STATUSMSG=!@%+ TOPICLEN=390 UHNAMES USERIP USERLEN=10 USERMODES=,,s,BDHILRSTWcdghikorwxz VBANLIST :are supported by this server
->> :*.freenode.net 005 jpillet VLIST=b WATCH=32 WHOX :are supported by this server
->> :*.freenode.net 251 jpillet :There are 19 users and 10483 invisible on 9 servers
->> :*.freenode.net 252 jpillet 7 :operator(s) online
->> :*.freenode.net 253 jpillet 19 :unknown connections
->> :*.freenode.net 254 jpillet 14170 :channels formed
->> :*.freenode.net 255 jpillet :I have 3365 clients and 1 servers
->> :*.freenode.net 265 jpillet :Current local users: 3365  Max: 6046
->> :*.freenode.net 266 jpillet :Current global users: 10502  Max: 10916
->> :*.freenode.net 375 jpillet :*.freenode.net message of the day
->> :*.freenode.net 372 jpillet :  Hello, World!
->> :*.freenode.net 372 jpillet : 
->> :*.freenode.net 372 jpillet :  Welcome to the
->> :*.freenode.net 372 jpillet :          __                               _
->> :*.freenode.net 372 jpillet :         / _|_ __ ___  ___ _ __   ___   __| | ___
->> :*.freenode.net 372 jpillet :        | |_| '__/ _ \/ _ \ '_ \ / _ \ / _` |/ _ \
->> :*.freenode.net 372 jpillet :        |  _| | |  __/  __/ | | | (_) | (_| |  __/
->> :*.freenode.net 372 jpillet :        |_| |_|  \___|\___|_| |_|\___/ \__,_|\___|
->> :*.freenode.net 372 jpillet :                                   AUTONOMOUS ZONE
->> :*.freenode.net 372 jpillet : 
->> :*.freenode.net 372 jpillet :  Connect to us on:
->> :*.freenode.net 372 jpillet : 
->> :*.freenode.net 372 jpillet :  Hostname: irc.freenode.net / chat.freenode.net
->> :*.freenode.net 372 jpillet :  Plaintext: 6660-6669
->> :*.freenode.net 372 jpillet :  TLS/SSL: 6697,7000,7070
->> :*.freenode.net 372 jpillet :  Webchat: https://webchat.freenode.net
->> :*.freenode.net 372 jpillet : 
->> :*.freenode.net 372 jpillet :  By connecting to freenode you indicate that you have read and accept our
->> :*.freenode.net 372 jpillet :  policies and guidelines as set out on https://freenode.net and agree to
->> :*.freenode.net 372 jpillet :  be scanned for an open proxy.
->> :*.freenode.net 372 jpillet : 
->> :*.freenode.net 372 jpillet :  If you are looking for assistance, please try:
->> :*.freenode.net 372 jpillet : 
->> :*.freenode.net 372 jpillet :  #help                    - Help with general IRC and Services.
->> :*.freenode.net 372 jpillet :  #chanhelp                - Help with channels and channel services.
->> :*.freenode.net 372 jpillet :  #IRC                     - Help with the IRC.com by freenode app.
->> :*.freenode.net 372 jpillet : 
->> :*.freenode.net 372 jpillet :  Checkout some of our communities and services:
->> :*.freenode.net 372 jpillet : 
->> :*.freenode.net 372 jpillet :  #freenode-bbs            - BBS [https://bbs.freenode.net/]
->> :*.freenode.net 372 jpillet :  #freenode-bbs-discussion - BBS Discussion
->> :*.freenode.net 372 jpillet :  #freenode-jobs           - Jobs [https://jobs.freenode.net/]
->> :*.freenode.net 372 jpillet :  #freenode                - Chat about freenode.
->> :*.freenode.net 372 jpillet :  #anonchan                - Chat anonymously.
->> :*.freenode.net 372 jpillet : 
->> :*.freenode.net 372 jpillet :  Type /join #<channel>
->> :*.freenode.net 372 jpillet : 
->> :*.freenode.net 372 jpillet :  Thank you for using freenode!
->> :*.freenode.net 376 jpillet :End of message of the day.
->> :*.freenode.net 396 jpillet freenode-a99.759.j1faas.IP :is now your displayed host
->> :jpillet!~jpillet@freenode-a99.759.j1faas.IP MODE jpillet :+wRix
->> :*.freenode.net NOTICE jpillet :*** You are connected to chat.freenode.net using TLS (SSL) cipher 'TLSv1.3-TLS_AES_256_GCM_SHA384'
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< JOIN #jeteste
->> :jpillet!~jpillet@freenode-a99.759.j1faas.IP JOIN :#jeteste
->> :*.freenode.net 353 jpillet = #jeteste :@jpillet
->> :*.freenode.net 366 jpillet #jeteste :End of /NAMES list.
+>> :qbrillai!~qbrillai@freenode-a99.759.j1faas.IP JOIN :#jeteste
+>> :qbrillai!~qbrillai@freenode-a99.759.j1faas.IP PRIVMSG #jeteste :ls
+<< KICK #jeteste banane :
+>> :*.freenode.net 401 jpillet_ banane :No such nick
+>> :*.freenode.net 353 jpillet_ = #jeteste :@jpillet jpillet_
+>> :*.freenode.net 366 jpillet_ #jeteste :End of /NAMES list.
 << MODE #jeteste
->> :*.freenode.net 324 jpillet #jeteste :+nt
+>> :*.freenode.net 324 jpillet_ #jeteste :+nt
 --> chanquery mode
 << WHO #jeteste
->> :*.freenode.net 329 jpillet #jeteste :1657007529
+>> :*.freenode.net 329 jpillet_ #jeteste :1657035945
 --> event 329
->> :*.freenode.net 352 jpillet #jeteste ~jpillet freenode-a99.759.j1faas.IP *.freenode.net jpillet H@s :0 Julien Pillet
+>> :*.freenode.net 352 jpillet_ #jeteste ~jpillet freenode-a99.759.j1faas.IP *.freenode.net jpillet H@s :0 Julien Pillet
 --> silent event who
->> :*.freenode.net 315 jpillet #jeteste :End of /WHO list.
+>> :*.freenode.net 352 jpillet_ #jeteste ~jpillet freenode-a99.759.j1faas.IP *.freenode.net jpillet_ Hs :0 Julien Pillet
+--> silent event who
+>> :*.freenode.net 315 jpillet_ #jeteste :End of /WHO list.
 --> chanquery who end
 << MODE #jeteste b
->> :*.freenode.net 368 jpillet #jeteste :End of channel ban list
+>> :*.freenode.net 368 jpillet_ #jeteste :End of channel ban list
 --> chanquery ban end
-<< MODE #jeteste -l10
->> :*.freenode.net 472 jpillet 1 :is not a recognised channel mode.
->> :*.freenode.net 472 jpillet 0 :is not a recognised channel mode.
-<< PRIVMSG #jeteste :1
+>> :qbrillai!~qbrillai@freenode-a99.759.j1faas.IP JOIN :#jeteste
+>> :qbrillai!~qbrillai@freenode-a99.759.j1faas.IP PRIVMSG #jeteste :ls
+<< KICK #jeteste banane :
+>> :*.freenode.net 401 jpillet_ banane :No such nick
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
-<< MODE #jeteste +l asdads
->> :*.freenode.net 696 jpillet #jeteste l asdads :Invalid limit mode parameter. Syntax: <limit>.
-<< MODE #jeteste +l 0
->> :*.freenode.net 696 jpillet #jeteste l 0 :Invalid limit mode parameter. Syntax: <limit>.
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
@@ -1843,82 +269,12 @@
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
-<< MODE #jeteste +l 12a0
->> :jpillet!~jpillet@freenode-a99.759.j1faas.IP MODE #jeteste +l :12
-<< MODE #jeteste -l12a0
->> :*.freenode.net 472 jpillet 1 :is not a recognised channel mode.
->> :*.freenode.net 472 jpillet 2 :is not a recognised channel mode.
->> :*.freenode.net 472 jpillet a :is not a recognised channel mode.
->> :*.freenode.net 472 jpillet 0 :is not a recognised channel mode.
->> :jpillet!~jpillet@freenode-a99.759.j1faas.IP MODE #jeteste :-l
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
->> :*.freenode.net CAP jpillet ACK :multi-prefix
-<< CAP END
->> :*.freenode.net NOTICE jpillet :*** Ident lookup timed out, using ~jpillet instead.
->> :*.freenode.net 001 jpillet :Welcome to the freenode IRC Network jpillet!~jpillet@62.129.8.171
-<< MODE jpillet +i
->> :*.freenode.net 002 jpillet :Your host is *.freenode.net, running version InspIRCd-3
->> :*.freenode.net 003 jpillet :This server was created 00:17:59 Apr 21 2022
->> :*.freenode.net 004 jpillet *.freenode.net InspIRCd-3 BDHILRSTWcdghikorswxz ABCDEFIJKLMNOPQRSTUWXYZbcdefhijklmnoprstuvwz :BEFIJLWXYZbdefhjklovw
->> :*.freenode.net 005 jpillet ACCEPT=30 AWAYLEN=200 BOT=B CALLERID=g CASEMAPPING=ascii CHANLIMIT=#:20 CHANMODES=IXZbew,k,BEFJLWdfjl,ACDKMNOPQRSTUcimnprstuz CHANNELLEN=64 CHANTYPES=# ELIST=CMNTU ESILENCE=CcdiNnPpTtx EXCEPTS=e :are supported by this server
->> :*.freenode.net 005 jpillet EXTBAN=,ACNOQRSTUacjmnpruwz HOSTLEN=64 INVEX=I KEYLEN=32 KICKLEN=255 LINELEN=512 MAXLIST=I:100,X:100,b:100,e:100,w:100 MAXTARGETS=20 MODES=20 MONITOR=30 NAMELEN=128 NAMESX NETWORK=freenode :are supported by this server
->> :*.freenode.net 005 jpillet NICKLEN=30 PREFIX=(Yohv)!@%+ REMOVE SAFELIST SECURELIST=60 SILENCE=32 STATUSMSG=!@%+ TOPICLEN=390 UHNAMES USERIP USERLEN=10 USERMODES=,,s,BDHILRSTWcdghikorwxz VBANLIST :are supported by this server
->> :*.freenode.net 005 jpillet VLIST=b WATCH=32 WHOX :are supported by this server
->> :*.freenode.net 251 jpillet :There are 19 users and 10483 invisible on 9 servers
->> :*.freenode.net 252 jpillet 7 :operator(s) online
->> :*.freenode.net 253 jpillet 19 :unknown connections
->> :*.freenode.net 254 jpillet 14170 :channels formed
->> :*.freenode.net 255 jpillet :I have 3365 clients and 1 servers
->> :*.freenode.net 265 jpillet :Current local users: 3365  Max: 6046
->> :*.freenode.net 266 jpillet :Current global users: 10502  Max: 10916
->> :*.freenode.net 375 jpillet :*.freenode.net message of the day
->> :*.freenode.net 372 jpillet :  Hello, World!
->> :*.freenode.net 372 jpillet : 
->> :*.freenode.net 372 jpillet :  Welcome to the
->> :*.freenode.net 372 jpillet :          __                               _
->> :*.freenode.net 372 jpillet :         / _|_ __ ___  ___ _ __   ___   __| | ___
->> :*.freenode.net 372 jpillet :        | |_| '__/ _ \/ _ \ '_ \ / _ \ / _` |/ _ \
->> :*.freenode.net 372 jpillet :        |  _| | |  __/  __/ | | | (_) | (_| |  __/
->> :*.freenode.net 372 jpillet :        |_| |_|  \___|\___|_| |_|\___/ \__,_|\___|
->> :*.freenode.net 372 jpillet :                                   AUTONOMOUS ZONE
->> :*.freenode.net 372 jpillet : 
->> :*.freenode.net 372 jpillet :  Connect to us on:
->> :*.freenode.net 372 jpillet : 
->> :*.freenode.net 372 jpillet :  Hostname: irc.freenode.net / chat.freenode.net
->> :*.freenode.net 372 jpillet :  Plaintext: 6660-6669
->> :*.freenode.net 372 jpillet :  TLS/SSL: 6697,7000,7070
->> :*.freenode.net 372 jpillet :  Webchat: https://webchat.freenode.net
->> :*.freenode.net 372 jpillet : 
->> :*.freenode.net 372 jpillet :  By connecting to freenode you indicate that you have read and accept our
->> :*.freenode.net 372 jpillet :  policies and guidelines as set out on https://freenode.net and agree to
->> :*.freenode.net 372 jpillet :  be scanned for an open proxy.
->> :*.freenode.net 372 jpillet : 
->> :*.freenode.net 372 jpillet :  If you are looking for assistance, please try:
->> :*.freenode.net 372 jpillet : 
->> :*.freenode.net 372 jpillet :  #help                    - Help with general IRC and Services.
->> :*.freenode.net 372 jpillet :  #chanhelp                - Help with channels and channel services.
->> :*.freenode.net 372 jpillet :  #IRC                     - Help with the IRC.com by freenode app.
->> :*.freenode.net 372 jpillet : 
->> :*.freenode.net 372 jpillet :  Checkout some of our communities and services:
->> :*.freenode.net 372 jpillet : 
->> :*.freenode.net 372 jpillet :  #freenode-bbs            - BBS [https://bbs.freenode.net/]
->> :*.freenode.net 372 jpillet :  #freenode-bbs-discussion - BBS Discussion
->> :*.freenode.net 372 jpillet :  #freenode-jobs           - Jobs [https://jobs.freenode.net/]
->> :*.freenode.net 372 jpillet :  #freenode                - Chat about freenode.
->> :*.freenode.net 372 jpillet :  #anonchan                - Chat anonymously.
->> :*.freenode.net 372 jpillet : 
->> :*.freenode.net 372 jpillet :  Type /join #<channel>
->> :*.freenode.net 372 jpillet : 
->> :*.freenode.net 372 jpillet :  Thank you for using freenode!
->> :*.freenode.net 376 jpillet :End of message of the day.
->> :*.freenode.net 396 jpillet freenode-a99.759.j1faas.IP :is now your displayed host
->> :jpillet!~jpillet@freenode-a99.759.j1faas.IP MODE jpillet :+wRix
->> :*.freenode.net NOTICE jpillet :*** You are connected to chat.freenode.net using TLS (SSL) cipher 'TLSv1.3-TLS_AES_256_GCM_SHA384'
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
@@ -1940,34 +296,9 @@
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
-<< JOIN #jeteste
->> :jpillet!~jpillet@freenode-a99.759.j1faas.IP JOIN :#jeteste
->> :*.freenode.net 353 jpillet = #jeteste :@jpillet
->> :*.freenode.net 366 jpillet #jeteste :End of /NAMES list.
-<< MODE #jeteste
->> :*.freenode.net 324 jpillet #jeteste :+nt
---> chanquery mode
-<< WHO #jeteste
->> :*.freenode.net 329 jpillet #jeteste :1657007529
---> event 329
->> :*.freenode.net 352 jpillet #jeteste ~jpillet freenode-a99.759.j1faas.IP *.freenode.net jpillet H@s :0 Julien Pillet
---> silent event who
->> :*.freenode.net 315 jpillet #jeteste :End of /WHO list.
---> chanquery who end
-<< MODE #jeteste b
->> :*.freenode.net 368 jpillet #jeteste :End of channel ban list
---> chanquery ban end
-<< MODE #jeteste -l10
->> :*.freenode.net 472 jpillet 1 :is not a recognised channel mode.
->> :*.freenode.net 472 jpillet 0 :is not a recognised channel mode.
-<< PRIVMSG #jeteste :1
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
-<< MODE #jeteste +l asdads
->> :*.freenode.net 696 jpillet #jeteste l asdads :Invalid limit mode parameter. Syntax: <limit>.
-<< MODE #jeteste +l 0
->> :*.freenode.net 696 jpillet #jeteste l 0 :Invalid limit mode parameter. Syntax: <limit>.
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
@@ -1977,14 +308,6 @@
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
-<< MODE #jeteste +l 12a0
->> :jpillet!~jpillet@freenode-a99.759.j1faas.IP MODE #jeteste +l :12
-<< MODE #jeteste -l12a0
->> :*.freenode.net 472 jpillet 1 :is not a recognised channel mode.
->> :*.freenode.net 472 jpillet 2 :is not a recognised channel mode.
->> :*.freenode.net 472 jpillet a :is not a recognised channel mode.
->> :*.freenode.net 472 jpillet 0 :is not a recognised channel mode.
->> :jpillet!~jpillet@freenode-a99.759.j1faas.IP MODE #jeteste :-l
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
@@ -2003,19 +326,9 @@
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
-<< MODE #jeteste +l asdads
->> :*.freenode.net 696 jpillet #jeteste l asdads :Invalid limit mode parameter. Syntax: <limit>.
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
-<< MODE #jeteste +l 0asdads
->> :*.freenode.net 696 jpillet #jeteste l 0asdads :Invalid limit mode parameter. Syntax: <limit>.
-<< MODE #jeteste +l 0
->> :*.freenode.net 696 jpillet #jeteste l 0 :Invalid limit mode parameter. Syntax: <limit>.
-<< MODE #jeteste +l 12asdads
->> :jpillet!~jpillet@freenode-a99.759.j1faas.IP MODE #jeteste +l :12
-<< MODE #jeteste -l
->> :jpillet!~jpillet@freenode-a99.759.j1faas.IP MODE #jeteste :-l
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
@@ -2049,145 +362,15 @@
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
-<< MODE #jeteste -l
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
-<< MODE #jeteste +l 1
->> :jpillet!~jpillet@freenode-a99.759.j1faas.IP MODE #jeteste +l :1
-<< MODE #jeteste -l
->> :jpillet!~jpillet@freenode-a99.759.j1faas.IP MODE #jeteste :-l
->> :*.freenode.net 322 jpillet #osm.ee 1 :[+nt] 
->> :*.freenode.net 322 jpillet #windows-legacy 1 :[+Pnrt] 
->> :*.freenode.net 322 jpillet #badnicks 3 :[+nt] 
->> :*.freenode.net 322 jpillet #pilife 1 :[+nt] 
->> :*.freenode.net 322 jpillet ##rust 39 :[+r] The official channel seems to be #rust | /!\ This network is depreciated please connect to irc.letspiss.net on 6667 or 6697 (TLS) /!\
->> :*.freenode.net 322 jpillet #pimp-support 1 :[+nt] 
->> :*.freenode.net 322 jpillet ##apocalypse 7 :[+nt] 
->> :*.freenode.net 322 jpillet #virt 1 :[+nt] 
->> :*.freenode.net 322 jpillet #paste 2 :[+nt] 
->> :*.freenode.net 322 jpillet #wikipedia-fr-liverc 3 :[+nt] 
->> :*.freenode.net 322 jpillet #linuxfr 2 :[+nt] 
->> :*.freenode.net 322 jpillet #irc 10 :[+nt] 
->> :*.freenode.net 322 jpillet ##ableton 1 :[+nt] 
->> :*.freenode.net 322 jpillet ##altcoin-dev 4 :[+nrt] 
->> :*.freenode.net 322 jpillet ##cactusbugle 3 :[+nt] 
->> :*.freenode.net 322 jpillet #dreamscache 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet #galliumos-mgmt 4 :[+nt] 
->> :*.freenode.net 322 jpillet #besfrenz 2 :[+nt] 
->> :*.freenode.net 322 jpillet #cccamp 1 :[+nt] 
->> :*.freenode.net 322 jpillet #galliumos-offtopic 1 :[+nt] 
->> :*.freenode.net 322 jpillet #kano.is 1 :[+nt] 
->> :*.freenode.net 322 jpillet #steamkit 3 :[+nt] 
->> :*.freenode.net 322 jpillet #realhack 1 :[+nt] 
->> :*.freenode.net 322 jpillet #mender 2 :[+nt] 
->> :*.freenode.net 322 jpillet #savannah 3 :[+nt] 
->> :*.freenode.net 322 jpillet #rmll-orga 1 :[+nt] 
->> :*.freenode.net 322 jpillet #qt-pyside 4 :[+nt] 
->> :*.freenode.net 322 jpillet #trailblazer 1 :[+nt] 
->> :*.freenode.net 322 jpillet #archinstall 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet ##toot 1 :[+nt] 
->> :*.freenode.net 322 jpillet ##hamradio-unregistered 5 :[+nt] 
->> :*.freenode.net 322 jpillet ##politicalfun 2 :[+nt] 
->> :*.freenode.net 322 jpillet #foswiki-association 0 :[+Pnt] closed channel
->> :*.freenode.net 322 jpillet #music-theory 11 :[+nrt] Welcome to #music-theory! | https://www.apassion4jazz.net/keys.html | Feel free to ask questions, present your projects, or share resources you've found helpful. | high-quality open reference: https://www.teoria.com
->> :*.freenode.net 322 jpillet #txlf 2 :[+nt] 
->> :*.freenode.net 322 jpillet #ltc-friends 1 :[+nt] 
->> :*.freenode.net 322 jpillet #snorby 2 :[+nt] 
->> :*.freenode.net 322 jpillet ##if 1 :[+nt] 
->> :*.freenode.net 322 jpillet #shellium 1 :[+nt] 
->> :*.freenode.net 322 jpillet #helsinkihacklab 1 :[+nt] 
->> :*.freenode.net 322 jpillet #tentative_limoges_2021 1 :[+nt] 
->> :*.freenode.net 322 jpillet #fedora-cs 3 :[+nt] 
->> :*.freenode.net 322 jpillet ##hnnew 1 :[+nt] 
->> :*.freenode.net 322 jpillet ##ghabry-test 1 :[+nt] 
->> :*.freenode.net 322 jpillet #znc-dev 4 :[+nt] 
->> :*.freenode.net 322 jpillet #akademy 3 :[+nt] 
->> :*.freenode.net 322 jpillet #linuxcnc-devel 2 :[+nt] 
->> :*.freenode.net 322 jpillet #ketoops 1 :[+nt] 
->> :*.freenode.net 322 jpillet #realfittit 1 :[+nt] 
->> :*.freenode.net 322 jpillet #silabs 1 :[+nt] 
->> :*.freenode.net 322 jpillet #apache-karaf 1 :[+nt] 
->> :*.freenode.net 322 jpillet #friendsofcake 2 :[+nt] 
->> :*.freenode.net 322 jpillet #bsd-dk 2 :[+nt] 
->> :*.freenode.net 322 jpillet #DERO 1 :[+nt] 
->> :*.freenode.net 322 jpillet #penguinplay 1 :[+nt] 
->> :*.freenode.net 322 jpillet ##pokemon 1 :[+r] /!\ This network is depreciated please connect to irc.letspiss.net on 6667 or 6697 (TLS) /!\
->> :*.freenode.net 322 jpillet #ljharb 2 :[+nrt] 
->> :*.freenode.net 322 jpillet #pumpingstationone 2 :[+nt] 
->> :*.freenode.net 322 jpillet #cybr1d 1 :[+nt] 
->> :*.freenode.net 322 jpillet #cubicle 2 :[+nt] 
->> :*.freenode.net 322 jpillet #calibre 8 :[+nt] 
->> :*.freenode.net 322 jpillet #0ctf2018 1 :[+nt] 
->> :*.freenode.net 322 jpillet #Catholic 2 :[+nrt] 
->> :*.freenode.net 322 jpillet #bedrock-chat 2 :[+nt] 
->> :*.freenode.net 322 jpillet #armagetron-ladle 1 :[+nt] 
->> :*.freenode.net 322 jpillet #amok 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet #openinfra 1 :[+nt] 
->> :*.freenode.net 322 jpillet #fatburger 1 :[+nt] 
->> :*.freenode.net 322 jpillet #rodos 1 :[+nt] 
->> :*.freenode.net 322 jpillet #scrotwm 1 :[+nt] 
->> :*.freenode.net 322 jpillet #archlinux.de 3 :[+nt] 
->> :*.freenode.net 322 jpillet #openssh 2 :[+CDFKMNRSTcdfntz 3:333 66 3:3] #OpenSSH Secure Shell | Project http://openssh.com | Patch http://openssh.com/security.html | Note http://openssh.com/releasenotes.html | Portable http://openssh.com/portable.html | CVS http://cvsweb.openbsd.org/src/usr.bin/ssh | Manual http://openssh.com/manual.html | Mail http://openssh.com/list.html | Problem http://openssh.com/report.html | See notice | No spam | Included in #OpenBSD
->> :*.freenode.net 322 jpillet #android-wear 1 :[+nt] 
->> :*.freenode.net 322 jpillet #freshrss 2 :[+nt] 
->> :*.freenode.net 322 jpillet ##c2s 3 :[+nt] 
->> :*.freenode.net 322 jpillet #phathack 1 :[+nt] 
->> :*.freenode.net 322 jpillet #UKDNB 1 :[+nt] 
->> :*.freenode.net 322 jpillet #nycmesh 1 :[+nt] 
->> :*.freenode.net 322 jpillet #asahi-superdry 1 :[+nt] 
->> :*.freenode.net 322 jpillet #utox 2 :[+nt] 
->> :*.freenode.net 322 jpillet #socialjustice 2 :[+Pnrt] 
->> :*.freenode.net 322 jpillet ##misha 1 :[+nt] 
->> :*.freenode.net 322 jpillet #kubuntu-podcast 1 :[+nt] 
->> :*.freenode.net 322 jpillet #Gloop 1 :[+nt] 
->> :*.freenode.net 322 jpillet #cdn-hackerspaces 2 :[+nt] 
->> :*.freenode.net 322 jpillet #kubuntu-offtopic 1 :[+nt] 
->> :*.freenode.net 322 jpillet #vorbis 2 :[+nt] 
->> :*.freenode.net 322 jpillet #Catacombs 0 :[+CPnt] 0,1 *** Welcome To #Catacombs! https://en.wikipedia.org/wiki/Catacombs ***
->> :*.freenode.net 322 jpillet #redditcbb 2 :[+nt] 
->> :*.freenode.net 322 jpillet #olympe 1 :[+nt] 
->> :*.freenode.net 322 jpillet #ubuntu-ph 1 :[+nt] 
->> :*.freenode.net 322 jpillet ##xNetX 2 :[+nt] 
->> :*.freenode.net 322 jpillet #wordpress-cli 1 :[+nt] 
->> :*.freenode.net 322 jpillet #siege 3 :[+nt] 
->> :*.freenode.net 322 jpillet #sabah 1 :[+nt] 
->> :*.freenode.net 322 jpillet #opengameart 5 :[+nt] 
->> :*.freenode.net 322 jpillet #IRCShellsZNC 1 :[+nt] 
->> :*.freenode.net 322 jpillet ##electronics 65 :[+nt] 
->> :*.freenode.net 322 jpillet #klaf 1 :[+nt] 
->> :*.freenode.net 322 jpillet ##kxstudio 1 :[+nt] 
->> :*.freenode.net 322 jpillet #rattumb 3 :[+nt] 
->> :*.freenode.net 322 jpillet #ufeff 2 :[+nt] 
->> :*.freenode.net 322 jpillet ##theyo 1 :[+nt] 
->> :*.freenode.net 322 jpillet #hack.ar 1 :[+nt] 
->> :*.freenode.net 322 jpillet #pld 2 :[+nt] 
->> :*.freenode.net 322 jpillet #pld-git 1 :[+nt] 
->> :*.freenode.net 322 jpillet #nluug 2 :[+nt] 
->> :*.freenode.net 322 jpillet #wikipedia-es 1 :[+nt] 
->> :*.freenode.net 322 jpillet #unixnl 1 :[+nt] 
->> :*.freenode.net 322 jpillet #ck-platinum 2 :[+nt] 
->> :*.freenode.net 323 jpillet :End of channel list.
-<< WHO #coffee
->> :*.freenode.net 315 jpillet #coffee :End of /WHO list.
-<< WHO coffee
->> :*.freenode.net 352 jpillet #crossbridge ~coffee freenode-2rlsuq.940a.sqfp.q4asrn.IP *.freenode.net coffee H@s :0 coffee
->> :*.freenode.net 315 jpillet coffee :End of /WHO list.
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
-<< WHO #security
->> :*.freenode.net 352 jpillet #security services services.freenode.net *.freenode.net ChanServ H@B :0 Channel Registration Service
->> :*.freenode.net 352 jpillet #security ~tom freenode-5c0uds.6jle.gprk.0u8u7u.IP *.freenode.net tjbp Gs :0 tjbp
->> :*.freenode.net 352 jpillet #security ~Abrax freenode/helper/abrax *.freenode.net Abrax H@s :0 join #videogames
->> :*.freenode.net 315 jpillet #security :End of /WHO list.
-<< WHO security
->> :*.freenode.net 315 jpillet security :End of /WHO list.
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
-<< WHO #siege
->> :*.freenode.net 315 jpillet #siege :End of /WHO list.
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
@@ -2203,11 +386,6 @@
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
-<< WHO #siege
->> :*.freenode.net 315 jpillet #siege :End of /WHO list.
-<< WHO #wikipedia
->> :*.freenode.net 352 jpillet #wikipedia ~tom freenode-5c0uds.6jle.gprk.0u8u7u.IP *.freenode.net tjbp Gs :0 tjbp
->> :*.freenode.net 315 jpillet #wikipedia :End of /WHO list.
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
@@ -2244,216 +422,17 @@
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
-<< WHO #wikipedia
->> :*.freenode.net 352 jpillet #wikipedia ~tom freenode-5c0uds.6jle.gprk.0u8u7u.IP *.freenode.net tjbp Gs :0 tjbp
->> :*.freenode.net 315 jpillet #wikipedia :End of /WHO list.
-<< WHO #siege
->> :*.freenode.net 315 jpillet #siege :End of /WHO list.
-<< WHO #security
->> :*.freenode.net 352 jpillet #security services services.freenode.net *.freenode.net ChanServ H@B :0 Channel Registration Service
->> :*.freenode.net 352 jpillet #security ~tom freenode-5c0uds.6jle.gprk.0u8u7u.IP *.freenode.net tjbp Gs :0 tjbp
->> :*.freenode.net 352 jpillet #security ~Abrax freenode/helper/abrax *.freenode.net Abrax H@s :0 join #videogames
->> :*.freenode.net 315 jpillet #security :End of /WHO list.
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
->> :*.freenode.net 322 jpillet #Catholic 2 :[+nrt] 
->> :*.freenode.net 322 jpillet #bedrock-chat 2 :[+nt] 
->> :*.freenode.net 322 jpillet #armagetron-ladle 1 :[+nt] 
->> :*.freenode.net 322 jpillet #amok 0 :[+Pnt] 
->> :*.freenode.net 322 jpillet #openinfra 1 :[+nt] 
->> :*.freenode.net 322 jpillet #fatburger 1 :[+nt] 
->> :*.freenode.net 322 jpillet #rodos 1 :[+nt] 
->> :*.freenode.net 322 jpillet #scrotwm 1 :[+nt] 
->> :*.freenode.net 322 jpillet #archlinux.de 3 :[+nt] 
->> :*.freenode.net 322 jpillet #openssh 2 :[+CDFKMNRSTcdfntz 3:333 66 3:3] #OpenSSH Secure Shell | Project http://openssh.com | Patch http://openssh.com/security.html | Note http://openssh.com/releasenotes.html | Portable http://openssh.com/portable.html | CVS http://cvsweb.openbsd.org/src/usr.bin/ssh | Manual http://openssh.com/manual.html | Mail http://openssh.com/list.html | Problem http://openssh.com/report.html | See notice | No spam | Included in #OpenBSD
->> :*.freenode.net 322 jpillet #android-wear 1 :[+nt] 
->> :*.freenode.net 322 jpillet #freshrss 2 :[+nt] 
->> :*.freenode.net 322 jpillet ##c2s 3 :[+nt] 
->> :*.freenode.net 322 jpillet #phathack 1 :[+nt] 
->> :*.freenode.net 322 jpillet #UKDNB 1 :[+nt] 
->> :*.freenode.net 322 jpillet #nycmesh 1 :[+nt] 
->> :*.freenode.net 322 jpillet #asahi-superdry 1 :[+nt] 
->> :*.freenode.net 322 jpillet #utox 2 :[+nt] 
->> :*.freenode.net 322 jpillet #socialjustice 2 :[+Pnrt] 
->> :*.freenode.net 322 jpillet ##misha 1 :[+nt] 
->> :*.freenode.net 322 jpillet #kubuntu-podcast 1 :[+nt] 
->> :*.freenode.net 322 jpillet #Gloop 1 :[+nt] 
->> :*.freenode.net 322 jpillet #cdn-hackerspaces 2 :[+nt] 
->> :*.freenode.net 322 jpillet #kubuntu-offtopic 1 :[+nt] 
->> :*.freenode.net 322 jpillet #vorbis 2 :[+nt] 
->> :*.freenode.net 322 jpillet #Catacombs 0 :[+CPnt] 0,1 *** Welcome To #Catacombs! https://en.wikipedia.org/wiki/Catacombs ***
->> :*.freenode.net 322 jpillet #redditcbb 2 :[+nt] 
->> :*.freenode.net 322 jpillet #olympe 1 :[+nt] 
->> :*.freenode.net 322 jpillet #ubuntu-ph 1 :[+nt] 
->> :*.freenode.net 322 jpillet ##xNetX 2 :[+nt] 
->> :*.freenode.net 322 jpillet #wordpress-cli 1 :[+nt] 
->> :*.freenode.net 322 jpillet #siege 3 :[+nt] 
->> :*.freenode.net 322 jpillet #sabah 1 :[+nt] 
->> :*.freenode.net 322 jpillet #opengameart 5 :[+nt] 
->> :*.freenode.net 322 jpillet #IRCShellsZNC 1 :[+nt] 
->> :*.freenode.net 322 jpillet ##electronics 65 :[+nt] 
->> :*.freenode.net 322 jpillet #klaf 1 :[+nt] 
->> :*.freenode.net 322 jpillet ##kxstudio 1 :[+nt] 
->> :*.freenode.net 322 jpillet #rattumb 3 :[+nt] 
->> :*.freenode.net 322 jpillet #ufeff 2 :[+nt] 
->> :*.freenode.net 322 jpillet ##theyo 1 :[+nt] 
->> :*.freenode.net 322 jpillet #hack.ar 1 :[+nt] 
->> :*.freenode.net 322 jpillet #pld 2 :[+nt] 
->> :*.freenode.net 322 jpillet #pld-git 1 :[+nt] 
->> :*.freenode.net 322 jpillet #nluug 2 :[+nt] 
->> :*.freenode.net 322 jpillet #wikipedia-es 1 :[+nt] 
->> :*.freenode.net 322 jpillet #unixnl 1 :[+nt] 
->> :*.freenode.net 322 jpillet #ck-platinum 2 :[+nt] 
->> :*.freenode.net 323 jpillet :End of channel list.
-<< WHO #coffee
->> :*.freenode.net 315 jpillet #coffee :End of /WHO list.
-<< WHO coffee
->> :*.freenode.net 352 jpillet #crossbridge ~coffee freenode-2rlsuq.940a.sqfp.q4asrn.IP *.freenode.net coffee H@s :0 coffee
->> :*.freenode.net 315 jpillet coffee :End of /WHO list.
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
-<< WHO #security
->> :*.freenode.net 352 jpillet #security services services.freenode.net *.freenode.net ChanServ H@B :0 Channel Registration Service
->> :*.freenode.net 352 jpillet #security ~tom freenode-5c0uds.6jle.gprk.0u8u7u.IP *.freenode.net tjbp Gs :0 tjbp
->> :*.freenode.net 352 jpillet #security ~Abrax freenode/helper/abrax *.freenode.net Abrax H@s :0 join #videogames
->> :*.freenode.net 315 jpillet #security :End of /WHO list.
-<< WHO security
->> :*.freenode.net 315 jpillet security :End of /WHO list.
+<< PRIVMSG qbrillai :cadeau
+>> :*.freenode.net 477 jpillet_ qbrillai :You need to be identified to a registered account to message this user
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
-<< WHO #siege
->> :*.freenode.net 315 jpillet #siege :End of /WHO list.
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< WHO #siege
->> :*.freenode.net 315 jpillet #siege :End of /WHO list.
-<< WHO #wikipedia
->> :*.freenode.net 352 jpillet #wikipedia ~tom freenode-5c0uds.6jle.gprk.0u8u7u.IP *.freenode.net tjbp Gs :0 tjbp
->> :*.freenode.net 315 jpillet #wikipedia :End of /WHO list.
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< WHO #wikipedia
->> :*.freenode.net 352 jpillet #wikipedia ~tom freenode-5c0uds.6jle.gprk.0u8u7u.IP *.freenode.net tjbp Gs :0 tjbp
->> :*.freenode.net 315 jpillet #wikipedia :End of /WHO list.
-<< WHO #siege
->> :*.freenode.net 315 jpillet #siege :End of /WHO list.
-<< WHO #security
->> :*.freenode.net 352 jpillet #security services services.freenode.net *.freenode.net ChanServ H@B :0 Channel Registration Service
->> :*.freenode.net 352 jpillet #security ~tom freenode-5c0uds.6jle.gprk.0u8u7u.IP *.freenode.net tjbp Gs :0 tjbp
->> :*.freenode.net 352 jpillet #security ~Abrax freenode/helper/abrax *.freenode.net Abrax H@s :0 join #videogames
->> :*.freenode.net 315 jpillet #security :End of /WHO list.
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< PING *.freenode.net
->> :*.freenode.net PONG *.freenode.net :*.freenode.net
---> lag pong
-<< NICK tartiflette
->> :jpillet!~jpillet@freenode-a99.759.j1faas.IP NICK :tartiflette

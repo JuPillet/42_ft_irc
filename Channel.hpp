@@ -216,12 +216,12 @@ class Channel
 			for ( cliIt = _cliCrnt.begin(); cliIt != _cliCrnt.end() && nick != ( *cliIt )->getNick(); ++cliIt );
 			return ( cliIt );
 		}
+
 		void							eraseCli( std::string nick )
 		{
-			clientIterator cliIt ( isCli( nick ) );
-			if ( cliIt == _cliCrnt.end() )
-				throw( IRCErr( "Client isnt in the channel: " + _name ) );
-			_cliCrnt.erase( cliIt );
+			clientIterator clienTarget = isCli( nick );
+			if ( clienTarget != _cliCrnt.end() )
+				_cliCrnt.erase( clienTarget );
 		}
 
 		void							setVo( std::string tmp ) { _cliVo.push_back( tmp ); }
@@ -301,7 +301,8 @@ class Channel
 		}
 
 		std::list<pairBan> const	*getBan( void ) const { return &_chanBan; }
-		void WHO( clientIterator clientIt, std::string &servIP, bool isServOps )
+
+		void						WHO( clientIterator clientIt, std::string &servIP, bool isServOps )
 		{
 			for ( clientIterator userIt = _cliCrnt.begin(); clientIt != _cliCrnt.end(); ++userIt )
 			{

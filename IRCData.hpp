@@ -29,6 +29,7 @@ class IRCData
 			Mode( void )	{ return; }
 			~Mode( void )	{ return; }
 	};
+
 	typedef std::list<Mode>::iterator		listModeIt;
 	std::list<Mode>							_mods;
 	listModeIt								_modsIt;
@@ -152,6 +153,8 @@ class IRCData
 					&& *argIt != '\n' && *argIt != '\r'; ++argIt );
 				argTmp = std::string( *_request, 0, argIt - _request->begin() );
 			}
+			else
+				argTmp = " :";
 			clearPostArgs();
 			return argTmp;
 		}
@@ -297,7 +300,7 @@ class IRCData
 					sender( _sd, ":*." + _selfIP + " 433 * " + nickTmp + " :Nickname already in use\r\n",
 						&IRCErr( "Nick already in use" ) );
 			}
-			for ( channelListIt chanIt = ( *_clientIt )->getChannels().begin(); chanIt != ( *_clientIt )->getChannels().end(); ++chanIt )
+			for ( channelsListIt chanIt = ( *_clientIt )->getChannels().begin(); chanIt != ( *_clientIt )->getChannels().end(); ++chanIt )
 			{
 				if ( ( *_clientIt )->getNick() == ( *chanIt )->getOwner() )
 					( *chanIt )->setOwner( nickTmp );
@@ -375,37 +378,73 @@ class IRCData
 			if ( chanIt->getLimit() && chanIt->getLimit() == chanIt->getCli()->size() )
 				sender( _sd, ":*." + _selfIP + " 471 " + ( *_clientIt )->getNick() + " " + _channelTmp + " :Cannot join channel ( channel is full )\r\n",
 					&IRCErr( "limit channel full" ) );
+			( *_clientIt )->addChannel( _selfIP, &( *chanIt ) );
 		}
 
-		void			KILLING( clientIterator const &cliIt, std::string const reason )
+		void			KICK( void )
 		{
-			sender( ( *cliIt )->getSocket(), " Avoir le formatage réponse envoyé à la personne ban " + reason, 0 );
-			( *cliIt )->removeInAllChannel();
-			delete ( *cliIt );
-			_clients.erase( cliIt );
+			_target = getArg();
+			std::string userTarget = getArg();
+			std::string reason = getMsgArg();
+
+			channelIterator chanIt = isChannel( _target );
+			if ( chanIt == _channels.end() )
+				sender( _sd, ":*." + _selfIP + " 403 " + ( *_clientIt )->getNick() + " " + _target + " :No such channel\r\n",
+					&IRCErr( "KICK: channel innexistant" ) );
+			if ( chanIt->isOps( ( *_clientIt )->getUser() ) == chanIt->getOps()->end() )
+				sender( ( *_clientIt )->getSocket(), ":*." + _selfIP + " 482 " + ( *_clientIt )->getNick() + " " + _target + " :You must have channel op access or above to kick some one\r\n",
+					&IRCErr( "Not channel operator" ) );
+			clientIterator userIt = chanIt->isCli( userTarget );
+			if ( userIt == chanIt->getCli()->end() )
+				sender( _sd, ":*." + _selfIP + " 401 " + ( *_clientIt )->getNick() + " " + userTarget + " :No such nick\r\n",
+					&IRCErr( "KICK: nick target inexistant in channel" ) );
+			for ( constClientIterator chanCliIt = chanIt->getCli()->begin(); chanCliIt != chanIt->getCli()->end(); ++chanCliIt )
+			{
+				try
+				{ sender( ( *chanCliIt )->getSocket(), ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " KICK " + _target + " " + userTarget + " " + reason + "\r\n", 0 ); }
+				catch ( IRCErr const &err )
+				{ std::cerr << err.getError() << std::endl; }
+			}
+			( *userIt )->removeInChannel( chanIt );
+		}
+
+		void			KILLING( clientIterator const &kickIt, std::string cmd, std::string const reason )
+		{
+			for ( channelsListIt chanIt = ( *kickIt )->getChannels().begin(); chanIt != ( *kickIt )->getChannels().end(); ++chanIt )
+			{
+				for ( constClientIterator chanCliIt = ( *chanIt )->getCli()->begin(); chanCliIt != ( *chanIt )->getCli()->end(); ++chanCliIt )
+				{
+					try
+					{ sender( ( *chanCliIt )->getSocket(), ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " " + cmd + " " + _target + reason, 0 ); }
+					catch ( IRCErr const &err )
+					{ std::cerr << err.getError() << std::endl; }
+				}
+			}
+			( *kickIt )->removeInAllChannel();
+			delete ( *kickIt );
+			_clients.erase( kickIt );
 		}
 
 		void			KILL( void )
 		{
-			std::string		userKick;
+			std::string		_target = getArg();
 			size_t			endStol;
-			std::string		reason;
+			std::string		reason = getMsgArg();
 			strIt			argIt;
-			clientIterator	cliIt;
+			clientIterator	kickIt;
 
 			if ( isOps( ( *_clientIt )->getUser() ) == _servOps.end() )
 			{
 				_request->clear();
-				sender( _sd, " A voir ici le code erreur KLINE\r\n",
-					&IRCErr( ( *_clientIt )->getUser() + " try command KILL without serveur operator rights." ) );
+				sender( ( *_clientIt )->getSocket(), ":*." + _selfIP + " 481 " + ( *_clientIt )->getNick() + " :You must have channel op access or above to kick some one\r\n",
+					&IRCErr( "Not server operator" ) );
 			}
-
-			userKick = getArg();
-			reason = getMsgArg();
-
-			for ( cliIt = _clients.begin(); cliIt != _clients.end() && ( *cliIt )->getUser() != userKick; ++cliIt );
-			if ( cliIt != _clients.end() )
-				KILLING( cliIt, reason );
+			kickIt = isCli( _target );
+			if ( kickIt == _clients.end() )
+				sender( _sd, ":*." + _selfIP + " 401 " + ( *_clientIt )->getNick() + " " + _target + " :No such nick\r\n",
+					&IRCErr( "KICK: nick target inexistant in channel" ) );
+			if ( kickIt != _clients.end() )
+				KILLING( kickIt, " KILL ", reason );
 		}
 
 		void			KLINE( void )
@@ -421,7 +460,7 @@ class IRCData
 			{
 				_request->clear();
 				_destSD = ( *_clientIt )->getSocket();
-				sender( _sd, ":*." + _selfIP + " 471 " + ( *_clientIt )->getNick() + " :Permission Denied- You're not an IRC operator\r\n",
+				sender( _sd, ":*." + _selfIP + " 471 " + ( *_clientIt )->getNick() + " :Permission Denied - You're not an IRC operator\r\n",
 					&IRCErr( ( *_clientIt )->getUser() + " try command KLINE without serveur operator rights." ) );
 			}
 
@@ -443,9 +482,8 @@ class IRCData
 			if ( cliBanished != _servBan.end() )
 				_servBan.erase( cliBanished );
 			_servBan.push_back( pairBan ( userBan, timeBan ) );
-	
 			if ( ( cliIt = isCli( userBan ) ) != _clients.end() )
-				KILLING( cliIt, reason );
+				KILLING( cliIt, " KLINE ", reason );
 		}
 
 		void					OPENMSG( void )
@@ -488,6 +526,9 @@ class IRCData
 		{
 			std::string		privMsg = getMsgArg();
 			clientIterator clientIt = isCli( _target );
+			if ( privMsg == " :" )
+				sender( _sd, ":*." + _selfIP + " 461 " + ( *_clientIt )->getNick() + " " + _cmd + " " + _target + " :Not enough parameters given\r\n",
+				&IRCErr( _cmd + "Not enough parameters given" ) );
 			if ( clientIt != _clients.end() )
 				sender( _sd, ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " " + _cmd + " " + _target + " " + privMsg + "\r\n", 0 );
 		}
@@ -510,34 +551,44 @@ class IRCData
 
 			if ( chanIt == _channels.end() )
 				sender( _sd , ":*." + _selfIP + " 403 " + ( *_clientIt )->getNick() + " " + _target + " :No such channel\r\n",
-				 &IRCErr( "Channel doesnt exist." ) );
+					&IRCErr( "Channel doesnt exist." ) );
 			try
 			{
-				try
-				{ chanIt->eraseCli( ( *_clientIt )->getUser() ); }
-				catch ( IRCErr const &err )
-				{
-					sender( _sd , ":*." + _selfIP + " 442 " + ( *_clientIt )->getNick() + " " + _target + " :You're not on that channel\r\n",
+				if ( !( *_clientIt )->isInChannel( _target ) )
+					sender( ( *_clientIt )->getSocket() , ":*." + _selfIP + " 442 " + ( *_clientIt )->getNick() + " " + _target + " :You're not on that channel\r\n",
 						&IRCErr( "Client not on the channel." ) );
-				}
-				_answer = ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " PART " + _target + " :left away\r\n";
-				sender( _sd, ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " PART " + _target + " :left away\r\n",
-					0 );
-				for ( constClientIterator chanCliIt = chanIt->getCli()->begin();
-					chanCliIt != chanIt->getCli()->end(); ++chanCliIt )
+				( *_clientIt )->removeInChannel( chanIt );
+				sender( _sd, ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " PART " + _target + " :left away\r\n", 0 );
+				for ( constClientIterator chanCliIt = chanIt->getCli()->begin(); chanCliIt != chanIt->getCli()->end(); ++chanCliIt )
 				{
 					_destSD = ( *chanCliIt )->getSocket();
 					try
-					{ sender( _destSD, ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " PART " + _target + " :left away\r\n",
-					0 ); }
+					{ sender( _destSD, ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " PART " + _target + " :left away\r\n", 0 ); }
 					catch ( IRCErr const &err )
 					{ std::cerr << err.getError() << std::endl; }
 				}
 			}
 			catch ( IRCErr const &err )
+			{ throw( err ); }
+		}
+
+		void				QUIT( void )
+		{
+			std::string		quitMsg = getMsgArg();
+
+			if ( quitMsg == " :" )
+				quitMsg = " :left away";
+			for ( channelsListIt chanIt = ( *_clientIt )->getChannels().begin(); chanIt != ( *_clientIt )->getChannels().end(); ++chanIt )
 			{
-				throw( err );
+				for ( constClientIterator chanCliIt = ( *chanIt )->getCli()->begin(); chanCliIt != ( *chanIt )->getCli()->end(); ++chanCliIt )
+				{
+					try
+					{ sender( ( *chanCliIt )->getSocket(), ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " PART " + _target + quitMsg + "\r\n", 0 ); }
+					catch ( IRCErr const &err )
+					{ std::cerr << err.getError() << std::endl; }
+				}
 			}
+			closeEraseDeleteClient();
 		}
 
 		void				TOPIC( void )
@@ -593,33 +644,6 @@ class IRCData
 			sender( _sd, ":*." + _selfIP + " 341 " + user + " " + _target + " :" + _channelTmp + "\r\n", 0 );
 		}
 
-		void				QUIT( void )
-		{
-			std::string		quitMsg;
-
-			if ( !( quitMsg = getMsgArg() ).size() )
-				quitMsg = ":left the server";
-			for ( channelIterator chanIt = _channels.begin(); chanIt != _channels.end(); ++chanIt )
-			{
-				if ( chanIt->isCli( ( *_clientIt )->getUser() ) != chanIt->getCli()->end() )
-				{
-					*_request = chanIt->getName() + "\r\n";
-					try
-					{ PART(); }
-					catch ( IRCErr const &err )
-					{ std::cerr << err.getError() << std::endl; }
-				}
-			}
-			for ( clientIterator clientIt = _clients.begin(); clientIt != _clients.end(); ++clientIt )
-			{
-				try
-				{ sender( _sd, ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " QUIT " + quitMsg + "\r\n", 0 ); }
-				catch ( IRCErr const &err )
-				{ std::cerr << err.getError() << std::endl; }
-			}
-			closeEraseDeleteClient();
-		}
-
 		void				setAddress( void )
 		{
 			_address.sin_family = AF_INET;
@@ -634,6 +658,7 @@ class IRCData
 			std::cout << "Host disconnected , ip " << inet_ntoa( _address.sin_addr ) << ", port " << ntohs( _address.sin_port ) << std::endl;
 			FD_CLR( _sd, &_crntfds );
 			//Close the socket and mark as 0 in list for reuse
+			( *_clientIt )->removeInAllChannel( );
 			delete ( *_clientIt );
 			_clients.erase( _clientIt );
 		}
@@ -867,10 +892,10 @@ class IRCData
 		void				U_MODE_O( void )
 		{
 			if ( !_target.size() )
-				sender( _sd, ":" + _selfIP + " 461 " + ( *_clientIt )->getNick()  + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " MODE :MODE user +o targetted user forgotten\r\n", 
+				sender( _sd, ":" + _selfIP + " 461 " + ( *_clientIt )->getNick()  + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " MODE : MODE user +o targetted user forgotten\r\n", 
 					&IRCErr( "MODE user +o targeted user forgotten" ) );
 			if ( isCli( _target ) == _clients.end() )
-				sender( _sd, ":*." + _selfIP + " 401 " + ( *_clientIt )->getNick() + " " + _target + " :No such nick\r\n", &IRCErr( std::string( "No such nick " + _target ) ) );
+				sender( _sd, ":*." + _selfIP + " 401 " + ( *_clientIt )->getNick() + " " + _target + " : No such nick\r\n", &IRCErr( std::string( "No such nick " + _target ) ) );
 
 			strListIt opsTarget = isOps( _target );
 			if ( ( _modsIt->flop == '+' && opsTarget == _servOps.end() ) || ( _modsIt->flop == '-' && opsTarget != _servOps.end() ) )
@@ -890,7 +915,7 @@ class IRCData
 			{
 				size_t limit = IRC::stol( _modsIt->arg );
 				if ( !limit )
-					sender( _sd, ":*." + _selfIP + " 696 " + ( *_clientIt )->getNick() + " " + _target + " l " + _modsIt->arg + " :Invalid limit mode parameter. Syntax: <limit>.\r\n",
+					sender( _sd, ":*." + _selfIP + " 696 " + ( *_clientIt )->getNick() + " " + _target + " l " + _modsIt->arg + " : Invalid limit mode parameter. Syntax: <limit>.\r\n",
 						&IRCErr( " :Invalid limit mode parameter" ) );
 				_answer += _modsIt->flop + "l :" + IRC::ultostr( limit );
 			}

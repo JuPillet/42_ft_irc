@@ -13,7 +13,7 @@ typedef std::string::iterator					strIt;
 typedef	std::list<Client*>::iterator			clientIterator;
 typedef	std::list<Client*>::const_iterator		constClientIterator;
 typedef std::list<Channel*>						channelsList;
-typedef channelsList::iterator					channelListIt;
+typedef channelsList::iterator					channelsListIt;
 typedef std::list<Channel>::iterator			channelIterator;
 typedef std::list<std::string>::iterator		strListIt;
 typedef std::list<std::string>::const_iterator	conStrListIt;
@@ -98,9 +98,17 @@ class Client
 		std::string						const *getRequest( void ) const { return &_request; }
 		void							setInvitation( std::string invitation ) { _invitation = invitation; }
 		std::string						getInvitation( void ) const { return _invitation; }
+		bool							isInChannel( std::string name )
+		{
+			for ( channelsListIt iter = _channels.begin(); iter != _channels.end(); ++iter )
+				if ( ( *iter )->getName() == name )
+					return true;
+			return false;
+		}
+
 		void							addChannel(std::string servIP, Channel *channel )
 										{
-											channelListIt channelIt;
+											channelsListIt channelIt;
 											for ( channelIt = _channels.begin(); channelIt != _channels.end() && *channelIt != channel; ++channel );
 											if ( channelIt == _channels.end() )
 											{
@@ -140,7 +148,7 @@ class Client
 		channelsList					getChannels( void ) { return _channels; }
 		void							removeChannel( Channel *channel )
 		{
-			channelListIt chanIt;
+			channelsListIt chanIt;
 			for ( chanIt = _channels.begin(); chanIt != _channels.end() && *chanIt != channel; ++chanIt );
 			if ( chanIt != _channels.end() )
 				_channels.erase( chanIt );
@@ -164,7 +172,7 @@ class Client
 			removeChannel( &( *channel ) );
 		}
 
-		void							removeInChannel( channelListIt channel )
+		void							removeInChannel( channelsListIt channel )
 		{
 			( *channel )->unsetVo( _nick );
 			( *channel )->unsetOps( _nick );
@@ -172,10 +180,10 @@ class Client
 			( *channel )->removeGuests( _nick );
 			removeChannel( *channel );
 		}
-			
+
 		void							removeInAllChannel( void )
 		{
-			for ( channelListIt chanIt = _channels.begin(); chanIt != _channels.end(); )
+			for ( channelsListIt chanIt = _channels.begin(); chanIt != _channels.end(); )
 			{
 				removeInChannel( chanIt );
 				chanIt = _channels.begin();
