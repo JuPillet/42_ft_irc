@@ -137,7 +137,7 @@ class Client
 												}
 											}
 										}
-												
+		channelsList					getChannels( void ) { return _channels; }
 		void							removeChannel( Channel *channel )
 		{
 			channelListIt chanIt;

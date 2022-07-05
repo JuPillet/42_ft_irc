@@ -64,9 +64,9 @@ class Channel
 		bool							_extMsg; // bloque ou non les messages externes
 		bool							_invit;
 		bool							_protecTopic;
-		unsigned long					_limit; // limite d utilisateurs sur le channel, 0 pour pas de limite.
+		size_t							_limit; // limite d utilisateurs sur le channel, 0 pour pas de limite.
 		const std::string				_name;
-		std::string						_fondator;
+		std::string						_owner;
 		std::string						_flags;
 		std::string						_pass;
 		std::string						_topic;
@@ -81,9 +81,9 @@ class Channel
 										Channel( std::string name ) : _mod( false ), _priv( false ), _secret(false), _extMsg( false ), _invit( false ), _limit( 0 ), _name( name ), _flags(), _pass(), _topic(), _cliCrnt(), _chanOps(), _cliVo(), _chanBan() { return; }
 										~Channel( void ) {}
 		std::string						getName( void ) const { return _name; }
-		void							setFondator( std::string const &fondator ) { _fondator = fondator; }
-		void							delFondator( void ) { _fondator.clear(); }
-		std::string						getFondator() const { return _fondator; }
+		void							setOwner( std::string const &owner ) { _owner = owner; }
+		void							delOwner( void ) { _owner.clear(); }
+		std::string						getOwner() const { return _owner; }
 		std::string						getFlags( void ) { return _flags; }
 		void							addFlag( char flag )
 		{
@@ -304,14 +304,22 @@ class Channel
 		void WHO( clientIterator clientIt, std::string &servIP, bool isServOps )
 		{
 			for ( clientIterator userIt = _cliCrnt.begin(); clientIt != _cliCrnt.end(); ++userIt )
+			{
 				std::string answer = ":*." + servIP + " 352 " + ( *clientIt )->getNick() + " " + _name + " ";
+				if ( ( *userIt )->getNick() == _owner )
+					answer.push_back( '~' );
+				answer += ( *userIt )->getUser() + " " + servIP + " " + servIP + " ";
 				if ( isServOps )
 					answer.push_back( '*' );
 				if ( isOps( (*clientIt)->getNick() ) != _chanOps.end() )
 					answer.push_back( '@' );
 				
-				sender( _sd,
-				":*." + _selfIP + " 352 " + jpillet + " " + #jeteste ~jpillet freenode-a99.759.j1faas.IP *.freenode.net jpillet H@s :0 Julien Pillet
-				:*.freenode.net 315 jpillet #jeteste :End of /WHO list.
+				answer += " :0 " + ( *userIt )->getName() + "\r\n";
+				try
+				{ sender( ( *clientIt )->getSocket(), answer , 0); }
+				catch ( IRCErr &err )
+				{ std::cerr << err.getError() << std::endl; }
+			}
+			sender ( ( *clientIt )->getSocket(), ":*." + servIP + " 315 " + ( *clientIt )->getNick() + " " + _name + " :End of /WHO list.\r\n" , 0 );
 		}
 };
