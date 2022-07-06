@@ -1,60 +1,6 @@
 #pragma once
-#include <ctime>
 #include <cctype>
-#include "Client.hpp"
-
-namespace IRC
-{
-	int	stoi( const std::string &str, std::size_t *index = 0 )
-	{
-		char		posinega = 1;
-		std::size_t	ifnull;
-		int			result = 0;
-
-		if ( !index )
-			index = &ifnull;
-		for ( *index = 0; *index < str.size() && std::isspace( str[*index] ); ++( *index ) );
-		if ( *index < str.size() && str[*index] == '-' )
-			posinega = -1;
-		if ( *index < str.size() && ( str[*index] == '+' || str[*index] == '-' ) )
-			++( *index );
-		for ( ; *index < str.size() && std::isdigit( str[*index] ); ++( *index ) )
-			result = ( result * 10 ) + ( ( str[*index] - '0' ) * posinega );
-		return result;
-	};
-
-	long int	stol( const std::string &str, std::size_t *index = 0 )
-	{
-		char posinega = 1;
-		std::size_t	ifnull;
-		long int result = 0;
-
-		if ( !index )
-			index = &ifnull;
-		for ( *index = 0; *index < str.size() && std::isspace( str[*index] ); ++( *index ) );
-		if ( *index < str.size() && str[*index] == '-' )
-			posinega = -1;
-		if ( *index < str.size() && ( str[*index] == '+' || str[*index] == '-' ) )
-			++( *index );
-		for ( ; *index < str.size() && std::isdigit( str[*index] ); ++( *index ) )
-			result = ( result * 10 ) + ( ( str[*index] - '0' ) * posinega );
-		return result;
-	};
-
-	std::string ultostr( std::size_t val )
-	{
-		std::string valStr;
-		do
-		{
-			char cToAdd = ( val % 10 ) + '0';
-			valStr = cToAdd + valStr;
-			val /= 10;
-		} while( val );
-		return valStr;
-	}
-};
-
-typedef std::pair< std::string, time_t >	_pairBan;
+#include "IRCtypedef.hpp"
 
 class Channel
 {
@@ -84,243 +30,68 @@ class Channel
 		void							setOwner( std::string const &owner ) { _owner = owner; }
 		void							delOwner( void ) { _owner.clear(); }
 		std::string						getOwner() const { return _owner; }
+
 		std::string						getFlags( void ) { return _flags; }
-		void							addFlag( char flag )
-		{
-			strIt	flagIt;
-			for ( flagIt = _flags.begin(); flagIt != _flags.end() && *flagIt != flag ; ++flagIt );
-			if ( flagIt == _flags.end() )
-				_flags.push_back( flag );
-		}
-		void							delFlag( char flag )
-		{
-			strIt	flagIt;
-			for ( flagIt = _flags.begin(); flagIt != _flags.end() && *flagIt != flag ; ++flagIt );
-			if ( flagIt != _flags.end() )
-				_flags.erase( flagIt );
-		}
+		void							addFlag( char flag );
+		void							delFlag( char flag );
 
-		void							setPass ( std::string str )
-										{
-											_pass = str;
-											addFlag( 'k' );
-										}
-		void                            unsetPass ( void )
-										{
-											_pass.clear();
-											delFlag( 'k' );
-										}
+		void							setPass ( std::string str );
+		void							unsetPass ( void );
 		std::string						getPass( void ) const { return _pass; }
-		void							setPriv( bool priv )
-										{
-											_priv = priv;
-											if ( priv )
-												addFlag( 'p' );
-											else
-												delFlag( 'p' );
-										}
-		bool							getPriv( void ) const { return _priv; }
-		void							setSecret( bool secret )
-										{
-											_secret = secret;
-											if ( secret )
-												addFlag( 's' );
-											else
-												delFlag( 's' );
-										}
-		bool							getSecret( void ) const { return _secret; }
-		void							setInvit( bool invit )
-										{
-											_invit = invit;
-											if ( invit )
-												addFlag( 'i' );
-											else
-												delFlag( 'i' );
-										}
-		bool							getInvit( void ) const { return _invit; }
-		void							setMod( bool mod )
-										{
-											_mod = mod;
-											if ( mod )
-												addFlag( 'm' );
-											else
-												delFlag( 'm' );
-										}
-		bool							getMod( void ) const { return _mod; }
-		void							setExt ( bool extMsg )
-										{
-											_extMsg = extMsg;
-											if ( extMsg )
-												addFlag( 'n' );
-											else
-												delFlag( 'n' );
-										}
-		bool							getExt( void ) const { return _extMsg; }
-		void							setLimit ( unsigned int limit )
-										{
-											_limit = limit;
-											if ( limit )
-												addFlag( 'l' );
-											else
-												delFlag( 'l' );
-										}
-		unsigned int					getLimit ( void ) const { return _limit; }
-		void							setProtecTopic ( unsigned int limit )
-										{
-											_limit = limit;
-											if ( limit )
-												addFlag( 't' );
-											else
-												delFlag( 't' );
-										}
-		unsigned int					getProtecTopic ( void ) const { return _limit; }
-		void							setTopic ( std::string topic ) { _topic = topic; }
-		std::string						getTopic ( void ) { return _topic; }
-		strListIt						isOps( std::string nick ) {
-			strListIt opsIt;
-			for ( opsIt = _chanOps.begin(); opsIt != _chanOps.end() && nick != *opsIt ; ++opsIt )
-			return ( opsIt );
-		}
-		void                            setOps( std::string ops ) {
-			if ( isOps( ops ) == _chanOps.end() )
-				_chanOps.push_back( ops );
-		}
-		void                            unsetOps( std::string nick )
-        {
-            strListIt opsIt = isOps( nick );
-            if ( opsIt != _chanOps.end() )
-				_chanOps.erase( opsIt );
-        }
-		std::list<std::string> const	*getOps( void ) const { return &_chanOps; }
-		void							setCli( Client *tmp ) { _cliCrnt.push_back( tmp ); }
-		std::list<Client *> const		*getCli( void ) const { return &_cliCrnt; }
-		std::string						getNickList( void )
-		{
-			std::string	clients;
-			for ( clientIterator clientIt = _cliCrnt.begin(); clientIt != _cliCrnt.end(); ++clientIt )
-				clients.append( ( *clientIt )->getNick() + " " );
-			if ( clients.size() )
-				clients = std::string( clients, clients.size() - 1 );
-			return clients;
-		}
-		std::string						getUserByNick( std::string &nickTarget ) 
-		{
-			clientIterator clientIt;
-			for ( clientIt = _cliCrnt.begin(); clientIt != _cliCrnt.end(); ++clientIt );
-				if ( ( *clientIt )->getNick() == nickTarget )
-					return ( *clientIt )->getUser();
-			return "";
-		}
-		clientIterator					isCli( std::string nick ) {
-			clientIterator cliIt;
-			for ( cliIt = _cliCrnt.begin(); cliIt != _cliCrnt.end() && nick != ( *cliIt )->getNick(); ++cliIt );
-			return ( cliIt );
-		}
 
-		void							eraseCli( std::string nick )
-		{
-			clientIterator clienTarget = isCli( nick );
-			if ( clienTarget != _cliCrnt.end() )
-				_cliCrnt.erase( clienTarget );
-		}
+		void							setPriv( bool priv );
+		bool							getPriv( void ) const { return _priv; }
+
+		void							setSecret( bool secret );
+		bool							getSecret( void ) const { return _secret; }
+
+		void							setInvit( bool invit );
+		bool							getInvit( void ) const { return _invit; }
+
+		void							setMod( bool mod );
+		bool							getMod( void ) const { return _mod; }
+
+		void							setExt ( bool extMsg );
+		bool							getExt( void ) const { return _extMsg; }
+
+		void							setLimit ( unsigned int limit );
+		unsigned int					getLimit ( void ) const { return _limit; }
+
+		void							setProtecTopic ( unsigned int limit );
+		unsigned int					getProtecTopic ( void ) const { return _limit; }
+
+		void							setTopic ( std::string topic, std::string servIp, std::string changerNick );
+		std::string						getTopic ( void ) { return _topic; }
+
+		strListIt						isOps( std::string nick );
+		void							setOps( std::string ops );
+		void							unsetOps( std::string nick );
+		std::list<std::string> const	*getOps( void ) const { return &_chanOps; }
+
+		void							setCli( Client *tmp ) { _cliCrnt.push_back( tmp ); }
+		void							eraseCli( std::string nick );
+		clientIterator					isCli( std::string nick );
+		std::list<Client *> const		*getCli( void ) const { return &_cliCrnt; }
+
+		std::string						getNickList( void );
+		std::string						getUserByNick( std::string &nickTarget );
 
 		void							setVo( std::string tmp ) { _cliVo.push_back( tmp ); }
+		void							unsetVo( std::string nick );
+		strListIt						isVo( std::string nick );
 		std::list<std::string>			*getVo( void ) { return &_cliVo; }
-		strListIt							isVo( std::string nick ) {
-			strListIt voIt;
-			for ( voIt = _cliVo.begin(); voIt != _cliVo.end() && nick != *voIt; ++voIt );
-			return voIt;
-		}
 
-		void                            unsetVo( std::string nick )
-        {
-			strListIt voIt = isVo( nick );
-            if ( voIt != _cliVo.end() )
-				_cliVo.erase( voIt );
-        }
+		void							addGuests( std::string guest );
+		void							removeGuests( std::string guest );
+		strListIt						isGuest( std::string guest );
+		std::list<std::string>			*getGuests( void ) { return &_guests; }
 
-		strListIt						isGuest( std::string guest )
-		{
-			strListIt guestIt;
-			for ( guestIt = _guests.begin(); guestIt != _guests.end() && *guestIt != guest; ++guestIt );
-			return guestIt;
-		}
+		void							setBan( std::string tmp , unsigned int nb );
+		void							unBan( std::string tmp );
+		itBan							isBan( std::string nick );
+		std::list<pairBan> const		*getBan( void ) const { return &_chanBan; }
 
-		void							addGuests( std::string guest )
-		{
-			if ( isGuest( guest ) == _guests.end() )
-				_guests.push_back( guest );
-		}
-
-		void							removeGuests( std::string guest )
-		{
-			strListIt guestIt = isGuest( guest );
-			if ( guestIt != _guests.end() )
-				_guests.erase( guestIt );
-		}
-
-		std::list<std::string>			getGuests( void ) { return _guests; }
-
-		itBan							isBan( std::string nick ) {
-			itBan banIt;
-			for ( banIt = _chanBan.begin(); banIt != _chanBan.end() && banIt->first != nick; ++banIt );
-			if ( banIt != _chanBan.end() && banIt->second && banIt->second <= std::time( nullptr ) )
-			{
-					_chanBan.erase( banIt );
-					banIt = _chanBan.end();
-			}
-			return banIt;
-		}
-
-		void						setBan( std::string tmp , unsigned int nb )
-		{
-			itBan tmpIt = isBan( tmp );
-
-			if ( tmpIt == _chanBan.end() )
-			{
-				if ( nb == 0 )
-					_chanBan.push_back( _pairBan( tmp, 0 ) );
-				else
-					_chanBan.push_back( _pairBan( tmp, std::time( nullptr ) + nb ) );
-			}
-			else
-			{
-				if ( nb == 0 )
-					tmpIt->second = nb;
-				else
-					tmpIt->second = std::time( nullptr ) + nb;
-			}
-		}
-
-		void						unBan( std::string tmp )
-		{
-			itBan tmpIt ( isBan( tmp ) );
-			if ( isBan( tmp ) == _chanBan.end() )
-				throw ( IRCErr( "User isnt banned." ) );
-			_chanBan.erase( tmpIt );
-		}
-
-		std::list<pairBan> const	*getBan( void ) const { return &_chanBan; }
-
-		void						WHO( clientIterator clientIt, std::string &servIP, bool isServOps )
-		{
-			for ( clientIterator userIt = _cliCrnt.begin(); clientIt != _cliCrnt.end(); ++userIt )
-			{
-				std::string answer = ":*." + servIP + " 352 " + ( *clientIt )->getNick() + " " + _name + " ";
-				if ( ( *userIt )->getNick() == _owner )
-					answer.push_back( '~' );
-				answer += ( *userIt )->getUser() + " " + servIP + " " + servIP + " ";
-				if ( isServOps )
-					answer.push_back( '*' );
-				if ( isOps( (*clientIt)->getNick() ) != _chanOps.end() )
-					answer.push_back( '@' );
-				
-				answer += " :0 " + ( *userIt )->getName() + "\r\n";
-				try
-				{ sender( ( *clientIt )->getSocket(), answer , 0); }
-				catch ( IRCErr &err )
-				{ std::cerr << err.getError() << std::endl; }
-			}
-			sender ( ( *clientIt )->getSocket(), ":*." + servIP + " 315 " + ( *clientIt )->getNick() + " " + _name + " :End of /WHO list.\r\n" , 0 );
-		}
+		void							WHO( clientIterator clientIt, std::string &servIP, bool isServOps );
 };
+
+#include "Client.hpp"
