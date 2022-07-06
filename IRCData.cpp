@@ -66,6 +66,7 @@ void						IRCData::isUnsignedNumber( void )
 	if ( !arg.size() || argIt != arg.end() )
 	{
 		IRCErr	ircErr( ( *_clientIt )->getUser() + " argument isn't an unsigned number" );
+		VOIR ICI
 		sender( ( *_clientIt )->getSocket(), "voir erreur 461", &ircErr );
 	}
 }
@@ -171,20 +172,20 @@ void						IRCData::LIST( void )
 		if ( !chanIt->getSecret() )
 		{
 			char *nbr;
-			_answer = ":*." + _selfIP + " 322 " + ( *_clientIt )->getNick() + " " + chanIt->getName() + " :" + chanIt->getFlags();
+			_answer = ":*." + _servIP + " 322 " + ( *_clientIt )->getNick() + " " + chanIt->getName() + " :" + chanIt->getFlags();
 			if ( !chanIt->getPriv() )
 				_answer +=  " " + chanIt->getTopic();
 			sender( _sd, _answer + "\r\n", 0 );
 		}
 	}
-	sender( _sd, ":*." + _selfIP + " 323 " + ( *_clientIt )->getNick() +  " :End of channel list.\r\n", 0 );
+	sender( _sd, ":*." + _servIP + " 323 " + ( *_clientIt )->getNick() +  " :End of channel list.\r\n", 0 );
 }
 
 void						IRCData::WELCOME( void )
 {
 	if ( ( *_clientIt )->getPass() == _pass
 		&& ( *_clientIt )->getNick().size() && ( *_clientIt )->getUser().size() )
-		( *_clientIt )->setAutentification( _selfIP, inet_ntoa( _address.sin_addr ) );
+		( *_clientIt )->setAutentification( _servIP, inet_ntoa( _address.sin_addr ) );
 }
 void				IRCData::CAP( void )
 {
@@ -198,7 +199,7 @@ void						IRCData::checkPass( void )
 	if ( ( *_clientIt )->getPass() != _pass )
 	{
 		IRCErr	ircErr( ( ( *_clientIt )->getUser() + " Bad password" ) );
-		sender( _sd, ":*." + _selfIP + " 475 " + ( *_clientIt )->getNick() + " " + _target + " :Cannot join channel ( incorrect channel key )\r\n", &ircErr );
+		sender( _sd, ":*." + _servIP + " 475 " + ( *_clientIt )->getNick() + " " + _target + " :Cannot join channel ( incorrect channel key )\r\n", &ircErr );
 	}
 }
 
@@ -211,7 +212,7 @@ void						IRCData::PASS( void )
 	if ( ( *_clientIt )->getAutentification() )
 	{
 		IRCErr ircErr( ( *_clientIt )->getUser() + " try a double registration" );
-		sender( _sd, ":" + _selfIP + " 462 " + " " + ( *_clientIt )->getNick() + " " + ":You may not reregister", &ircErr );
+		sender( _sd, ":" + _servIP + " 462 " + " " + ( *_clientIt )->getNick() + " " + ":You may not reregister", &ircErr );
 	}
 	( *_clientIt )->setPass( passTmp );
 	checkPass();
@@ -234,7 +235,7 @@ void						IRCData::NICK( void )
 	if ( !std::isalpha( *nickIt ) )
 	{
 		IRCErr ircErr( "Nick format - first char not an alphabetic character" );
-		sender( _sd, ":*." + _selfIP + " 432 " + nickTmp + " :Erroneous Nickname first character not an alphabetic character\r\n", &ircErr );
+		sender( _sd, ":*." + _servIP + " 432 " + nickTmp + " :Erroneous Nickname first character not an alphabetic character\r\n", &ircErr );
 	}
 	for ( ; nickIt != nickTmp.end(); ++nickIt )
 	{
@@ -246,7 +247,7 @@ void						IRCData::NICK( void )
 				errLog.push_back( *nickIt );
 				errLog.push_back( '\'' );
 				IRCErr ircErr( errLog );
-				sender( _sd, ":*." + _selfIP + " 432 " + nickTmp + " :Erroneous Nickname, nick contain caracter '" + *nickIt + "'\r\n", &ircErr);
+				sender( _sd, ":*." + _servIP + " 432 " + nickTmp + " :Erroneous Nickname, nick contain caracter '" + *nickIt + "'\r\n", &ircErr);
 			}
 		}
 	}
@@ -257,7 +258,7 @@ void						IRCData::NICK( void )
 		if ( ( *cliIt )->getNick() == nickTmp )
 		{
 			IRCErr ircErr( "Nick already in use" );
-			sender( _sd, ":*." + _selfIP + " 433 * " + nickTmp + " :Nickname already in use\r\n",
+			sender( _sd, ":*." + _servIP + " 433 * " + nickTmp + " :Nickname already in use\r\n",
 				&ircErr);
 		}
 	}
@@ -294,7 +295,7 @@ void						IRCData::USER( void )
 	if ( isBan( userTmp ) != _servBan.end() )
 	{
 		IRCErr ircErr( "User " + ( *_clientIt )->getUser() + " tried to connect during his banish time." );
-		sender( _sd, ":*." + _selfIP + " 466 " + ( *_clientIt )->getNick() + " " + _channelTmp + " :You are banned from this server",
+		sender( _sd, ":*." + _servIP + " 466 " + ( *_clientIt )->getNick() + " " + _channelTmp + " :You are banned from this server",
 			&ircErr);
 	}
 	( *_clientIt )->setUser( userTmp );
@@ -306,7 +307,7 @@ void						IRCData::USER( void )
 void						IRCData::PONG( void )
 {
 	clearPostArgs();
-	sender( _sd, ":" + _selfIP + " PONG " + _selfIP + " :" + _selfIP + "\r\n", 0 );
+	sender( _sd, ":" + _servIP + " PONG " + _servIP + " :" + _servIP + "\r\n", 0 );
 }
 
 void						IRCData::JOIN( void )
@@ -330,19 +331,19 @@ void						IRCData::JOIN( void )
 	if ( chanIt->getInvit() && chanIt->isGuest( ( *_clientIt )->getNick() ) == chanIt->getGuests()->end() )
 	{
 		IRCErr ircErr( "isn't invited" );
-		sender( _sd, ":*." + _selfIP + " 473 " + ( *_clientIt )->getNick() + " " + _channelTmp + " :Cannot join channel ( invite only )\r\n", &ircErr);
+		sender( _sd, ":*." + _servIP + " 473 " + ( *_clientIt )->getNick() + " " + _channelTmp + " :Cannot join channel ( invite only )\r\n", &ircErr);
 	}
 	if ( chanIt->getPass().size() && chanIt->getPass() != _chanPassTmp )
 	{
 		IRCErr ircErr( "bad password" );
-		sender( _sd, ":*." + _selfIP + " 475 " + ( *_clientIt )->getNick() + " " + _channelTmp + " :Cannot join channel ( incorrect channel key )\r\n", &ircErr );
+		sender( _sd, ":*." + _servIP + " 475 " + ( *_clientIt )->getNick() + " " + _channelTmp + " :Cannot join channel ( incorrect channel key )\r\n", &ircErr );
 	}
 	if ( chanIt->getLimit() && chanIt->getLimit() == chanIt->getCli()->size() )
 	{
 		IRCErr ircErr( "limit channel full" );
-		sender( _sd, ":*." + _selfIP + " 471 " + ( *_clientIt )->getNick() + " " + _channelTmp + " :Cannot join channel ( channel is full )\r\n", &ircErr );
+		sender( _sd, ":*." + _servIP + " 471 " + ( *_clientIt )->getNick() + " " + _channelTmp + " :Cannot join channel ( channel is full )\r\n", &ircErr );
 	}
-	( *_clientIt )->addChannel( _selfIP, &( *chanIt ) );
+	( *_clientIt )->addChannel( _servIP, &( *chanIt ) );
 }
 
 void						IRCData::KICK( void )
@@ -356,18 +357,18 @@ void						IRCData::KICK( void )
 	if ( chanIt == _channels.end() )
 	{
 		IRCErr ircErr( "KICK: channel innexistant" );
-		sender( _sd, ":*." + _selfIP + " 403 " + ( *_clientIt )->getNick() + " " + _target + " :No such channel\r\n", &ircErr);
+		sender( _sd, ":*." + _servIP + " 403 " + ( *_clientIt )->getNick() + " " + _target + " :No such channel\r\n", &ircErr);
 	}
 	if ( chanIt->isOps( ( *_clientIt )->getUser() ) == chanIt->getOps()->end() )
 	{
 		IRCErr ircErr( "Not channel operator" );
-		sender( ( *_clientIt )->getSocket(), ":*." + _selfIP + " 482 " + ( *_clientIt )->getNick() + " " + _target + " :You must have channel op access or above to kick some one\r\n", &ircErr );
+		sender( ( *_clientIt )->getSocket(), ":*." + _servIP + " 482 " + ( *_clientIt )->getNick() + " " + _target + " :You must have channel op access or above to kick some one\r\n", &ircErr );
 	}
 	clientIterator userIt = chanIt->isCli( userTarget );
 	if ( userIt == chanIt->getCli()->end() )
 	{
 		IRCErr ircErr( "KICK: nick target inexistant in channel" );
-			sender( _sd, ":*." + _selfIP + " 401 " + ( *_clientIt )->getNick() + " " + userTarget + " :No such nick\r\n", &ircErr );
+			sender( _sd, ":*." + _servIP + " 401 " + ( *_clientIt )->getNick() + " " + userTarget + " :No such nick\r\n", &ircErr );
 	}
 	
 	for ( constClientIterator chanCliIt = chanIt->getCli()->begin(); chanCliIt != chanIt->getCli()->end(); ++chanCliIt )
@@ -410,14 +411,14 @@ void						IRCData::KILL( void )
 	{
 		_request->clear();
 		IRCErr ircErr( "Not server operator" );
-		sender( ( *_clientIt )->getSocket(), ":*." + _selfIP + " 481 " + ( *_clientIt )->getNick() + " :You must have channel op access or above to kick some one\r\n",
+		sender( ( *_clientIt )->getSocket(), ":*." + _servIP + " 481 " + ( *_clientIt )->getNick() + " :You must have channel op access or above to kick some one\r\n",
 			&ircErr );
 	}
 	kickIt = isCli( _target );
 	if ( kickIt == _clients.end() )
 	{
 		IRCErr ircErr( "KICK: nick target inexistant in channel" );
-		sender( _sd, ":*." + _selfIP + " 401 " + ( *_clientIt )->getNick() + " " + _target + " :No such nick\r\n",
+		sender( _sd, ":*." + _servIP + " 401 " + ( *_clientIt )->getNick() + " " + _target + " :No such nick\r\n",
 			&ircErr);}
 	if ( kickIt != _clients.end() )
 		KILLING( kickIt, " KILL ", reason );
@@ -440,7 +441,7 @@ void						IRCData::KLINE( void )
 		_request->clear();
 		_destSD = ( *_clientIt )->getSocket();
 		IRCErr ircErr( ( *_clientIt )->getUser() + " try command KLINE without serveur operator rights." );
-		sender( _sd, ":*." + _selfIP + " 471 " + ( *_clientIt )->getNick() + " :Permission Denied - You're not an IRC operator\r\n",
+		sender( _sd, ":*." + _servIP + " 471 " + ( *_clientIt )->getNick() + " :Permission Denied - You're not an IRC operator\r\n",
 			&ircErr);
 	}
 	timeBan = IRC::stol( *_request, &endStol );
@@ -470,24 +471,24 @@ void						IRCData::OPENMSG( void )
 	if ( chanIt == _channels.end() )
 	{
 		IRCErr ircErr( "No such channel" );
-		sender( _sd, ":*." + _selfIP + " 403 " + ( *_clientIt )->getNick() + " " + _target + " :No such channel\r\n", &ircErr );
+		sender( _sd, ":*." + _servIP + " 403 " + ( *_clientIt )->getNick() + " " + _target + " :No such channel\r\n", &ircErr );
 	}
 	if ( ( chanIt->isBan( ( *_clientIt )->getUser() ) ) != chanIt->getBan()->end() )
 	{
 		IRCErr ircErr( ( *_clientIt )->getNick() + " banned from " + _target );
-		sender( _sd, ":*." + _selfIP + " 474 " + ( *_clientIt )->getNick() + " " + _target + " :you are banned from channel\r\n", &ircErr);
+		sender( _sd, ":*." + _servIP + " 474 " + ( *_clientIt )->getNick() + " " + _target + " :you are banned from channel\r\n", &ircErr);
 	}
 	if ( chanIt->getExt() && chanIt->isCli( ( *_clientIt )->getUser() ) == chanIt->getCli()->end() )
 	{
 		IRCErr ircErr( "PRIVMSG - Channel " + _target + " external restriction" );
-		sender( _sd, ":*." + _selfIP + " 404 " + ( *_clientIt )->getNick() + " " + _target + " You cannot send messages to this channel whilst the +n ( noextmsg ) mode is set.\r\n", &ircErr );
+		sender( _sd, ":*." + _servIP + " 404 " + ( *_clientIt )->getNick() + " " + _target + " You cannot send messages to this channel whilst the +n ( noextmsg ) mode is set.\r\n", &ircErr );
 	}
 	if ( chanIt->getMod()
 		&& chanIt->isOps( ( *_clientIt )->getUser() ) == chanIt->getOps()->end()
 		&& chanIt->isVo( ( *_clientIt )->getUser() ) == chanIt->getVo()->end() )
 	{
 		IRCErr ircErr( "PRIVMSG - Channel " + _target + " moderation restriction" );
-		sender( _sd, ":*." + _selfIP + " 404 " + ( *_clientIt )->getNick() + " " + _target + " You cannot send messages to this channel whilst the +m ( moderated ) mode is set.\r\n", &ircErr );
+		sender( _sd, ":*." + _servIP + " 404 " + ( *_clientIt )->getNick() + " " + _target + " You cannot send messages to this channel whilst the +m ( moderated ) mode is set.\r\n", &ircErr );
 	}
 
 	_answer = ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " " + _cmd + " " + _target + " " + privMsg + "\r\n"; // A voir formatage pour envoyer un message
@@ -511,7 +512,7 @@ void						IRCData::PRIVMSG( void )
 
 	if ( privMsg == " :" ){
 		IRCErr ircErr( _cmd + "Not enough parameters given" );
-		sender( _sd, ":*." + _selfIP + " 461 " + ( *_clientIt )->getNick() + " " + _cmd + " " + _target + " :Not enough parameters given\r\n",
+		sender( _sd, ":*." + _servIP + " 461 " + ( *_clientIt )->getNick() + " " + _cmd + " " + _target + " :Not enough parameters given\r\n",
 		&ircErr );}
 	if ( clientIt != _clients.end() )
 		sender( _sd, ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " " + _cmd + " " + _target + " " + privMsg + "\r\n", 0 );
@@ -535,14 +536,14 @@ void						IRCData::PART( void )
 	if ( chanIt == _channels.end() )
 	{
 		IRCErr ircErr( "Channel doesnt exist." );
-		sender( _sd , ":*." + _selfIP + " 403 " + ( *_clientIt )->getNick() + " " + _target + " :No such channel\r\n",
+		sender( _sd , ":*." + _servIP + " 403 " + ( *_clientIt )->getNick() + " " + _target + " :No such channel\r\n",
 			&ircErr );
 	}
 	try
 	{
 		if ( !( *_clientIt )->isInChannel( _target ) ){
 			IRCErr ircErr( "Client not on the channel." );
-			sender( ( *_clientIt )->getSocket() , ":*." + _selfIP + " 442 " + ( *_clientIt )->getNick() + " " + _target + " :You're not on that channel\r\n",
+			sender( ( *_clientIt )->getSocket() , ":*." + _servIP + " 442 " + ( *_clientIt )->getNick() + " " + _target + " :You're not on that channel\r\n",
 				&ircErr );}
 		( *_clientIt )->removeInChannel( chanIt );
 		sender( _sd, ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " PART " + _target + " :left away\r\n", 0 );
@@ -590,7 +591,7 @@ void						IRCData::TOPIC( void )
 	if ( channelIt == _channels.end() )
 	{
 		IRCErr ircErr( "TOPIC: channel innexistant" );
-		sender( _sd, ":*." + _selfIP + " 403 " + ( *_clientIt )->getNick() + " " + _target + " :No such channel\r\n", &ircErr );
+		sender( _sd, ":*." + _servIP + " 403 " + ( *_clientIt )->getNick() + " " + _target + " :No such channel\r\n", &ircErr );
 	}
 	if ( topic.size() && topic != " :" )
 	{
@@ -599,12 +600,12 @@ void						IRCData::TOPIC( void )
 		{
 			_request->clear();
 			IRCErr ircErr( ( *_clientIt )->getNick() + " not '" + _channelTmp + "' channel operator" );
-			sender( _sd, ":*." + _selfIP + " 482 " + ( *_clientIt )->getNick() + " " + _channelTmp + " :You must be a channel half-operator\r\n", &ircErr);
+			sender( _sd, ":*." + _servIP + " 482 " + ( *_clientIt )->getNick() + " " + _channelTmp + " :You must be a channel half-operator\r\n", &ircErr);
 		}
-		channelIt->setTopic( topic, _selfIP, *changer );
+		channelIt->setTopic( topic, _servIP, *changer );
 	}
 	else
-		sender( _sd, ":*." + _selfIP + " 332 " + ( *_clientIt )->getNick() + " " + _target + channelIt->getTopic() + "\r\n", 0 );
+		sender( _sd, ":*." + _servIP + " 332 " + ( *_clientIt )->getNick() + " " + _target + channelIt->getTopic() + "\r\n", 0 );
 }
 
 void						IRCData::INVITE( void )
@@ -618,30 +619,30 @@ void						IRCData::INVITE( void )
 	{
 		_request->clear();
 		IRCErr ircErr( _target + " not server client" );
-		sender( _sd, ":*." + _selfIP + " 401 " + ( *_clientIt )->getNick() + " " + _target + " :No such nick\r\n", &ircErr );
+		sender( _sd, ":*." + _servIP + " 401 " + ( *_clientIt )->getNick() + " " + _target + " :No such nick\r\n", &ircErr );
 	}
 	if ( channel == _channels.end() )
 	{
 		IRCErr ircErr( "TOPIC: channel innexistant" );
-		sender( _sd, ":*." + _selfIP + " 403 " + ( *_clientIt )->getNick() + " " + _target + " :No such channel\r\n", &ircErr );
+		sender( _sd, ":*." + _servIP + " 403 " + ( *_clientIt )->getNick() + " " + _target + " :No such channel\r\n", &ircErr );
 	}
 	if ( channel->isOps( user ) == channel->getOps()->end() )
 	{
 		_request->clear();
 		IRCErr ircErr( user + " not '" + _channelTmp + "' channel operator" );
-		sender( _sd, ":*." + _selfIP + " 482 " + ( *_clientIt )->getNick() + " " + _channelTmp + " :You must be a channel half-operator\r\n",
+		sender( _sd, ":*." + _servIP + " 482 " + ( *_clientIt )->getNick() + " " + _channelTmp + " :You must be a channel half-operator\r\n",
 			&ircErr );
 	}
 	if ( channel->isCli( _target ) == channel->getCli()->end() )
 	{
 		_request->clear();
 		IRCErr ircErr( _target + " allready on '" + _channelTmp + "' channel" );
-		sender( _sd, ":*." + _selfIP + " 443 " + user + " " + _target + " :" + _channelTmp + " :is already on channel\r\n", &ircErr );
+		sender( _sd, ":*." + _servIP + " 443 " + user + " " + _target + " :" + _channelTmp + " :is already on channel\r\n", &ircErr );
 	}
 	channel->addGuests( _target );
 	sender( ( *cliTarget )->getSocket(), ":" + _target + "!~" + ( *cliTarget )->getUser() + "@" + ( *cliTarget )->getClIp() + " " + _cmd + " " + ( *cliTarget )->getUser() + " :" + _channelTmp + "\r\n", 0 );
 	( *cliTarget )->setInvitation( _channelTmp );
-	sender( _sd, ":*." + _selfIP + " 341 " + user + " " + _target + " :" + _channelTmp + "\r\n", 0 );
+	sender( _sd, ":*." + _servIP + " 341 " + user + " " + _target + " :" + _channelTmp + "\r\n", 0 );
 }
 
 void						IRCData::setAddress( void )
@@ -718,7 +719,7 @@ void						IRCData::initFct( void )
 	_listFctC.push_back( pairKVM( 'm', pairFctsM( &IRCData::C_MODE_M, 0 ) ) );
 	_listFctC.push_back( pairKVM( 'l', pairFctsM( &IRCData::C_MODE_L, &IRCData::MODE_GET_ARG ) ) );
 	_listFctC.push_back( pairKVM( 'b', pairFctsM( &IRCData::C_MODE_B, &IRCData::MODE_GET_ARG ) ) );
-	_listFctC.push_back( pairKVM( 'v', pairFctsM( &IRCData::C_MODE_V, 0 ) ) );
+	_listFctC.push_back( pairKVM( 'v', pairFctsM( &IRCData::C_MODE_V, &IRCData::MODE_GET_ARG ) ) );
 	_listFctC.push_back( pairKVM( 'k', pairFctsM( &IRCData::C_MODE_K, &IRCData::MODE_GET_ARG ) ) );
 	////	listPtrFctnModeUser
 	_listFctU.push_back( pairKVM( 'o', pairFctsM( &IRCData::U_MODE_O, &IRCData::MODE_GET_ARG ) ) );
@@ -763,9 +764,9 @@ void						IRCData::init( std::string port, std::string password, char **ep )
 	FD_SET( _master_socket, &_crntfds );
 	gethostname( selfhost, sizeof( selfhost ) );
 	host_entry = gethostbyname( selfhost );
-	_selfIP = inet_ntoa( *( reinterpret_cast<struct in_addr*>( host_entry->h_addr_list[0] ) ) );
+	_servIP = inet_ntoa( *( reinterpret_cast<struct in_addr*>( host_entry->h_addr_list[0] ) ) );
 	close( 4 );
-	std::cout << _selfIP << std::endl;
+	std::cout << _servIP << std::endl;
 	initFct();
 	std::cout << "Waiting for connections ..." << std::endl;
 }
@@ -798,7 +799,7 @@ void						IRCData::execFct( void )
 	{
 		_request->clear();
 		IRCErr ircErr( "Client try to use other command than PASS, NICK or USER without authentification\r\n" );
-		sender( _sd, ":*." + _selfIP + " 451 " + ( *_clientIt )->getNick() + " :Not register\r\n", &ircErr );
+		sender( _sd, ":*." + _servIP + " 451 " + ( *_clientIt )->getNick() + " :Not register\r\n", &ircErr );
 	}
 	for ( _listPairIt = _listFctI.begin(); _listPairIt != _listFctI.end() && _listPairIt->first != _cmd; ++_listPairIt );
 	if ( _listPairIt != _listFctI.end() )
@@ -861,12 +862,12 @@ void						IRCData::U_MODE_O( void )
 	if ( !_target.size() )
 	{
 		IRCErr ircErr( "MODE user +o targeted user forgotten" );
-		sender( _sd, ":" + _selfIP + " 461 " + ( *_clientIt )->getNick()  + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " MODE : MODE user +o targetted user forgotten\r\n", &ircErr );
+		sender( _sd, ":" + _servIP + " 461 " + ( *_clientIt )->getNick()  + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " MODE : MODE user +o targetted user forgotten\r\n", &ircErr );
 	}
 	if ( isCli( _target ) == _clients.end() )
 	{
 		IRCErr ircErr( "No such nick " + _target );
-		sender( _sd, ":*." + _selfIP + " 401 " + ( *_clientIt )->getNick() + " " + _target + " : No such nick\r\n", &ircErr );
+		sender( _sd, ":*." + _servIP + " 401 " + ( *_clientIt )->getNick() + " " + _target + " : No such nick\r\n", &ircErr );
 	}
 	strListIt opsTarget = isOps( _target );
 	if ( ( _modsIt->flop == '+' && opsTarget == _servOps.end() ) || ( _modsIt->flop == '-' && opsTarget != _servOps.end() ) )
@@ -875,23 +876,22 @@ void						IRCData::U_MODE_O( void )
 			_servOps.push_back( _target );
 		else
 			_servOps.erase( opsTarget );
-		sender( _sd, ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " MODE " + _target + " " + _modsIt->flop + "o :" + _target + "\r\n", 0 );
+		_printedFlags += " " + _target;
 	}
 }
 
 void						IRCData::C_MODE_L()
 {
-	_answer = ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " MODE " + _target + " ";
 	if ( _modsIt->flop == '+' )
 	{
 		size_t limit = IRC::stol( _modsIt->arg );
 		if ( !limit )
 		{
 			IRCErr ircErr( " :Invalid limit mode parameter" );
-			sender( _sd, ":*." + _selfIP + " 696 " + ( *_clientIt )->getNick() + " " + _target + " l " + _modsIt->arg + " : Invalid limit mode parameter. Syntax: <limit>.\r\n", &ircErr );
+			sender( _sd, ":*." + _servIP + " 696 " + ( *_clientIt )->getNick() + " " + _target + " l " + _modsIt->arg + " : Invalid limit mode parameter. Syntax: <limit>.\r\n", &ircErr );
 		}
 		_answer.push_back( _modsIt->flop );
-		_answer += "l :" + IRC::ultostr( limit );
+		_printedArgs += " " + IRC::ultostr( limit );
 	}
 	else
 	{
@@ -904,22 +904,21 @@ void						IRCData::C_MODE_L()
 void						IRCData::C_MODE_B( void )
 {
 	//char _flop egal a plus ou moins pour savoir si je dois ban ou unban
-	std::string nickBan = getArg();
-	if ( !nickBan.size() )
+	if ( !_modsIt->arg.size() )
 	{
 		std::list<pairBan> const	*channelBan = _modsIt->chanIt->getBan();
 		for ( std::list<pairBan>::const_iterator chanBanIt = channelBan->begin(); chanBanIt != channelBan->end(); ++chanBanIt )
-			sender( _sd, ":*." + _selfIP + " 367 " + ( *_clientIt )->getNick() + " " + _target + " " + nickBan + "!*@*\r\n", 0 );
-		sender( _sd, ":*." + _selfIP + " 368 " + ( *_clientIt )->getNick() + " " + _target + " :End of channel ban list\r\n", 0 );
+			sender( _sd, ":*." + _servIP + " 367 " + ( *_clientIt )->getNick() + " " + _target + " " + nickBan + "!*@*\r\n", 0 );
+		sender( _sd, ":*." + _servIP + " 368 " + ( *_clientIt )->getNick() + " " + _target + " :End of channel ban list\r\n", 0 );
 	}
 	else
 	{
 		itBan opsTarget = _modsIt->chanIt->isBan( _target );
 		if ( _modsIt->flop == '+' )
-			_modsIt->chanIt->setBan( nickBan, 0 );
+			_modsIt->chanIt->setBan( _modsIt->arg, 0 );
 		else
-			_modsIt->chanIt->unBan( nickBan );
-		sender( _sd,  ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " MODE " + _target + " " + _modsIt->flop + "b :" + nickBan + "!*@*\r\n", 0 );
+			_modsIt->chanIt->unBan( _modsIt->arg );
+		_printedArgs += " " + _modsIt->arg + "!*@*";
 	}
 }
 
@@ -927,27 +926,24 @@ void						IRCData::C_MODE_K( void )
 {
 	if ( _modsIt->flop == '-' )
 		_modsIt->arg = _modsIt->chanIt->getPass();
-	if ( !_chanPassTmp.size() )
+	if ( !_modsIt->arg.size() )
 	{
 		IRCErr ircErr( ( *_clientIt )->getUser() + " forget argument for channel mode " + _modsIt->flop + "k" );
-		sender( _sd, ":*." + _selfIP + " 696 " + ( *_clientIt )->getNick() + _target + " k * :You must specify a parameter for the key mode. Syntax: <key>.\r\n",
-			&ircErr );
+		sender( _sd, ":*." + _servIP + " 696 " + ( *_clientIt )->getNick() + _target + " k * :You must specify a parameter for the key mode. Syntax: <key>.\r\n", &ircErr );
 	}
 	if ( _modsIt->flop == '-' )
 		_modsIt->chanIt->unsetPass();
 	else
 	{
-		_chanPassTmp = getArg();
 		if ( _modsIt->chanIt->getPass().size() )
 		{
-			_answer = ":*." + _selfIP + " 467 " + ( *_clientIt )->getNick() + _target + " k * :Channel key already set.\r\n";
+			_answer = ":*." + _servIP + " 467 " + ( *_clientIt )->getNick() + _target + " k * :Channel key already set.\r\n";
 			IRCErr ircErr( ( *_clientIt )->getUser() + " password already exist for channel mode " + _modsIt->flop + "k" );
-			sender( _sd, _answer = ":*." + _selfIP + " 467 " + ( *_clientIt )->getNick() + _target + " k * :Channel key already set.\r\n",
-				&ircErr );
+			sender( _sd, _answer = ":*." + _servIP + " 467 " + ( *_clientIt )->getNick() + _target + " k * :Channel key already set.\r\n", &ircErr );
 		}
-		_modsIt->chanIt->setPass( _chanPassTmp );
+		_modsIt->chanIt->setPass( _modsIt->arg );
 	}
-	sender( _sd, ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " MODE " + _target + " " + _modsIt->flop + "b :" + _modsIt->arg + "!*@*\r\n", 0 );
+	_printedArgs += " " + _modsIt->arg + "!*@*";
 }
 
 void						IRCData::C_MODE_M( void )
@@ -959,7 +955,7 @@ void						IRCData::C_MODE_M( void )
 			_modsIt->chanIt->setMod( true );
 		else
 			_modsIt->chanIt->setMod( false );
-		sender( _sd, ":" + _selfIP + " " + _cmd + " " + _target + " :" + _modsIt->flop + "m\r\n", 0 );
+		sender( _sd, ":" + _servIP + " " + _cmd + " " + _target + " :" + _modsIt->flop + "m\r\n", 0 );
 	}
 }
 
@@ -969,7 +965,7 @@ void						IRCData::C_MODE_T( void )
 	if ( _modsIt->chanIt->getMod() != mode )
 	{
 		_modsIt->flop == '+' ? _modsIt->chanIt->setProtecTopic( true ) : _modsIt->chanIt->setProtecTopic( false );
-		sender( _sd, ":" + _selfIP + " " + _cmd + " " + _target + " :" + _modsIt->flop + "t\r\n", 0 );
+		sender( _sd, ":" + _servIP + " " + _cmd + " " + _target + " :" + _modsIt->flop + "t\r\n", 0 );
 	}
 }
 
@@ -982,7 +978,7 @@ void						IRCData::C_MODE_N( void )
 			_modsIt->chanIt->setExt( true );
 		else
 			_modsIt->chanIt->setExt( false );
-		sender( _sd, ":" + _selfIP + " " + _cmd + " " + _target + " :" + _modsIt->flop + "n\r\n", 0 );
+		sender( _sd, ":" + _servIP + " " + _cmd + " " + _target + " :" + _modsIt->flop + "n\r\n", 0 );
 	}
 }
 
@@ -993,46 +989,37 @@ void						IRCData::C_MODE_O( void )
 	if ( !_modsIt->arg.size() )
 	{
 		IRCErr ircErr (( *_clientIt )->getUser() + " forgotten argument <nick> for channel mode o");
-		sender( _sd, ":*." + _selfIP + " 696 " + ( *_clientIt )->getNick() + _target + " o * :You must specify a parameter for the op mode. Syntax: <nick>.\r\n",
+		sender( _sd, ":*." + _servIP + " 696 " + ( *_clientIt )->getNick() + _target + " o * :You must specify a parameter for the op mode. Syntax: <nick>.\r\n",
 			&ircErr );
 	}
 	if ( _modsIt->chanIt->isCli( _modsIt->arg ) == _modsIt->chanIt->getCli()->end() )
 	{
 		IRCErr ircErr( ( *_clientIt )->getUser() + " forgotten argument <nick> for channel mode o" );
-		sender( _sd, ":*." + _selfIP + " 696 " + ( *_clientIt )->getNick() + _target + " o * :You must specify a parameter for the op mode. Syntax: <nick>.\r\n",  &ircErr );
+		sender( _sd, ":*." + _servIP + " 696 " + ( *_clientIt )->getNick() + _target + " o * :You must specify a parameter for the op mode. Syntax: <nick>.\r\n",  &ircErr );
 	}
 	_modsIt->flop == '+' ? _modsIt->chanIt->setOps( _modsIt->arg ) : _modsIt->chanIt->unsetOps( _modsIt->arg );
-	sender( _sd, ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " MODE " + _target + " " + _modsIt->flop + "o :" + _modsIt->arg + "!*@*\r\n", 0 );
+	_printedArgs += " " + _modsIt->arg + "!*@*";
 }
 
 void						IRCData::C_MODE_P( void )
 {
 	bool mode = ( _modsIt->flop == '+' );
 	if ( _modsIt->chanIt->getMod() != mode )
-	{
 		_modsIt->flop == '+' ? _modsIt->chanIt->setPriv( true ) : _modsIt->chanIt->setPriv( false );
-		sender( _sd, ":" + _selfIP + " " + _cmd + " " + _target + " :" + _modsIt->flop + "p\r\n", 0 );
-	}
 }
 
 void						IRCData::C_MODE_S( void )
 {
 	bool mode = ( _modsIt->flop == '+' );
 	if ( _modsIt->chanIt->getMod() != mode )
-	{
 		_modsIt->flop == '+' ? _modsIt->chanIt->setSecret( true ) : _modsIt->chanIt->setSecret( false );
-		sender( _sd, ":" + _selfIP + " " + _cmd + " " + _target + " :" + _modsIt->flop + "s\r\n", 0 );
-	}
 }
 
 void						IRCData::C_MODE_I( void )
 {
 	bool mode = ( _modsIt->flop == '+' );
 	if ( _modsIt->chanIt->getMod() != mode )
-	{
 		_modsIt->flop == '+' ? _modsIt->chanIt->setInvit( true ) : _modsIt->chanIt->setInvit( false );
-		sender( _sd, ":" + _selfIP + " " + _cmd + " " + _target + " :" + _modsIt->flop + "i\r\n", 0 );
-	}
 }
 
 void						IRCData::C_MODE_V( void )
@@ -1041,14 +1028,14 @@ void						IRCData::C_MODE_V( void )
 	{
 		_request->clear();
 		IRCErr ircErr( ( *_clientIt )->getUser() + " foget argument for channel mode " + _modsIt->flop + "v" );
-		sender( _sd, ":*." + _selfIP + " 696 " + ( *_clientIt )->getNick() + _target + " * :You must specify a parameter for the voice mode. Syntax: <nick>.\r\n", &ircErr );
+		sender( _sd, ":*." + _servIP + " 696 " + ( *_clientIt )->getNick() + _target + " * :You must specify a parameter for the voice mode. Syntax: <nick>.\r\n", &ircErr );
 	}
 	bool plus = _modsIt->flop == '+' && _modsIt->chanIt->isVo( _modsIt->arg ) == ( *_modsIt->chanIt->getVo() ).end();
 	bool minus = _modsIt->flop == '-' && _modsIt->chanIt->isVo( _modsIt->arg ) != ( *_modsIt->chanIt->getVo() ).end();
 	if ( ( plus || minus ) && _modsIt->chanIt->isCli( _modsIt->arg ) != _modsIt->chanIt->getCli()->end() )
 	{
 		plus ? _modsIt->chanIt->setVo( _modsIt->arg ) : _modsIt->chanIt->unsetVo( _modsIt->arg );
-		sender( _sd, ":"  + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " MODE " + _target + " " + _modsIt->flop + "v :" + _modsIt->arg + "!*@*\r\n", 0 );
+		_printedArgs += " " + _modsIt->arg + "!*@*";
 	}
 }
 
@@ -1063,15 +1050,14 @@ void						IRCData::wrongUserFlag( void )
 			stErr.push_back( *flagIt );
 			stErr += " :is not a recognised channel mode.";
 			IRCErr ircErr( stErr );
-			sender( _sd, ":*." + _selfIP + " 472 " + ( *_clientIt )->getNick() + " " + *flagIt + " :is not a recognised channel mode.\r\n",
-				&ircErr );
+			sender( _sd, ":*." + _servIP + " 472 " + ( *_clientIt )->getNick() + " " + *flagIt + " :is not a recognised channel mode.\r\n", &ircErr );
 		}
 	}
 }
 
 void						IRCData::wrongFlag( void )
 {
-	sender( _sd, ":*." + _selfIP + " 472 " + ( *_clientIt )->getNick() + " " + _modsIt->arg + "' :is not a recognised channel mode.\r\n", 0 );
+	sender( _sd, ":*." + _servIP + " 472 " + ( *_clientIt )->getNick() + " " + _modsIt->arg + "' :is not a recognised channel mode.\r\n", 0 );
 }
 
 void						IRCData::WHO( void )
@@ -1080,19 +1066,20 @@ void						IRCData::WHO( void )
 	if ( !_target.size() )
 	{
 		IRCErr ircErr( "WHO no target given" );
-		sender( _sd, ":" + _selfIP + " 461 " + ( *_clientIt )->getNick()  + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " WHO : WHO no target given\r\n", &ircErr );
+		sender( _sd, ":" + _servIP + " 461 " + ( *_clientIt )->getNick()  + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " WHO : WHO no target given\r\n", &ircErr );
 	}
 	channelIterator chanIt = isChannel( _target ) ;
 	if ( chanIt == _channels.end() )
 	{
 		IRCErr ircErr( "No such channel" );
-		sender( _sd, ":*." + _selfIP + " 403 " + ( *_clientIt )->getNick() + " " + _target + " :No such channel\r\n", &ircErr );
+		sender( _sd, ":*." + _servIP + " 403 " + ( *_clientIt )->getNick() + " " + _target + " :No such channel\r\n", &ircErr );
 	}
-	chanIt->WHO( _clientIt, _selfIP, isOps( ( *_clientIt )->getNick() ) != _servOps.end() );
+	chanIt->WHO( _clientIt, _servIP, isOps( ( *_clientIt )->getNick() ) != _servOps.end() );
 }
 
 void						IRCData::execMode( void )
 {
+	channelIterator chanIt;
 	std::cout << "CHANNEL MODE start" << std::endl;
 	for ( _modsIt = _mods.begin(); _modsIt != _mods.end(); ++_modsIt )
 	{
@@ -1101,11 +1088,14 @@ void						IRCData::execMode( void )
 		catch( IRCErr const &err )
 		{ std::cerr << err.getError() << std::endl; }
 	}
+	if ( _target[0] == '#' )
+		isChannel( _target )->printModifFlags( _printedFlags + _printedArgs, _servIP );
 	std::cout << "CHANNEL MODE exit" << std::endl;
 }
 
 void						IRCData::setListFlagCmdU( void )
 {
+	char	printedFlop = 0;
 	_mods.clear();
 	for( strIt flagIt = _flag.begin(); flagIt != _flag.end(); ++flagIt )
 	{
@@ -1115,6 +1105,12 @@ void						IRCData::setListFlagCmdU( void )
 		for ( _listPairIt = _listFctU.begin(); _listPairIt != _listFctU.end() && _listPairIt->first != *flagIt; ++_listPairIt );
 		if ( _listPairIt != _listFctU.end() )
 		{
+			if ( printedFlop != _modsIt->flop )
+			{
+				printedFlop = _modsIt->flop;
+				_printedFlag.push_back( printedFlop )
+			}
+			_printedFlag.push_back( *flagIt );
 			_modsIt->client = _target;
 			_modsIt->fctn = _listPairIt->second.first;
 			if ( _listPairIt->second.second )
@@ -1131,6 +1127,7 @@ void						IRCData::setListFlagCmdU( void )
 
 void						IRCData::setListFlagCmdC( channelIterator &chanIt )
 {
+	char	printedFlop = 0;
 	_flop = 0;
 	_mods.clear();
 	
@@ -1147,6 +1144,12 @@ void						IRCData::setListFlagCmdC( channelIterator &chanIt )
 			for ( _listPairIt = _listFctC.begin(); _listPairIt != _listFctC.end() && _listPairIt->first != *flagIt; ++_listPairIt );
 			if ( _listPairIt != _listFctC.end() )
 			{
+				if( printedFlop != _modsIt->flop )
+				{
+					printedFlop = _modsIt->flop;
+					_printedFlag.push_back( printedFlop )
+				}
+				_printedFlag.push_back( *flagIt );
 				_modsIt->chanIt = chanIt;
 				_modsIt->fctn = _listPairIt->second.first;
 				if ( _listPairIt->second.second	 )
@@ -1163,10 +1166,7 @@ void						IRCData::setListFlagCmdC( channelIterator &chanIt )
 	}
 }
 
-void						IRCData::USERMODE( void )
-{
-	setListFlagCmdU();
-}
+void						IRCData::USERMODE( void ) { setListFlagCmdU(); }
 
 void						IRCData::CHANMODE( void )
 {
@@ -1176,18 +1176,17 @@ void						IRCData::CHANMODE( void )
 	{
 		_request->clear();
 		IRCErr ircErr( "unvalid flag" );
-		sender( ( *_clientIt )->getSocket(), "Voir code erreur channel incconu\r\n", 
-			&ircErr);
+		sender( _sd, ":*." + _servIP + " 403 " + ( *_clientIt )->getNick() + " " + _target + " :No such channel\r\n", &ircErr);
 	}
 	if ( !_flag.size() )
-		sender( ( *_clientIt )->getSocket(), ":" + _selfIP + " 324 " + ( *_clientIt )->getNick() + " " + _target + " :+" + chanIt->getFlags() + "\r\n", 0 );
+		sender( ( *_clientIt )->getSocket(), ":" + _servIP + " 324 " + ( *_clientIt )->getNick() + " " + _target + " :+" + chanIt->getFlags() + "\r\n", 0 );
 	else
 	{
 		if ( chanIt->isOps( ( *_clientIt )->getUser() ) == chanIt->getOps()->end() )
 		{
 			_request->clear();
 			IRCErr ircErr( "Not channel operator" );
-			sender( ( *_clientIt )->getSocket(), ":*." + _selfIP + " 482 " + ( *_clientIt )->getNick() + " " + _target + " :You must have channel op access or above to set channel mode\r\n", &ircErr);
+			sender( ( *_clientIt )->getSocket(), ":*." + _servIP + " 482 " + ( *_clientIt )->getNick() + " " + _target + " :You must have channel op access or above to set channel mode\r\n", &ircErr);
 		}
 		setListFlagCmdC( chanIt ) ;
 	}
@@ -1203,14 +1202,16 @@ void						IRCData::MODE( void )
 	if ( !_target.size() || _target[0] == '+' || _target[0] == '-' )
 	{
 		IRCErr ircErr( "MODE : <channel|user> target forgotten" );
-		sender( _sd, ":" + _selfIP + " 461 " + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " MODE : <channel|user> target forgotten\r\n",
+		sender( _sd, ":" + _servIP + " 461 " + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " MODE : <channel|user> target forgotten\r\n",
 			&ircErr );
 	}
 	if ( ( !_flag.size() && _target[0] != '#' ) || ( _flag[0] != '+' && _flag[0] != '-' ) )
 	{
 		IRCErr ircErr( "MODE :operator [+|-] for flag Mode forgotten" );
-		sender( _sd, ":" + _selfIP + " 400 " + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " MODE :operator [+|-] for flag Mode forgotten\r\n", &ircErr );
+		sender( _sd, ":" + _servIP + " 400 " + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " MODE :operator [+|-] for flag Mode forgotten\r\n", &ircErr );
 	}
+	_printedFlags.clear();
+	_printedArgs.clear();
 	if ( _target[0] == '#' )
 		CHANMODE();
 	else

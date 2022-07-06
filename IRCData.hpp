@@ -30,12 +30,13 @@ class IRCData
 								Mode( void )	{ return; }
 								~Mode( void )	{ return; }
 	};
-
+	std::string								_printedFlags;
+	std::string								_printedArgs;
 	typedef std::list<Mode>::iterator		listModeIt;
 	std::list<Mode>							_mods;
 	listModeIt								_modsIt;
 /////	Server Info /////
-	std::string								_selfIP;
+	std::string								_servIP;
 	int										_port;
 	std::string								_pass;
 

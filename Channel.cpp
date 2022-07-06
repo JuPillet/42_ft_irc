@@ -24,6 +24,13 @@ void			Channel::delFlag( char flag )
 		_flags.erase( flagIt );
 }
 
+void							Channel::printModifFlags( std::string &_printed, std::string servIP ) const
+{
+	constClientIterator userIt;
+	for ( userIt = _cliCrnt.begin(); userIt != _cliCrnt.end() ; ++userIt )
+		sender( ( *userIt )->getSocket(), ":" + servIP + " MODE " + _name + " :" + _printed + "\r\n", 0 );
+}
+
 void			Channel::setPass ( std::string str )
 {
 	_pass = str;

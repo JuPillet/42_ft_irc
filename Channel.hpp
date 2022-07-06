@@ -34,6 +34,7 @@ class Channel
 		std::string						getFlags( void ) { return _flags; }
 		void							addFlag( char flag );
 		void							delFlag( char flag );
+		void							printModifFlags( std::string &_printedFlags, std::string servIP ) const;
 
 		void							setPass ( std::string str );
 		void							unsetPass ( void );
