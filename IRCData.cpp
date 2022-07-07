@@ -57,20 +57,6 @@ void						IRCData::receveRequest( void ) {
 	std::cout << "message exit" << std::endl;
 }
 
-void						IRCData::isUnsignedNumber( void )
-{
-	std::string arg = _modsIt->arg;
-	strIt argIt;
-
-	for ( argIt = arg.begin(); argIt != arg.end() && std::isdigit( *argIt ); ++argIt );
-	if ( !arg.size() || argIt != arg.end() )
-	{
-		IRCErr	ircErr( ( *_clientIt )->getUser() + " argument isn't an unsigned number" );
-		VOIR ICI
-		sender( ( *_clientIt )->getSocket(), "voir erreur 461", &ircErr );
-	}
-}
-
 std::string const			IRCData::getAllArg( void )
 {
 	std::string argTmp;
@@ -262,11 +248,11 @@ void						IRCData::NICK( void )
 				&ircErr);
 		}
 	}
-//	for ( channelsListIt chanIt = ( *_clientIt )->getChannels().begin(); chanIt != ( *_clientIt )->getChannels().end(); ++chanIt )
-//	{
-//		if ( ( *_clientIt )->getNick() == ( *chanIt )->getOwner() )
-//			( *chanIt )->setOwner( nickTmp );
-//	}
+	for ( channelsListIt chanIt = ( *_clientIt )->getChannels().begin(); chanIt != ( *_clientIt )->getChannels().end(); ++chanIt )
+	{
+		if ( ( *_clientIt )->getNick() == ( *chanIt )->getOwner() )
+			( *chanIt )->setOwner( nickTmp );
+	}
 	( *_clientIt )->setNick( nickTmp );
 	checkPass();
 	if ( !( *_clientIt )->getAutentification() )
@@ -541,10 +527,11 @@ void						IRCData::PART( void )
 	}
 	try
 	{
-		if ( !( *_clientIt )->isInChannel( _target ) ){
+		if ( !( *_clientIt )->isInChannel( _target ) )
+		{
 			IRCErr ircErr( "Client not on the channel." );
-			sender( ( *_clientIt )->getSocket() , ":*." + _servIP + " 442 " + ( *_clientIt )->getNick() + " " + _target + " :You're not on that channel\r\n",
-				&ircErr );}
+			sender( ( *_clientIt )->getSocket() , ":*." + _servIP + " 442 " + ( *_clientIt )->getNick() + " " + _target + " :You're not on that channel\r\n", &ircErr );
+		}
 		( *_clientIt )->removeInChannel( chanIt );
 		sender( _sd, ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " PART " + _target + " :left away\r\n", 0 );
 		for ( constClientIterator chanCliIt = chanIt->getCli()->begin(); chanCliIt != chanIt->getCli()->end(); ++chanCliIt )
@@ -818,8 +805,7 @@ void						IRCData::newClient( void )
 	if ( ( _new_socket = accept( _master_socket, reinterpret_cast<struct sockaddr *>( &_address ), reinterpret_cast<socklen_t *>( &_addrlen ) ) ) < 0 )
 		throw IRCErr( "accept" );
 	FD_SET( _new_socket, &_crntfds );
-	_clients.push_back( new Client( _new_socket ) );
-	( *( --_clients.end() ) )->setClIp( inet_ntoa( _address.sin_addr ) );
+	_clients.push_back( new Client( _new_socket, inet_ntoa( _address.sin_addr ) ) );
 	std::cout << "New connection , socket fd is " << _new_socket << ", ip is : " << inet_ntoa( _address.sin_addr ) << ", port : " << ntohs( _address.sin_port ) << std::endl;
 }
 
@@ -884,21 +870,20 @@ void						IRCData::C_MODE_L()
 {
 	if ( _modsIt->flop == '+' )
 	{
+		if ( !_modsIt->arg.size() )
+			_modsIt->arg = "*";
 		size_t limit = IRC::stol( _modsIt->arg );
 		if ( !limit )
 		{
 			IRCErr ircErr( " :Invalid limit mode parameter" );
-			sender( _sd, ":*." + _servIP + " 696 " + ( *_clientIt )->getNick() + " " + _target + " l " + _modsIt->arg + " : Invalid limit mode parameter. Syntax: <limit>.\r\n", &ircErr );
+			if ( _modsIt->arg[0] < '0' || _modsIt->arg[0] < '0' )
+				sender( _sd, ":*." + _servIP + " 696 " + ( *_clientIt )->getNick() + " " + _target + " l " + _modsIt->arg + " : Invalid limit mode parameter. Syntax: <limit>.\r\n", &ircErr );
+			sender( _sd, ":*." + _servIP + " 696 " + ( *_clientIt )->getNick() + " " + _target + " l 0 : Invalid limit mode parameter. Syntax: <limit>.\r\n", &ircErr );
 		}
-		_answer.push_back( _modsIt->flop );
 		_printedArgs += " " + IRC::ultostr( limit );
 	}
 	else
-	{
 		_modsIt->chanIt->setLimit( false );
-		_answer += ":-l";
-	}
-	sender( _sd, _answer + "\r\n", 0 );
 }
 
 void						IRCData::C_MODE_B( void )
@@ -908,7 +893,7 @@ void						IRCData::C_MODE_B( void )
 	{
 		std::list<pairBan> const	*channelBan = _modsIt->chanIt->getBan();
 		for ( std::list<pairBan>::const_iterator chanBanIt = channelBan->begin(); chanBanIt != channelBan->end(); ++chanBanIt )
-			sender( _sd, ":*." + _servIP + " 367 " + ( *_clientIt )->getNick() + " " + _target + " " + nickBan + "!*@*\r\n", 0 );
+			sender( _sd, ":*." + _servIP + " 367 " + ( *_clientIt )->getNick() + " " + _target + " " + chanBanIt->first + "!*@*\r\n", 0 );
 		sender( _sd, ":*." + _servIP + " 368 " + ( *_clientIt )->getNick() + " " + _target + " :End of channel ban list\r\n", 0 );
 	}
 	else
@@ -992,10 +977,15 @@ void						IRCData::C_MODE_O( void )
 		sender( _sd, ":*." + _servIP + " 696 " + ( *_clientIt )->getNick() + _target + " o * :You must specify a parameter for the op mode. Syntax: <nick>.\r\n",
 			&ircErr );
 	}
+	if ( isCli( _target ) == _clients.end() )
+	{
+		IRCErr ircErr( "No such nick " + _target );
+		sender( _sd, ":*." + _servIP + " 401 " + ( *_clientIt )->getNick() + " " + _target + " : No such nick\r\n", &ircErr );
+	}
 	if ( _modsIt->chanIt->isCli( _modsIt->arg ) == _modsIt->chanIt->getCli()->end() )
 	{
-		IRCErr ircErr( ( *_clientIt )->getUser() + " forgotten argument <nick> for channel mode o" );
-		sender( _sd, ":*." + _servIP + " 696 " + ( *_clientIt )->getNick() + _target + " o * :You must specify a parameter for the op mode. Syntax: <nick>.\r\n",  &ircErr );
+		IRCErr ircErr( ( *_clientIt )->getUser() + " not on the channel" );
+		sender( ( *_clientIt )->getSocket() , ":*." + _servIP + " 442 " + ( *_clientIt )->getNick() + " " + _target + " :You're not on that channel\r\n", &ircErr );
 	}
 	_modsIt->flop == '+' ? _modsIt->chanIt->setOps( _modsIt->arg ) : _modsIt->chanIt->unsetOps( _modsIt->arg );
 	_printedArgs += " " + _modsIt->arg + "!*@*";
@@ -1108,9 +1098,9 @@ void						IRCData::setListFlagCmdU( void )
 			if ( printedFlop != _modsIt->flop )
 			{
 				printedFlop = _modsIt->flop;
-				_printedFlag.push_back( printedFlop )
+				_printedFlags.push_back( printedFlop );
 			}
-			_printedFlag.push_back( *flagIt );
+			_printedFlags.push_back( *flagIt );
 			_modsIt->client = _target;
 			_modsIt->fctn = _listPairIt->second.first;
 			if ( _listPairIt->second.second )
@@ -1147,9 +1137,9 @@ void						IRCData::setListFlagCmdC( channelIterator &chanIt )
 				if( printedFlop != _modsIt->flop )
 				{
 					printedFlop = _modsIt->flop;
-					_printedFlag.push_back( printedFlop )
+					_printedFlags.push_back( printedFlop );
 				}
-				_printedFlag.push_back( *flagIt );
+				_printedFlags.push_back( *flagIt );
 				_modsIt->chanIt = chanIt;
 				_modsIt->fctn = _listPairIt->second.first;
 				if ( _listPairIt->second.second	 )

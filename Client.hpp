@@ -19,14 +19,15 @@ class Client
 	std::string							_invitation;
 	channelsList						_channels;
 	
-										Client( void ): _client_socket( 0 ), _authentified( false ), _pass(), _nick(), _user() {};
+										Client( void ): _client_socket( 0 ), _authentified( false ), _clIp( "" ), _pass( "" ), _nick( "" ), _user( "" ), _name( "" ), _request( "" ), _invitation( "" )
+										{ return ; }
 	public:
 		
-										Client( int const _new_socket ): _client_socket( _new_socket ), _authentified( false ), _pass(), _nick(), _user(), _name(), _request()
+										Client( int const _new_socket, std::string const _new_clIp ): _client_socket( _new_socket ), _authentified( false ), _clIp( _new_clIp ), _pass( "" ), _nick( "" ), _user( "" ), _name( "" ), _request( "" ), _invitation( "" )
 										{ return ; }
 
 										Client( int const _new_socket, std::string const &pass, std::string const &nick, std::string const &user ):
-											_client_socket( _new_socket ), _authentified( false ), _pass( pass ), _nick( nick ), _user( user ), _name(), _request()
+											_client_socket( _new_socket ), _authentified( false ), _clIp( "" ), _pass( pass ), _nick( nick ), _user( user ), _name(), _request()
 										{ return ; }
 
 		explicit						Client( Client const &src );
@@ -63,7 +64,7 @@ class Client
 		bool							isInChannel( std::string name );
 
 		void							addChannel(std::string servIP, Channel *channel );
-		channelsList					getChannels( void );
+		channelsList					&getChannels( void );
 		
 		void							removeChannel( Channel *channel );
 		void							removeInChannel( Channel *channel );

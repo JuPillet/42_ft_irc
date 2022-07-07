@@ -1436,3 +1436,665 @@
 << PING *.freenode.net
 >> :*.freenode.net PONG *.freenode.net :*.freenode.net
 --> lag pong
+<< CAP LS
+<< NICK jpillet
+<< USER jpillet jpillet chat.freenode.net :Julien Pillet
+>> :*.freenode.net NOTICE * :*** Looking up your ident...
+>> :*.freenode.net NOTICE * :*** Looking up your hostname...
+>> :*.freenode.net NOTICE * :*** Could not resolve your hostname: Domain not found; using your IP address (62.129.8.171) instead.
+>> :*.freenode.net CAP * LS :account-notify account-tag away-notify batch cap-notify chghost draft/relaymsg echo-message extended-join inspircd.org/poison inspircd.org/standard-replies invite-notify labeled-response message-tags multi-prefix sasl server-time setname userhost-in-names 
+<< CAP REQ :multi-prefix
+>> PING :IyhWEhuMVM
+<< PONG :IyhWEhuMVM
+>> :*.freenode.net CAP jpillet ACK :multi-prefix
+<< CAP END
+>> :*.freenode.net NOTICE jpillet :*** Ident lookup timed out, using ~jpillet instead.
+>> :*.freenode.net 001 jpillet :Welcome to the freenode IRC Network jpillet!~jpillet@62.129.8.171
+<< MODE jpillet +i
+>> :*.freenode.net 002 jpillet :Your host is *.freenode.net, running version InspIRCd-3
+>> :*.freenode.net 003 jpillet :This server was created 00:20:08 Apr 21 2022
+>> :*.freenode.net 004 jpillet *.freenode.net InspIRCd-3 BDHILRSTWcdghikorswxz ABCDEFIJKLMNOPQRSTUWXYZbcdefhijklmnoprstuvwz :BEFIJLWXYZbdefhjklovw
+>> :*.freenode.net 005 jpillet ACCEPT=30 AWAYLEN=200 BOT=B CALLERID=g CASEMAPPING=ascii CHANLIMIT=#:20 CHANMODES=IXZbew,k,BEFJLWdfjl,ACDKMNOPQRSTUcimnprstuz CHANNELLEN=64 CHANTYPES=# ELIST=CMNTU ESILENCE=CcdiNnPpTtx EXCEPTS=e :are supported by this server
+>> :*.freenode.net 005 jpillet EXTBAN=,ACNOQRSTUacjmnpruwz HOSTLEN=64 INVEX=I KEYLEN=32 KICKLEN=255 LINELEN=512 MAXLIST=I:100,X:100,b:100,e:100,w:100 MAXTARGETS=20 MODES=20 MONITOR=30 NAMELEN=128 NAMESX NETWORK=freenode :are supported by this server
+>> :*.freenode.net 005 jpillet NICKLEN=30 PREFIX=(Yohv)!@%+ REMOVE SAFELIST SECURELIST=60 SILENCE=32 STATUSMSG=!@%+ TOPICLEN=390 UHNAMES USERIP USERLEN=10 USERMODES=,,s,BDHILRSTWcdghikorwxz VBANLIST :are supported by this server
+>> :*.freenode.net 005 jpillet VLIST=b WATCH=32 WHOX :are supported by this server
+>> :*.freenode.net 251 jpillet :There are 23 users and 10385 invisible on 9 servers
+>> :*.freenode.net 252 jpillet 7 :operator(s) online
+>> :*.freenode.net 253 jpillet 22 :unknown connections
+>> :*.freenode.net 254 jpillet 14173 :channels formed
+>> :*.freenode.net 255 jpillet :I have 4870 clients and 1 servers
+>> :*.freenode.net 265 jpillet :Current local users: 4870  Max: 4875
+>> :*.freenode.net 266 jpillet :Current global users: 10408  Max: 10916
+>> :*.freenode.net 375 jpillet :*.freenode.net message of the day
+>> :*.freenode.net 372 jpillet :  Hello, World!
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Welcome to the
+>> :*.freenode.net 372 jpillet :          __                               _
+>> :*.freenode.net 372 jpillet :         / _|_ __ ___  ___ _ __   ___   __| | ___
+>> :*.freenode.net 372 jpillet :        | |_| '__/ _ \/ _ \ '_ \ / _ \ / _` |/ _ \
+>> :*.freenode.net 372 jpillet :        |  _| | |  __/  __/ | | | (_) | (_| |  __/
+>> :*.freenode.net 372 jpillet :        |_| |_|  \___|\___|_| |_|\___/ \__,_|\___|
+>> :*.freenode.net 372 jpillet :                                   AUTONOMOUS ZONE
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Connect to us on:
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Hostname: irc.freenode.net / chat.freenode.net
+>> :*.freenode.net 372 jpillet :  Plaintext: 6660-6669
+>> :*.freenode.net 372 jpillet :  TLS/SSL: 6697,7000,7070
+>> :*.freenode.net 372 jpillet :  Webchat: https://webchat.freenode.net
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  By connecting to freenode you indicate that you have read and accept our
+>> :*.freenode.net 372 jpillet :  policies and guidelines as set out on https://freenode.net and agree to
+>> :*.freenode.net 372 jpillet :  be scanned for an open proxy.
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  If you are looking for assistance, please try:
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  #help                    - Help with general IRC and Services.
+>> :*.freenode.net 372 jpillet :  #chanhelp                - Help with channels and channel services.
+>> :*.freenode.net 372 jpillet :  #IRC                     - Help with the IRC.com by freenode app.
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Checkout some of our communities and services:
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  #freenode-bbs            - BBS [https://bbs.freenode.net/]
+>> :*.freenode.net 372 jpillet :  #freenode-bbs-discussion - BBS Discussion
+>> :*.freenode.net 372 jpillet :  #freenode-jobs           - Jobs [https://jobs.freenode.net/]
+>> :*.freenode.net 372 jpillet :  #freenode                - Chat about freenode.
+>> :*.freenode.net 372 jpillet :  #anonchan                - Chat anonymously.
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Type /join #<channel>
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Thank you for using freenode!
+>> :*.freenode.net 376 jpillet :End of message of the day.
+>> :*.freenode.net 396 jpillet freenode-a99.759.j1faas.IP :is now your displayed host
+>> :jpillet!~jpillet@freenode-a99.759.j1faas.IP MODE jpillet :+wRix
+>> :*.freenode.net NOTICE jpillet :*** You are connected to chat.freenode.net using TLS (SSL) cipher 'TLSv1.3-TLS_AES_256_GCM_SHA384'
+<< JOIN #jeteste
+>> :jpillet!~jpillet@freenode-a99.759.j1faas.IP JOIN :#jeteste
+>> :*.freenode.net 353 jpillet = #jeteste :@jpillet
+>> :*.freenode.net 366 jpillet #jeteste :End of /NAMES list.
+<< MODE #jeteste
+>> :*.freenode.net 324 jpillet #jeteste :+nt
+--> chanquery mode
+<< WHO #jeteste
+>> :*.freenode.net 329 jpillet #jeteste :1657182484
+--> event 329
+>> :*.freenode.net 352 jpillet #jeteste ~jpillet freenode-a99.759.j1faas.IP *.freenode.net jpillet H@s :0 Julien Pillet
+--> silent event who
+>> :*.freenode.net 315 jpillet #jeteste :End of /WHO list.
+--> chanquery who end
+<< MODE #jeteste b
+>> :*.freenode.net 368 jpillet #jeteste :End of channel ban list
+--> chanquery ban end
+<< MODE #jeteste -lawdadasd
+>> :*.freenode.net 472 jpillet a :is not a recognised channel mode.
+>> :*.freenode.net 472 jpillet a :is not a recognised channel mode.
+>> :*.freenode.net 472 jpillet a :is not a recognised channel mode.
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< MODE #jeteste +l awdadasd
+>> :*.freenode.net 696 jpillet #jeteste l awdadasd :Invalid limit mode parameter. Syntax: <limit>.
+<< CAP LS
+<< NICK jpillet
+<< USER jpillet jpillet chat.freenode.net :Julien Pillet
+>> :*.freenode.net NOTICE * :*** Looking up your ident...
+>> :*.freenode.net NOTICE * :*** Looking up your hostname...
+>> :*.freenode.net NOTICE * :*** Could not resolve your hostname: Domain not found; using your IP address (62.129.8.171) instead.
+>> :*.freenode.net CAP * LS :account-notify account-tag away-notify batch cap-notify chghost draft/relaymsg echo-message extended-join inspircd.org/poison inspircd.org/standard-replies invite-notify labeled-response message-tags multi-prefix sasl server-time setname userhost-in-names 
+<< CAP REQ :multi-prefix
+>> PING :IyhWEhuMVM
+<< PONG :IyhWEhuMVM
+>> :*.freenode.net CAP jpillet ACK :multi-prefix
+<< CAP END
+>> :*.freenode.net NOTICE jpillet :*** Ident lookup timed out, using ~jpillet instead.
+>> :*.freenode.net 001 jpillet :Welcome to the freenode IRC Network jpillet!~jpillet@62.129.8.171
+<< MODE jpillet +i
+>> :*.freenode.net 002 jpillet :Your host is *.freenode.net, running version InspIRCd-3
+>> :*.freenode.net 003 jpillet :This server was created 00:20:08 Apr 21 2022
+>> :*.freenode.net 004 jpillet *.freenode.net InspIRCd-3 BDHILRSTWcdghikorswxz ABCDEFIJKLMNOPQRSTUWXYZbcdefhijklmnoprstuvwz :BEFIJLWXYZbdefhjklovw
+>> :*.freenode.net 005 jpillet ACCEPT=30 AWAYLEN=200 BOT=B CALLERID=g CASEMAPPING=ascii CHANLIMIT=#:20 CHANMODES=IXZbew,k,BEFJLWdfjl,ACDKMNOPQRSTUcimnprstuz CHANNELLEN=64 CHANTYPES=# ELIST=CMNTU ESILENCE=CcdiNnPpTtx EXCEPTS=e :are supported by this server
+>> :*.freenode.net 005 jpillet EXTBAN=,ACNOQRSTUacjmnpruwz HOSTLEN=64 INVEX=I KEYLEN=32 KICKLEN=255 LINELEN=512 MAXLIST=I:100,X:100,b:100,e:100,w:100 MAXTARGETS=20 MODES=20 MONITOR=30 NAMELEN=128 NAMESX NETWORK=freenode :are supported by this server
+>> :*.freenode.net 005 jpillet NICKLEN=30 PREFIX=(Yohv)!@%+ REMOVE SAFELIST SECURELIST=60 SILENCE=32 STATUSMSG=!@%+ TOPICLEN=390 UHNAMES USERIP USERLEN=10 USERMODES=,,s,BDHILRSTWcdghikorwxz VBANLIST :are supported by this server
+>> :*.freenode.net 005 jpillet VLIST=b WATCH=32 WHOX :are supported by this server
+>> :*.freenode.net 251 jpillet :There are 23 users and 10385 invisible on 9 servers
+>> :*.freenode.net 252 jpillet 7 :operator(s) online
+>> :*.freenode.net 253 jpillet 22 :unknown connections
+>> :*.freenode.net 254 jpillet 14173 :channels formed
+>> :*.freenode.net 255 jpillet :I have 4870 clients and 1 servers
+>> :*.freenode.net 265 jpillet :Current local users: 4870  Max: 4875
+>> :*.freenode.net 266 jpillet :Current global users: 10408  Max: 10916
+>> :*.freenode.net 375 jpillet :*.freenode.net message of the day
+>> :*.freenode.net 372 jpillet :  Hello, World!
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Welcome to the
+>> :*.freenode.net 372 jpillet :          __                               _
+>> :*.freenode.net 372 jpillet :         / _|_ __ ___  ___ _ __   ___   __| | ___
+>> :*.freenode.net 372 jpillet :        | |_| '__/ _ \/ _ \ '_ \ / _ \ / _` |/ _ \
+>> :*.freenode.net 372 jpillet :        |  _| | |  __/  __/ | | | (_) | (_| |  __/
+>> :*.freenode.net 372 jpillet :        |_| |_|  \___|\___|_| |_|\___/ \__,_|\___|
+>> :*.freenode.net 372 jpillet :                                   AUTONOMOUS ZONE
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Connect to us on:
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Hostname: irc.freenode.net / chat.freenode.net
+>> :*.freenode.net 372 jpillet :  Plaintext: 6660-6669
+>> :*.freenode.net 372 jpillet :  TLS/SSL: 6697,7000,7070
+>> :*.freenode.net 372 jpillet :  Webchat: https://webchat.freenode.net
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  By connecting to freenode you indicate that you have read and accept our
+>> :*.freenode.net 372 jpillet :  policies and guidelines as set out on https://freenode.net and agree to
+>> :*.freenode.net 372 jpillet :  be scanned for an open proxy.
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  If you are looking for assistance, please try:
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  #help                    - Help with general IRC and Services.
+>> :*.freenode.net 372 jpillet :  #chanhelp                - Help with channels and channel services.
+>> :*.freenode.net 372 jpillet :  #IRC                     - Help with the IRC.com by freenode app.
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Checkout some of our communities and services:
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  #freenode-bbs            - BBS [https://bbs.freenode.net/]
+>> :*.freenode.net 372 jpillet :  #freenode-bbs-discussion - BBS Discussion
+>> :*.freenode.net 372 jpillet :  #freenode-jobs           - Jobs [https://jobs.freenode.net/]
+>> :*.freenode.net 372 jpillet :  #freenode                - Chat about freenode.
+>> :*.freenode.net 372 jpillet :  #anonchan                - Chat anonymously.
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Type /join #<channel>
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Thank you for using freenode!
+>> :*.freenode.net 376 jpillet :End of message of the day.
+>> :*.freenode.net 396 jpillet freenode-a99.759.j1faas.IP :is now your displayed host
+>> :jpillet!~jpillet@freenode-a99.759.j1faas.IP MODE jpillet :+wRix
+>> :*.freenode.net NOTICE jpillet :*** You are connected to chat.freenode.net using TLS (SSL) cipher 'TLSv1.3-TLS_AES_256_GCM_SHA384'
+<< JOIN #jeteste
+>> :jpillet!~jpillet@freenode-a99.759.j1faas.IP JOIN :#jeteste
+>> :*.freenode.net 353 jpillet = #jeteste :@jpillet
+>> :*.freenode.net 366 jpillet #jeteste :End of /NAMES list.
+<< MODE #jeteste
+>> :*.freenode.net 324 jpillet #jeteste :+nt
+--> chanquery mode
+<< WHO #jeteste
+>> :*.freenode.net 329 jpillet #jeteste :1657182484
+--> event 329
+>> :*.freenode.net 352 jpillet #jeteste ~jpillet freenode-a99.759.j1faas.IP *.freenode.net jpillet H@s :0 Julien Pillet
+--> silent event who
+>> :*.freenode.net 315 jpillet #jeteste :End of /WHO list.
+--> chanquery who end
+<< MODE #jeteste b
+>> :*.freenode.net 368 jpillet #jeteste :End of channel ban list
+--> chanquery ban end
+<< MODE #jeteste -lawdadasd
+>> :*.freenode.net 472 jpillet a :is not a recognised channel mode.
+>> :*.freenode.net 472 jpillet a :is not a recognised channel mode.
+>> :*.freenode.net 472 jpillet a :is not a recognised channel mode.
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< MODE #jeteste +l awdadasd
+>> :*.freenode.net 696 jpillet #jeteste l awdadasd :Invalid limit mode parameter. Syntax: <limit>.
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< MODE #jeteste +l
+>> :*.freenode.net 696 jpillet #jeteste l * :You must specify a parameter for the limit mode. Syntax: <limit>.
+<< MODE #jeteste +l0
+>> :*.freenode.net 472 jpillet 0 :is not a recognised channel mode.
+>> :*.freenode.net 696 jpillet #jeteste l * :You must specify a parameter for the limit mode. Syntax: <limit>.
+<< MODE #jeteste +l 0
+>> :*.freenode.net 696 jpillet #jeteste l 0 :Invalid limit mode parameter. Syntax: <limit>.
+<< CAP LS
+<< NICK jpillet
+<< USER jpillet jpillet chat.freenode.net :Julien Pillet
+>> :*.freenode.net NOTICE * :*** Looking up your ident...
+>> :*.freenode.net NOTICE * :*** Looking up your hostname...
+>> :*.freenode.net NOTICE * :*** Could not resolve your hostname: Domain not found; using your IP address (62.129.8.171) instead.
+>> :*.freenode.net CAP * LS :account-notify account-tag away-notify batch cap-notify chghost draft/relaymsg echo-message extended-join inspircd.org/poison inspircd.org/standard-replies invite-notify labeled-response message-tags multi-prefix sasl server-time setname userhost-in-names 
+<< CAP REQ :multi-prefix
+>> PING :IyhWEhuMVM
+<< PONG :IyhWEhuMVM
+>> :*.freenode.net CAP jpillet ACK :multi-prefix
+<< CAP END
+>> :*.freenode.net NOTICE jpillet :*** Ident lookup timed out, using ~jpillet instead.
+>> :*.freenode.net 001 jpillet :Welcome to the freenode IRC Network jpillet!~jpillet@62.129.8.171
+<< MODE jpillet +i
+>> :*.freenode.net 002 jpillet :Your host is *.freenode.net, running version InspIRCd-3
+>> :*.freenode.net 003 jpillet :This server was created 00:20:08 Apr 21 2022
+>> :*.freenode.net 004 jpillet *.freenode.net InspIRCd-3 BDHILRSTWcdghikorswxz ABCDEFIJKLMNOPQRSTUWXYZbcdefhijklmnoprstuvwz :BEFIJLWXYZbdefhjklovw
+>> :*.freenode.net 005 jpillet ACCEPT=30 AWAYLEN=200 BOT=B CALLERID=g CASEMAPPING=ascii CHANLIMIT=#:20 CHANMODES=IXZbew,k,BEFJLWdfjl,ACDKMNOPQRSTUcimnprstuz CHANNELLEN=64 CHANTYPES=# ELIST=CMNTU ESILENCE=CcdiNnPpTtx EXCEPTS=e :are supported by this server
+>> :*.freenode.net 005 jpillet EXTBAN=,ACNOQRSTUacjmnpruwz HOSTLEN=64 INVEX=I KEYLEN=32 KICKLEN=255 LINELEN=512 MAXLIST=I:100,X:100,b:100,e:100,w:100 MAXTARGETS=20 MODES=20 MONITOR=30 NAMELEN=128 NAMESX NETWORK=freenode :are supported by this server
+>> :*.freenode.net 005 jpillet NICKLEN=30 PREFIX=(Yohv)!@%+ REMOVE SAFELIST SECURELIST=60 SILENCE=32 STATUSMSG=!@%+ TOPICLEN=390 UHNAMES USERIP USERLEN=10 USERMODES=,,s,BDHILRSTWcdghikorwxz VBANLIST :are supported by this server
+>> :*.freenode.net 005 jpillet VLIST=b WATCH=32 WHOX :are supported by this server
+>> :*.freenode.net 251 jpillet :There are 23 users and 10385 invisible on 9 servers
+>> :*.freenode.net 252 jpillet 7 :operator(s) online
+>> :*.freenode.net 253 jpillet 22 :unknown connections
+>> :*.freenode.net 254 jpillet 14173 :channels formed
+>> :*.freenode.net 255 jpillet :I have 4870 clients and 1 servers
+>> :*.freenode.net 265 jpillet :Current local users: 4870  Max: 4875
+>> :*.freenode.net 266 jpillet :Current global users: 10408  Max: 10916
+>> :*.freenode.net 375 jpillet :*.freenode.net message of the day
+>> :*.freenode.net 372 jpillet :  Hello, World!
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Welcome to the
+>> :*.freenode.net 372 jpillet :          __                               _
+>> :*.freenode.net 372 jpillet :         / _|_ __ ___  ___ _ __   ___   __| | ___
+>> :*.freenode.net 372 jpillet :        | |_| '__/ _ \/ _ \ '_ \ / _ \ / _` |/ _ \
+>> :*.freenode.net 372 jpillet :        |  _| | |  __/  __/ | | | (_) | (_| |  __/
+>> :*.freenode.net 372 jpillet :        |_| |_|  \___|\___|_| |_|\___/ \__,_|\___|
+>> :*.freenode.net 372 jpillet :                                   AUTONOMOUS ZONE
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Connect to us on:
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Hostname: irc.freenode.net / chat.freenode.net
+>> :*.freenode.net 372 jpillet :  Plaintext: 6660-6669
+>> :*.freenode.net 372 jpillet :  TLS/SSL: 6697,7000,7070
+>> :*.freenode.net 372 jpillet :  Webchat: https://webchat.freenode.net
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  By connecting to freenode you indicate that you have read and accept our
+>> :*.freenode.net 372 jpillet :  policies and guidelines as set out on https://freenode.net and agree to
+>> :*.freenode.net 372 jpillet :  be scanned for an open proxy.
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  If you are looking for assistance, please try:
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  #help                    - Help with general IRC and Services.
+>> :*.freenode.net 372 jpillet :  #chanhelp                - Help with channels and channel services.
+>> :*.freenode.net 372 jpillet :  #IRC                     - Help with the IRC.com by freenode app.
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Checkout some of our communities and services:
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  #freenode-bbs            - BBS [https://bbs.freenode.net/]
+>> :*.freenode.net 372 jpillet :  #freenode-bbs-discussion - BBS Discussion
+>> :*.freenode.net 372 jpillet :  #freenode-jobs           - Jobs [https://jobs.freenode.net/]
+>> :*.freenode.net 372 jpillet :  #freenode                - Chat about freenode.
+>> :*.freenode.net 372 jpillet :  #anonchan                - Chat anonymously.
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Type /join #<channel>
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Thank you for using freenode!
+>> :*.freenode.net 376 jpillet :End of message of the day.
+>> :*.freenode.net 396 jpillet freenode-a99.759.j1faas.IP :is now your displayed host
+>> :jpillet!~jpillet@freenode-a99.759.j1faas.IP MODE jpillet :+wRix
+>> :*.freenode.net NOTICE jpillet :*** You are connected to chat.freenode.net using TLS (SSL) cipher 'TLSv1.3-TLS_AES_256_GCM_SHA384'
+<< JOIN #jeteste
+>> :jpillet!~jpillet@freenode-a99.759.j1faas.IP JOIN :#jeteste
+>> :*.freenode.net 353 jpillet = #jeteste :@jpillet
+>> :*.freenode.net 366 jpillet #jeteste :End of /NAMES list.
+<< MODE #jeteste
+>> :*.freenode.net 324 jpillet #jeteste :+nt
+--> chanquery mode
+<< WHO #jeteste
+>> :*.freenode.net 329 jpillet #jeteste :1657182484
+--> event 329
+>> :*.freenode.net 352 jpillet #jeteste ~jpillet freenode-a99.759.j1faas.IP *.freenode.net jpillet H@s :0 Julien Pillet
+--> silent event who
+>> :*.freenode.net 315 jpillet #jeteste :End of /WHO list.
+--> chanquery who end
+<< MODE #jeteste b
+>> :*.freenode.net 368 jpillet #jeteste :End of channel ban list
+--> chanquery ban end
+<< MODE #jeteste -lawdadasd
+>> :*.freenode.net 472 jpillet a :is not a recognised channel mode.
+>> :*.freenode.net 472 jpillet a :is not a recognised channel mode.
+>> :*.freenode.net 472 jpillet a :is not a recognised channel mode.
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< MODE #jeteste +l awdadasd
+>> :*.freenode.net 696 jpillet #jeteste l awdadasd :Invalid limit mode parameter. Syntax: <limit>.
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< MODE #jeteste +l
+>> :*.freenode.net 696 jpillet #jeteste l * :You must specify a parameter for the limit mode. Syntax: <limit>.
+<< MODE #jeteste +l0
+>> :*.freenode.net 472 jpillet 0 :is not a recognised channel mode.
+>> :*.freenode.net 696 jpillet #jeteste l * :You must specify a parameter for the limit mode. Syntax: <limit>.
+<< MODE #jeteste +l 0
+>> :*.freenode.net 696 jpillet #jeteste l 0 :Invalid limit mode parameter. Syntax: <limit>.
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< MODE #jeteste +b
+>> :*.freenode.net 368 jpillet #jeteste :End of channel ban list
+<< MODE #jeteste +o
+>> :*.freenode.net 696 jpillet #jeteste o * :You must specify a parameter for the op mode. Syntax: <nick>.
+<< CAP LS
+<< NICK jpillet
+<< USER jpillet jpillet chat.freenode.net :Julien Pillet
+>> :*.freenode.net NOTICE * :*** Looking up your ident...
+>> :*.freenode.net NOTICE * :*** Looking up your hostname...
+>> :*.freenode.net NOTICE * :*** Could not resolve your hostname: Domain not found; using your IP address (62.129.8.171) instead.
+>> :*.freenode.net CAP * LS :account-notify account-tag away-notify batch cap-notify chghost draft/relaymsg echo-message extended-join inspircd.org/poison inspircd.org/standard-replies invite-notify labeled-response message-tags multi-prefix sasl server-time setname userhost-in-names 
+<< CAP REQ :multi-prefix
+>> PING :IyhWEhuMVM
+<< PONG :IyhWEhuMVM
+>> :*.freenode.net CAP jpillet ACK :multi-prefix
+<< CAP END
+>> :*.freenode.net NOTICE jpillet :*** Ident lookup timed out, using ~jpillet instead.
+>> :*.freenode.net 001 jpillet :Welcome to the freenode IRC Network jpillet!~jpillet@62.129.8.171
+<< MODE jpillet +i
+>> :*.freenode.net 002 jpillet :Your host is *.freenode.net, running version InspIRCd-3
+>> :*.freenode.net 003 jpillet :This server was created 00:20:08 Apr 21 2022
+>> :*.freenode.net 004 jpillet *.freenode.net InspIRCd-3 BDHILRSTWcdghikorswxz ABCDEFIJKLMNOPQRSTUWXYZbcdefhijklmnoprstuvwz :BEFIJLWXYZbdefhjklovw
+>> :*.freenode.net 005 jpillet ACCEPT=30 AWAYLEN=200 BOT=B CALLERID=g CASEMAPPING=ascii CHANLIMIT=#:20 CHANMODES=IXZbew,k,BEFJLWdfjl,ACDKMNOPQRSTUcimnprstuz CHANNELLEN=64 CHANTYPES=# ELIST=CMNTU ESILENCE=CcdiNnPpTtx EXCEPTS=e :are supported by this server
+>> :*.freenode.net 005 jpillet EXTBAN=,ACNOQRSTUacjmnpruwz HOSTLEN=64 INVEX=I KEYLEN=32 KICKLEN=255 LINELEN=512 MAXLIST=I:100,X:100,b:100,e:100,w:100 MAXTARGETS=20 MODES=20 MONITOR=30 NAMELEN=128 NAMESX NETWORK=freenode :are supported by this server
+>> :*.freenode.net 005 jpillet NICKLEN=30 PREFIX=(Yohv)!@%+ REMOVE SAFELIST SECURELIST=60 SILENCE=32 STATUSMSG=!@%+ TOPICLEN=390 UHNAMES USERIP USERLEN=10 USERMODES=,,s,BDHILRSTWcdghikorwxz VBANLIST :are supported by this server
+>> :*.freenode.net 005 jpillet VLIST=b WATCH=32 WHOX :are supported by this server
+>> :*.freenode.net 251 jpillet :There are 23 users and 10385 invisible on 9 servers
+>> :*.freenode.net 252 jpillet 7 :operator(s) online
+>> :*.freenode.net 253 jpillet 22 :unknown connections
+>> :*.freenode.net 254 jpillet 14173 :channels formed
+>> :*.freenode.net 255 jpillet :I have 4870 clients and 1 servers
+>> :*.freenode.net 265 jpillet :Current local users: 4870  Max: 4875
+>> :*.freenode.net 266 jpillet :Current global users: 10408  Max: 10916
+>> :*.freenode.net 375 jpillet :*.freenode.net message of the day
+>> :*.freenode.net 372 jpillet :  Hello, World!
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Welcome to the
+>> :*.freenode.net 372 jpillet :          __                               _
+>> :*.freenode.net 372 jpillet :         / _|_ __ ___  ___ _ __   ___   __| | ___
+>> :*.freenode.net 372 jpillet :        | |_| '__/ _ \/ _ \ '_ \ / _ \ / _` |/ _ \
+>> :*.freenode.net 372 jpillet :        |  _| | |  __/  __/ | | | (_) | (_| |  __/
+>> :*.freenode.net 372 jpillet :        |_| |_|  \___|\___|_| |_|\___/ \__,_|\___|
+>> :*.freenode.net 372 jpillet :                                   AUTONOMOUS ZONE
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Connect to us on:
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Hostname: irc.freenode.net / chat.freenode.net
+>> :*.freenode.net 372 jpillet :  Plaintext: 6660-6669
+>> :*.freenode.net 372 jpillet :  TLS/SSL: 6697,7000,7070
+>> :*.freenode.net 372 jpillet :  Webchat: https://webchat.freenode.net
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  By connecting to freenode you indicate that you have read and accept our
+>> :*.freenode.net 372 jpillet :  policies and guidelines as set out on https://freenode.net and agree to
+>> :*.freenode.net 372 jpillet :  be scanned for an open proxy.
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  If you are looking for assistance, please try:
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  #help                    - Help with general IRC and Services.
+>> :*.freenode.net 372 jpillet :  #chanhelp                - Help with channels and channel services.
+>> :*.freenode.net 372 jpillet :  #IRC                     - Help with the IRC.com by freenode app.
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Checkout some of our communities and services:
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  #freenode-bbs            - BBS [https://bbs.freenode.net/]
+>> :*.freenode.net 372 jpillet :  #freenode-bbs-discussion - BBS Discussion
+>> :*.freenode.net 372 jpillet :  #freenode-jobs           - Jobs [https://jobs.freenode.net/]
+>> :*.freenode.net 372 jpillet :  #freenode                - Chat about freenode.
+>> :*.freenode.net 372 jpillet :  #anonchan                - Chat anonymously.
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Type /join #<channel>
+>> :*.freenode.net 372 jpillet : 
+>> :*.freenode.net 372 jpillet :  Thank you for using freenode!
+>> :*.freenode.net 376 jpillet :End of message of the day.
+>> :*.freenode.net 396 jpillet freenode-a99.759.j1faas.IP :is now your displayed host
+>> :jpillet!~jpillet@freenode-a99.759.j1faas.IP MODE jpillet :+wRix
+>> :*.freenode.net NOTICE jpillet :*** You are connected to chat.freenode.net using TLS (SSL) cipher 'TLSv1.3-TLS_AES_256_GCM_SHA384'
+<< JOIN #jeteste
+>> :jpillet!~jpillet@freenode-a99.759.j1faas.IP JOIN :#jeteste
+>> :*.freenode.net 353 jpillet = #jeteste :@jpillet
+>> :*.freenode.net 366 jpillet #jeteste :End of /NAMES list.
+<< MODE #jeteste
+>> :*.freenode.net 324 jpillet #jeteste :+nt
+--> chanquery mode
+<< WHO #jeteste
+>> :*.freenode.net 329 jpillet #jeteste :1657182484
+--> event 329
+>> :*.freenode.net 352 jpillet #jeteste ~jpillet freenode-a99.759.j1faas.IP *.freenode.net jpillet H@s :0 Julien Pillet
+--> silent event who
+>> :*.freenode.net 315 jpillet #jeteste :End of /WHO list.
+--> chanquery who end
+<< MODE #jeteste b
+>> :*.freenode.net 368 jpillet #jeteste :End of channel ban list
+--> chanquery ban end
+<< MODE #jeteste -lawdadasd
+>> :*.freenode.net 472 jpillet a :is not a recognised channel mode.
+>> :*.freenode.net 472 jpillet a :is not a recognised channel mode.
+>> :*.freenode.net 472 jpillet a :is not a recognised channel mode.
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< MODE #jeteste +l awdadasd
+>> :*.freenode.net 696 jpillet #jeteste l awdadasd :Invalid limit mode parameter. Syntax: <limit>.
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< MODE #jeteste +l
+>> :*.freenode.net 696 jpillet #jeteste l * :You must specify a parameter for the limit mode. Syntax: <limit>.
+<< MODE #jeteste +l0
+>> :*.freenode.net 472 jpillet 0 :is not a recognised channel mode.
+>> :*.freenode.net 696 jpillet #jeteste l * :You must specify a parameter for the limit mode. Syntax: <limit>.
+<< MODE #jeteste +l 0
+>> :*.freenode.net 696 jpillet #jeteste l 0 :Invalid limit mode parameter. Syntax: <limit>.
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< MODE #jeteste +b
+>> :*.freenode.net 368 jpillet #jeteste :End of channel ban list
+<< MODE #jeteste +o
+>> :*.freenode.net 696 jpillet #jeteste o * :You must specify a parameter for the op mode. Syntax: <nick>.
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< MODE #jeteste +o gbrfgbfvdfv
+>> :*.freenode.net 401 jpillet gbrfgbfvdfv :No such nick
+>> :*.freenode.net 368 jpillet #jeteste :End of channel ban list
+--> chanquery ban end
+<< MODE #jeteste +o Aeon-
+<< MODE #jeteste +o Aeon-
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong
+<< JOIN #fedora
+>> :jpillet!~jpillet@freenode-a99.759.j1faas.IP JOIN :#fedora
+>> :*.freenode.net 332 jpillet #fedora :Unofficial fedora channel. Freenode community channel. Lets have a good time and help each other out. No spamming. Also try asking your question in #Linux
+>> :*.freenode.net 333 jpillet #fedora sorcerer!unknown@freenode/staff/sorcerer :1624471574
+>> :*.freenode.net 353 jpillet = #fedora :noidea_ @nR Usurp SupaYoshi homma Yorick G-virt vt suhanc raj imcsk8 phr3ak Hackerpcs IKnowNothing pocketprotector Guest48009 majdi2 kapil_- NickG365 feldim2425 sspreitzer Aeon- [SLB] rhct turgenevskaya c0san0stra ClubMate Arsenick appiah downunder linxon prg jpillet stackofcats Mia @ChanServ roger_rabbit Hoosilon tangarora hpt Hien ORANGE_MAN_BAD @riddle ofourdan x-warrior blindcant panwolfram fraggle_laptop mkearey__ kiltzman saptaks WhizzWr Guest19997 Guest29314
+>> :*.freenode.net 353 jpillet = #fedora :Adluc Starz0r m0lle767 shann zfridric31596693 KBme Universe prfldg anthis smaug____ Gozno_ sl4ck3r zaf Furna ikurniawan indy msocorcim widelands Colpop4323 shailangsa joako smeggysmeg partlycloudy Guest60035 franzer fraggle_boate_ mrnuke orbina lvrp16_ speedy_ balbirs
+>> :*.freenode.net 366 jpillet #fedora :End of /NAMES list.
+<< MODE #fedora
+>> :*.freenode.net 324 jpillet #fedora :+Pnrt
+--> chanquery mode
+<< WHO #fedora
+>> :*.freenode.net 329 jpillet #fedora :1624398156
+--> event 329
+>> :*.freenode.net 352 jpillet #fedora ~noidea___ freenode-h1d.58i.5o9oqv.IP *.freenode.net noidea_ H :0 noidea_
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~IRC-nERDs irc-nerds.relay *.freenode.net nR H@s :0 IRC-nERDs PyLink Service Client
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~syl freenode-op8.uol.lkhglv.IP *.freenode.net Usurp Hs :0 Sylvain Petreolle
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~supayoshi freenode-t23.ta9.02t2j9.IP *.freenode.net SupaYoshi Gs :0 SupaYoshi
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~homma freenode/user/littlepap *.freenode.net homma Gs :0 homma
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora znc freenode-0e9.iig.k74g9e.IP *.freenode.net Yorick Gs :0 Yorick
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~quassel freenode-v1p16j.sdvc.sc61.8aifld.IP *.freenode.net G-virt Gs :0 Gareth
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~vt freenode-h5l7s5.uu8u.l6or.fu2ksa.IP *.freenode.net vt Gs :0 Vassili Tchersky
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~sha freenode-lv2.3lr.87jp6d.IP *.freenode.net suhanc Gs :0 suhanc
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~raj freenode/user/raj *.freenode.net raj H :0 Raj
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~ichavero freenode-c1o.6hb.slbpv4.IP *.freenode.net imcsk8 H :0 Ivan Chavero
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~noreply freenode/user/phr3ak *.freenode.net phr3ak Hs :0 phr3ak
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~user freenode/user/Hackerpcs *.freenode.net Hackerpcs Hs :0 user
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~B4ckBOne freenode-uaa.vu2.k8mg00.IP *.freenode.net IKnowNothing Hs :0 ZNC - https://znc.in
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~pocketpro freenode-dtb.6ki.egrqlm.IP *.freenode.net pocketprotector Gs :0 * I'm not to lame to read BitchX.doc *
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~aircpp freenode-6sn.g7f.he4brr.IP *.freenode.net Guest48009 Hs :0 Millkiways
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~majdi freenode-9dg.kg9.0rc81u.IP *.freenode.net majdi2 Hs :0 majdi
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~kapil freenode-8dijf1.97ag.8cp9.57kr9u.IP *.freenode.net kapil_- Hs :0 kapil pipaliya
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~NickG365 freenode-6dv4e8.v3sq.rtcp.qfe13k.IP *.freenode.net NickG365 Gs :0 NickG365
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~feldim242 freenode-1lp1rb.clu4.luo2.8npait.IP *.freenode.net feldim2425 Gs :0 ZNC - https://znc.in
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~sspreitze freenode-lqg5nn.9fe0.rfnt.gf02th.IP *.freenode.net sspreitzer Gs :0 Sascha Spreitzer
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~aeon freenode-pa1.8k2.c14jov.IP *.freenode.net Aeon- H :0 realname
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~slabua joseon/user/-SLB-x-2001a4c668396170 *.freenode.net [SLB] G :0 @slabua
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ns22 2604:880:a:2::38b *.freenode.net rhct Hs :0 Geeks never need any introduction
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~turgenevs freenode-cib.u12.kruumd.IP *.freenode.net turgenevskaya Hs :0 lol
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~nunyuh freenode-qrg.bt2.aa9am4.IP *.freenode.net c0san0stra Hs :0 nunyuh
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~ClubMate freenode-phu.eei.q2n3ho.IP *.freenode.net ClubMate G :0 ClubMate
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~quassel freenode-rbh.c14.7csvip.IP *.freenode.net Arsenick Hs :0 Arsenick,,,
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~appiah freenode-dbh.2j7.fb1unj.IP *.freenode.net appiah H :0 appiah
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~quassel freenode-rh4d62.dd8e.csb1.mc4289.IP *.freenode.net downunder H :0 Steve Shaw
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~linxon freenode-tet.uj7.q8203a.IP *.freenode.net linxon Hs :0 Yury Martynov
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~prg freenode-p5ca5v.ar5q.r4v7.0u8u7u.IP *.freenode.net prg Hs :0 prg
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~jpillet freenode-a99.759.j1faas.IP *.freenode.net jpillet Hs :0 Julien Pillet
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~stackofca freenode-6ej.i0k.pctvcf.IP *.freenode.net stackofcats Gs :0 Unknown
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~Mia freenode-gjq.if6.0b1d22.IP *.freenode.net Mia Hs :0 0
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora services services.freenode.net *.freenode.net ChanServ H@B :0 Channel Registration Service
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~roger_rab freenode-ga5.if9.9mvo0i.IP *.freenode.net roger_rabbit Hs :0 roger_rabbit
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~otherone freenode-c6qi8e.dq9l.e3bm.8aifld.IP *.freenode.net Hoosilon Hs :0 otherone
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~tangarora freenode-727.522.q9603u.IP *.freenode.net tangarora Hs :0 realname
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~hpt freenode-nni.2ma.7e8rfj.IP *.freenode.net hpt H :0 han pingtian
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~hien freenode-pbjj5i.b9ft.8lga.dvh9nd.IP *.freenode.net Hien Hs :0 hien
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~ORANGE_MA joseon/user/ORANGE-MAN-BADx-26d88a6a2fa7aef9 *.freenode.net ORANGE_MAN_BAD Hs :0 ORANGE_MAN_BAD
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora riddle PyLink/admin *.freenode.net riddle H@s :0 riddle
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~ofourdan freenode-7j7.arp.dee35e.IP *.freenode.net ofourdan H :0 Olivier Fourdan
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~x-warrior freenode-tqj.tc9.r909ep.IP *.freenode.net x-warrior Gs :0 a
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~tool freenode-37l.n0i.bu2953.IP *.freenode.net blindcant Hs :0 Damn you! Let the rabbits where glasses.
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~panwolfra freenode/user/panwolfram *.freenode.net panwolfram Gs :0 Mike Wolfram
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~fraggle freenode-7s44ji.qu9o.21lf.t1mehc.IP *.freenode.net fraggle_laptop Hs :0 fraggle
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~mutk freenode-dp4.r5b.e4r3kt.IP *.freenode.net mkearey__ Hs :0 Mike Kearey
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~k1ltzman freenode-smq.9ri.ipvel5.IP *.freenode.net kiltzman H :0 k1ltzman
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~saptaks freenode-pi0.68g.1n5kgh.IP *.freenode.net saptaks Gs :0 Saptak S
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora Whizz freenode-sb5q5s.sdrj.00r2.gl4acs.IP *.freenode.net WhizzWr Hs :0 Whizz
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~infamousj freenode-l5s.s3d.pvg2gu.IP *.freenode.net Guest19997 Hs :0 infamousjoeg
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~dhill freenode-0nn.c68.lded13.IP *.freenode.net Guest29314 Hs :0 Dave
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~Adluc freenode-kgp7ei.0idm.hb51.4vmqrs.IP *.freenode.net Adluc Hs :0 Adluc
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~quassel freenode-uuh.3iu.nfkt4u.IP *.freenode.net Starz0r Hs :0 Starz0r
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~m0lle freenode-4ip.b49.kjp69t.IP *.freenode.net m0lle767 Hs :0 m0lle
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~quassel freenode-rf5.7i3.738ft4.IP *.freenode.net shann H :0 Stanislas Leduc
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~zfridric freenode-230.6jg.4l6emq.IP *.freenode.net zfridric31596693 Hs :0 Zoltan Fridrich
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~KBme freenode-93h.dtq.fb1unj.IP *.freenode.net KBme Hs :0 KBme
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~Universe freenode-duv.77p.mkkanh.IP *.freenode.net Universe Gs :0 Universe
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora test333 freenode/user/prfldg *.freenode.net prfldg H :0 test333
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~anthis freenode-836.4ok.vu267i.IP *.freenode.net anthis Hs :0 anthis
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora sid395398 freenode-mou2b7.q04p.uge0.8cnpra.IP *.freenode.net smaug____ Gs :0 smaug
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~gozno freenode-idpue8.cvqu.cv1o.6jq2op.IP *.freenode.net Gozno_ Gs :0 ZNC - https://znc.in
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora sl4ck3r freenode/user/sl4ck3r *.freenode.net sl4ck3r Hs :0 sl4ck3r
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~zaf freenode-mkf.296.698882.IP *.freenode.net zaf Gs :0 zaf
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~Furna freenode-6jgk5a.k82n.essu.kbr985.IP *.freenode.net Furna Gs :0 The sky above the port was the color of television, tuned to a dead channel.
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~idk freenode-07mpfo.j56k.ootf.4hb93e.IP *.freenode.net ikurniawan Gs :0 /dev/null
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~indy freenode-c1s.70l.o06u7k.IP *.freenode.net indy Hs :0 jkjr
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~dennis freenode-jjj.9kf.k26r8r.IP *.freenode.net msocorcim H :0 dennis reichel
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~widelands joseon/user/widelands *.freenode.net widelands Hs :0 widelands
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~logstash freenode-e0b.hcl.j5smn2.IP *.freenode.net Colpop4323 H :0 logstash
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~shailangs freenode-h56.15g.n8h0nr.IP *.freenode.net shailangsa H :0 ...
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~joako freenode-ffk7pn.m02h.1dca.f8bgsb.IP *.freenode.net joako Hs :0 joako
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~smeg freenode/user/smeggysmeg *.freenode.net smeggysmeg Gs :0 smeg
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~partlyclo freenode-a20.6ut.2oo0gf.IP *.freenode.net partlycloudy Hs :0 partlycloudy
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~erico freenode-oo4.cgh.kgfcju.IP *.freenode.net Guest60035 Hs :0 Loeka Rogge
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~franzer freenode-ep0n1k.7q7r.14so.tofjal.IP *.freenode.net franzer Gs :0 ZNC - https://znc.in
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~fraggle freenode-nhpj9r.qu9o.21lf.t1mehc.IP *.freenode.net fraggle_boate_ Hs :0 realname
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~mrnuke freenode-ard.le2.k12nrh.IP *.freenode.net mrnuke Hs :0 ZNC - https://znc.in
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~orbina joseon/user/orbina *.freenode.net orbina Hs :0 Orb
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora sid153650 freenode-cqo7br.apb4.uge0.8cnpra.IP *.freenode.net lvrp16_ G :0 Libre Computer Project
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~speedy freenode-ck2.0l1.cg1sbs.IP *.freenode.net speedy_ H :0 realname
+--> silent event who
+>> :*.freenode.net 352 jpillet #fedora ~balbirs freenode-03bi0f.6he1.4d9e.eh18d1.IP *.freenode.net balbirs Gs :0 ZNC - https://znc.in
+--> silent event who
+>> :*.freenode.net 315 jpillet #fedora :End of /WHO list.
+--> chanquery who end
+<< MODE #fedora b
+>> :*.freenode.net 368 jpillet #fedora :End of channel ban list
+--> chanquery ban end
+<< MODE #jeteste +o Mia
+<< MODE #jeteste +o Mia
+<< PING *.freenode.net
+>> :*.freenode.net PONG *.freenode.net :*.freenode.net
+--> lag pong

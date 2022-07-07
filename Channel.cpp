@@ -24,7 +24,7 @@ void			Channel::delFlag( char flag )
 		_flags.erase( flagIt );
 }
 
-void							Channel::printModifFlags( std::string &_printed, std::string servIP ) const
+void							Channel::printModifFlags( std::string const _printed, std::string servIP ) const
 {
 	constClientIterator userIt;
 	for ( userIt = _cliCrnt.begin(); userIt != _cliCrnt.end() ; ++userIt )

@@ -100,7 +100,7 @@ void				Client::addChannel(std::string servIP, Channel *channel )
 	}
 }
 
-channelsList		Client::getChannels( void ) { return _channels; }
+channelsList		&Client::getChannels( void ) { return _channels; }
 void				Client::removeChannel( Channel *channel )
 {
 	channelsListIt chanIt;
