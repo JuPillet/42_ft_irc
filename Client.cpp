@@ -3,7 +3,7 @@
 
 Client::Client( Client const &src ): _client_socket( src.getSocket() ), _authentified( src.getAutentification() ),
 						_pass( src.getPass() ), _nick( src.getNick() ), _user( src.getUser() ), _name( src.getName() ), _request( *src.getRequest() )
-{ return ; }
+{ return; }
 
 Client				&Client::operator=( Client const &src )	
 {
@@ -76,7 +76,7 @@ void				Client::addChannel(std::string servIP, Channel *channel )
 	_channels.push_back( channel );
 	channel->setCli( this );
 	constClientIterator	chanCliIt;
-	for ( chanCliIt = channel->getCli()->begin(); chanCliIt != channel->getCli()->end(); ++chanCliIt )
+	for ( chanCliIt = channel->getCli().begin(); chanCliIt != channel->getCli().end(); ++chanCliIt )
 	{
 		try
 		{ sender( ( *chanCliIt )->getSocket(), ":" + _nick + "!~" + _user + "@" + _clIp + " JOIN :" + channelName + "\r\n", 0);	}

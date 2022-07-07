@@ -86,8 +86,7 @@ class IRCData
 
 	void									receveRequest( void );
 
-	void									isUnsignedNumber( void );
-
+	
 	std::string const						getAllArg( void );
 	std::string const						getMsgArg( void );
 	std::string const						getLastArg( void );

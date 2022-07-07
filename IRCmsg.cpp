@@ -1,9 +1,9 @@
 
 #include "IRCmsg.hpp"
 
-IRCErr::IRCErr( const std::string &err ) :_err( "Error: " + err ){}
+IRCErr::IRCErr( const std::string &err ) :_err( "Error: " + err ) { return; }
 
-IRCErr::~IRCErr() {}
+IRCErr::~IRCErr() { return; }
 		
 const std::string 	IRCErr::getError() const { return _err; }
 

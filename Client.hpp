@@ -20,15 +20,15 @@ class Client
 	channelsList						_channels;
 	
 										Client( void ): _client_socket( 0 ), _authentified( false ), _clIp( "" ), _pass( "" ), _nick( "" ), _user( "" ), _name( "" ), _request( "" ), _invitation( "" )
-										{ return ; }
+										{ return; }
 	public:
 		
 										Client( int const _new_socket, std::string const _new_clIp ): _client_socket( _new_socket ), _authentified( false ), _clIp( _new_clIp ), _pass( "" ), _nick( "" ), _user( "" ), _name( "" ), _request( "" ), _invitation( "" )
-										{ return ; }
+										{ return; }
 
 										Client( int const _new_socket, std::string const &pass, std::string const &nick, std::string const &user ):
 											_client_socket( _new_socket ), _authentified( false ), _clIp( "" ), _pass( pass ), _nick( nick ), _user( user ), _name(), _request()
-										{ return ; }
+										{ return; }
 
 		explicit						Client( Client const &src );
 

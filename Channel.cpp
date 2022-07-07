@@ -24,11 +24,11 @@ void			Channel::delFlag( char flag )
 		_flags.erase( flagIt );
 }
 
-void							Channel::printModifFlags( std::string const _printed, std::string servIP ) const
+void							Channel::printModifFlags( std::string const _printed ) const
 {
 	constClientIterator userIt;
 	for ( userIt = _cliCrnt.begin(); userIt != _cliCrnt.end() ; ++userIt )
-		sender( ( *userIt )->getSocket(), ":" + servIP + " MODE " + _name + " :" + _printed + "\r\n", 0 );
+		sender( ( *userIt )->getSocket(),  _printed, 0 );
 }
 
 void			Channel::setPass ( std::string str )
@@ -41,64 +41,16 @@ void			Channel::unsetPass ( void )
 	_pass.clear();
 	delFlag( 'k' );
 }
-void			Channel::setPriv( bool priv )
-{
-	_priv = priv;
-	if ( priv )
-		addFlag( 'p' );
-	else
-		delFlag( 'p' );
-}
-void			Channel::setSecret( bool secret )
-{
-	_secret = secret;
-	if ( secret )
-		addFlag( 's' );
-	else
-		delFlag( 's' );
-}
-void			Channel::setInvit( bool invit )
-{
-	_invit = invit;
-	if ( invit )
-		addFlag( 'i' );
-	else
-		delFlag( 'i' );
-}
-void			Channel::setMod( bool mod )
-{
-	_mod = mod;
-	if ( mod )
-		addFlag( 'm' );
-	else
-		delFlag( 'm' );
-}
-void			Channel::setExt ( bool extMsg )
-{
-	_extMsg = extMsg;
-	if ( extMsg )
-		addFlag( 'n' );
-	else
-		delFlag( 'n' );
-}
-void			Channel::setLimit ( unsigned int limit )
-{
-	_limit = limit;
-	if ( limit )
-		addFlag( 'l' );
-	else
-		delFlag( 'l' );
-}
-void			Channel::setProtecTopic ( unsigned int limit )
-{
-	_limit = limit;
-	if ( limit )
-		addFlag( 't' );
-	else
-		delFlag( 't' );
-}
+void			Channel::setPriv( bool priv ) { ( _priv = priv ) ? addFlag( 'p' ) : delFlag( 'p' ); }
+void			Channel::setSecret( bool secret ) { ( _secret = secret ) ? addFlag( 's' ) : delFlag( 's' ); }
+void			Channel::setInvit( bool invit ) { ( _invit = invit ) ? addFlag( 'i' ) : delFlag( 'i' ); }
+void			Channel::setMod( bool mod ) { ( _mod = mod ) ? addFlag( 'm' ) : delFlag( 'm' ); }
+void			Channel::setExt ( bool extMsg ) { ( _extMsg = extMsg ) ? addFlag( 'n' ) : delFlag( 'n' ); }
+void			Channel::setLimit ( unsigned int limit ) { ( _limit = limit ) ? addFlag( 'l' ) : delFlag( 'l' ); }
+void			Channel::setProtecTopic ( bool protect ) { ( _protecTopic = protect )? addFlag( 't' ) : delFlag( 't' ); }
 
-void			Channel::setOps( std::string ops ) {
+void			Channel::setOps( std::string ops )
+{
 	if ( isOps( ops ) == _chanOps.end() )
 		_chanOps.push_back( ops );
 }
@@ -210,7 +162,8 @@ void			Channel::unBan( std::string tmp )
 	_chanBan.erase( tmpIt );
 }
 
-itBan			Channel::isBan( std::string nick ) {
+itBan			Channel::isBan( std::string nick )
+{
 	itBan banIt;
 	for ( banIt = _chanBan.begin(); banIt != _chanBan.end() && banIt->first != nick; ++banIt );
 	if ( banIt != _chanBan.end() && banIt->second && banIt->second <= std::time( nullptr ) )
