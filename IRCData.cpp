@@ -584,14 +584,13 @@ void						IRCData::TOPIC( void )
 	}
 	if ( topic.size() && topic != " :" )
 	{
-		strListIt changer = channelIt->isOps( ( *_clientIt )->getNick() );
-		if ( channelIt->getProtecTopic() && changer == channelIt->getOps().end() )
+		if ( channelIt->getProtecTopic() && channelIt->isOps( ( *_clientIt )->getNick() ) == channelIt->getOps().end() )
 		{
 			_request->clear();
 			IRCErr ircErr( ( *_clientIt )->getNick() + " not '" + _channelTmp + "' channel operator" );
 			sender( _sd, ":*." + _servIP + " 482 " + ( *_clientIt )->getNick() + " " + _channelTmp + " :You must be a channel half-operator\r\n", &ircErr);
 		}
-		channelIt->setTopic( topic, _servIP, *changer );
+		channelIt->setTopic( topic, _servIP, ( *_clientIt )->getNick() );
 	}
 	else
 		sender( _sd, ":*." + _servIP + " 332 " + ( *_clientIt )->getNick() + " " + _target + channelIt->getTopic() + "\r\n", 0 );
