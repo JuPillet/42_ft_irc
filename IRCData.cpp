@@ -311,6 +311,11 @@ void						IRCData::JOIN( void )
 		chanIt->setOwner( ( *_clientIt )->getNick() );
 		chanIt->setOps( ( *_clientIt )->getNick() );
 	}
+	if ( ( chanIt->isBan( ( *_clientIt )->getUser() ) ) != chanIt->getBan().end() )
+	{
+		IRCErr ircErr( ( *_clientIt )->getNick() + " banned from " + _target );
+		sender( _sd, ":*." + _servIP + " 474 " + ( *_clientIt )->getNick() + " " + _channelTmp + " :you are banned from channel\r\n", &ircErr);
+	}
 	if ( chanIt->getInvit() && chanIt->isGuest( ( *_clientIt )->getNick() ) == chanIt->getGuests().end() )
 	{
 		IRCErr ircErr( "isn't invited" );
@@ -667,7 +672,7 @@ void						IRCData::nbArgs( const int ac )
 }
 void						IRCData::MODE_GET_ARG( void )
 {
-	bool minus = _modsIt->flop == '-' && ( _modsIt->flag == 'o' || _modsIt->flag == 'b' || _modsIt->flag == 'k' );
+	bool minus = _modsIt->flop == '-' && ( _modsIt->flag == 'o' || _modsIt->flag == 'b' || _modsIt->flag == 'k' || _modsIt->flag == 'v' );
 	if ( _modsIt->flop == '+' || minus )
 	{
 		std::string arg = getArg();
@@ -881,6 +886,7 @@ void						IRCData::C_MODE_L()
 			sender( _sd, ":*." + _servIP + " 696 " + ( *_clientIt )->getNick() + " " + _target + " l 0 : Invalid limit mode parameter. Syntax: <limit>.\r\n", &ircErr );
 		}
 		_printedArgs += " " + IRC::ultostr( limit );
+		_modsIt->chanIt->setLimit( limit );
 	}
 	else
 		_modsIt->chanIt->setLimit( false );
@@ -1002,13 +1008,14 @@ void						IRCData::C_MODE_V( void )
 	if ( !_modsIt->arg.size() )
 	{
 		_request->clear();
-		IRCErr ircErr( ( *_clientIt )->getUser() + " foget argument for channel mode " + _modsIt->flop + "v" );
+		IRCErr ircErr( ( *_clientIt )->getUser() + " forget argument for channel mode " + _modsIt->flop + "v" );
 		sender( _sd, ":*." + _servIP + " 696 " + ( *_clientIt )->getNick() + _target + " * :You must specify a parameter for the voice mode. Syntax: <nick>.\r\n", &ircErr );
 	}
 	bool plus = _modsIt->flop == '+' && _modsIt->chanIt->isVo( _modsIt->arg ) == _modsIt->chanIt->getVo().end();
 	bool minus = _modsIt->flop == '-' && _modsIt->chanIt->isVo( _modsIt->arg ) != _modsIt->chanIt->getVo().end();
 	if ( ( plus || minus ) && _modsIt->chanIt->isCli( _modsIt->arg ) != _modsIt->chanIt->getCli().end() )
 	{
+		std::cout << "ICI" << std::endl;
 		plus ? _modsIt->chanIt->setVo( _modsIt->arg ) : _modsIt->chanIt->unsetVo( _modsIt->arg );
 		_printedArgs += " " + _modsIt->arg + "!*@*";
 	}
