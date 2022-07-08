@@ -174,7 +174,7 @@ itBan			Channel::isBan( std::string nick )
 	return banIt;
 }
 
-void			Channel::WHO( clientIterator clientIt, std::string &servIP, bool isServOps )
+void			Channel::WHO( clientIterator clientIt, std::string &servIP)
 {
 	for ( clientIterator userIt = _cliCrnt.begin(); userIt != _cliCrnt.end(); ++userIt )
 	{

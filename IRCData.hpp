@@ -9,6 +9,7 @@
 #include <netdb.h>
 #include <list>
 #include <iostream>
+#include <sstream>
 #include <algorithm>
 #include "IRCutils.hpp"
 #include "IRCmsg.hpp"
@@ -48,7 +49,7 @@ class IRCData
 /////	Socket Info /////
 	int										_opt;
 	int										_master_socket, _addrlen, _new_socket,
-											_activity, _sd, _index;
+											_activity, _sd;
 	fd_set									_readfds, _writefds, _crntfds;
 	int										_max_sd;
 	struct sockaddr_in						_address;
@@ -59,7 +60,6 @@ class IRCData
 	std::string								_answer;
 	char									_buff[1024];
 	std::string 							_target;
-	int										_destSD;
 
 /////	Client Info /////
 	std::list<Client*>						_clients;
@@ -99,8 +99,9 @@ class IRCData
 	strListIt								isOps( std::string userTmp );
 
 	itBan									isBan ( std::string const &user );
-
+	std::list<std::string>					KBList( const std::string& s );
 	void									printNotChanOps( void );
+	void									printNotServOps( void );
 	void									C_MODE_L( void );
 	void									C_MODE_B( void );
 	void									C_MODE_K( void );
@@ -131,10 +132,11 @@ class IRCData
 	void									WHO( void );
 	void									PONG( void );
 	void									JOIN( void );
-	void									KICK( void );
-	void									KILLING( clientIterator const &kickIt, std::string cmd, std::string const reason );
+	void									KICK( channelIterator chanIt, std::list<std::string> KBlist, std::string reason );
+	void									BAN( channelIterator chanIt, std::list<std::string> KBlist, std::string reason );
+	void									KICKBAN( void );
+	void									KILLING( clientIterator const &kickIt/*, std::string cmd, std::string const reason */);
 	void									KILL( void );
-	void									KLINE( void );
 	void									OPENMSG( void );
 	void									PRIVMSG( void );
 	void									MSG( void );
@@ -153,7 +155,7 @@ class IRCData
 	public:
 											IRCData( void );
 											~IRCData( void );
-		int	const							getMasterSocket( void ) const;
+		int									getMasterSocket( void ) const;
 		fd_set	const						getCrntFds( void ) const;
 		fd_set	const						*getPtrCrntFds( void ) const;
 		fd_set	const						getReadFds( void ) const;

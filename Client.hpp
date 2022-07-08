@@ -39,7 +39,7 @@ class Client
 		int								getSocket( void ) const;
 
 		void							setAutentification( std::string servIP, std::string sin_addr );
-		bool const						getAutentification( void ) const;
+		bool							getAutentification( void ) const;
 
 		void							setPass( std::string const &pass );
 		std::string const				getPass( void ) const;

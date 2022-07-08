@@ -1,19 +1,44 @@
-NAME = ircserv
+#COMPILATION
+CC			= clang++
+CFLAGS		= -g -Wall -Wextra -Werror -std=c++98
+.DEFAULT_GOAL := all
+
+#VALUES
+NAME		= ircserv
+#MISC
+
+NO_COLOR	= \033[1;36m
+OK_COLOR	= \033[0;32m
+KILL_COLOR	= \033[0;31m
+WARN_COLOR	= \033[0;33m
+
+#SOURCES
+
+SRC =		Channel.cpp		\
+			Client.cpp 		\
+			IRCData.cpp		\
+			IRCmsg.cpp		\
+			IRCutils.cpp	\
+			main.cpp
 
 $(NAME):
-#	clang++ $(CFLAGS) $(OBJS) -o $(NAME)
-	clang++ -g *.cpp -o $(NAME)
-#%.o: %.cpp
-#	clang++  -g *.cpp -o $@ -c $< $(CFLAGS)
+		$(CC) $(SRC) $(CFLAGS) -o $(NAME)
 
-all: $(NAME)
+all:		$(NAME)
+
+exe:		all
+			./$(NAME)
 
 clean:
-	@rm -rf *.o
+			@rm -f *.o; rm -f *~
+			@echo "${WARN_COLOR}temporary files removed"
+			@echo "${NO_COLOR}"
 
-fclean:
-	@rm -rf *.o $(NAME)
+fclean: clean
+				@rm -f $(NAME)
+				@echo "${KILL_COLOR}exec deleted"
+				@echo "${NO_COLOR}"
 
-re: fclean all
+re:		fclean all
 
 .PHONY: all clean fclean re

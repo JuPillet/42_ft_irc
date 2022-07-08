@@ -92,7 +92,7 @@ class Channel
 		itBan							isBan( std::string nick );
 		std::list<pairBan> const		&getBan( void ) const { return _chanBan; }
 
-		void							WHO( clientIterator clientIt, std::string &servIP, bool isServOps );
+		void							WHO( clientIterator clientIt, std::string &servIP);
 };
 
 #include "Client.hpp"

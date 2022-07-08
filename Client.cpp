@@ -23,12 +23,12 @@ int					Client::getSocket( void ) const { return _client_socket; }
 void				Client::setAutentification( std::string servIP, std::string sin_addr )
 {
 	_authentified = true;
-	std::string answer = ":" + servIP + " 001 " + _nick + " :Welcome to the IRC_QJ_Server " + _nick + "!" + _user + "@" + sin_addr + "\r\n";
+	std::string answer = ":" + servIP + " 001 " + _nick + " :Welcome to the IRC_QDJ_Server " + _nick + "!" + _user + "@" + sin_addr + "\r\n";
 	std::cout << "client socket: " << _client_socket << std::endl;
 	sender( _client_socket, answer, 0 );
 	std::cout << "Welcome message sent successfully" << std::endl;
 }
-bool const			Client::getAutentification( void ) const { return _authentified; }
+bool				Client::getAutentification( void ) const { return _authentified; }
 		
 		
 void				Client::setPass( std::string const &pass )

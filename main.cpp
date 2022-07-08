@@ -35,8 +35,8 @@ int main( int ac, char **av, char **ep )
 		try { server.IOListener(); }
 		catch ( IRCErr const &err )
 		{ std::cerr << err.getError() << std::endl; }
-		usleep( 500000 );
-		std::cout << "END OF IOListener" << std::endl;
+		//usleep( 500000 );
+		//std::cout << "END OF IOListener" << std::endl;
 	}
 	return 0;
 }
