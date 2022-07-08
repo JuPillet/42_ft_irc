@@ -534,7 +534,7 @@ void						IRCData::PART( void )
 			for ( constClientIterator chanCliIt = chanIt->getCli().begin(); chanCliIt != chanIt->getCli().end(); ++chanCliIt )
 			{
 				try
-				{ sender(  ( *chanCliIt )->getSocket();, ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " PART " + _target + " :left away\r\n", 0 ); }
+				{ sender( ( *chanCliIt )->getSocket(), ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " PART " + _target + " :left away\r\n", 0 ); }
 				catch ( IRCErr const &err )
 				{ std::cerr << err.getError() << std::endl; }
 			}
@@ -1193,7 +1193,7 @@ void						IRCData::USERMODE( void )
 		sender( _sd, ":*." + _servIP + " 401 " + ( *_clientIt )->getNick() + " " + _target + " :No such nick\r\n", &ircErr );
 	}
 	if ( !_flag.size() )
-		sender( ( *_clientIt )->getSocket(), ":" + _servIP + " 324 " + ( *_clientIt )->getNick() + " " + _target + " :+" + chanIt->getFlags() + "\r\n", 0 ); //si pas de flag affiche les modes actif du channel
+		sender( ( *_clientIt )->getSocket(), ":" + _servIP + " 501 " + ( *_clientIt )->getNick() + " " + _target + " :[+|-]flag forget\r\n", 0 ); //si pas de flag affiche les modes actif du channel
 	else
 		setListFlagCmdU();
 }
