@@ -100,7 +100,8 @@ class IRCData
 
 	itBan									isBan ( std::string const &user );
 
-	void									C_MODE_L();
+	void									printNotChanOps( void );
+	void									C_MODE_L( void );
 	void									C_MODE_B( void );
 	void									C_MODE_K( void );
 	void									C_MODE_M( void );
