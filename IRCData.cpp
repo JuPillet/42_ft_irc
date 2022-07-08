@@ -849,7 +849,8 @@ void	IRCData::printNotChanOps( void )
 
 void						IRCData::U_MODE_O( void )
 {
-	( _modsIt->chanIt->isOps( ( *_clientIt )->getUser() ) == _modsIt->chanIt->getOps().end() ) ? printNotChanOps();
+	if ( _modsIt->chanIt->isOps( ( *_clientIt )->getUser() ) == _modsIt->chanIt->getOps().end() )
+		printNotChanOps();
 
 	if ( !_target.size() )
 	{
@@ -874,7 +875,8 @@ void						IRCData::U_MODE_O( void )
 
 void						IRCData::C_MODE_L( void )
 {
-	( _modsIt->chanIt->isOps( ( *_clientIt )->getUser() ) == _modsIt->chanIt->getOps().end() ) ? printNotChanOps();
+	if ( _modsIt->chanIt->isOps( ( *_clientIt )->getUser() ) == _modsIt->chanIt->getOps().end() )
+		printNotChanOps();
 
 	if ( _modsIt->flop == '+' )
 	{
@@ -898,7 +900,8 @@ void						IRCData::C_MODE_L( void )
 void						IRCData::C_MODE_B( void )
 {
 	//char _flop egal a plus ou moins pour savoir si je dois ban ou unban
-	( _modsIt->chanIt->isOps( ( *_clientIt )->getUser() ) == _modsIt->chanIt->getOps().end() && _modsIt->arg.size() ) ? printNotChanOps();
+	if ( _modsIt->chanIt->isOps( ( *_clientIt )->getUser() ) == _modsIt->chanIt->getOps().end() && _modsIt->arg.size() )
+		printNotChanOps();
 
 	if ( !_modsIt->arg.size() )
 	{
@@ -920,7 +923,8 @@ void						IRCData::C_MODE_B( void )
 
 void						IRCData::C_MODE_K( void )
 {
-	( _modsIt->chanIt->isOps( ( *_clientIt )->getUser() ) == _modsIt->chanIt->getOps().end() ) ? printNotChanOps();
+	if ( _modsIt->chanIt->isOps( ( *_clientIt )->getUser() ) == _modsIt->chanIt->getOps().end() )
+		printNotChanOps();
 
 	if ( _modsIt->flop == '-' )
 		_modsIt->arg = _modsIt->chanIt->getPass();
@@ -946,7 +950,8 @@ void						IRCData::C_MODE_K( void )
 
 void						IRCData::C_MODE_M( void )
 {
-	( _modsIt->chanIt->isOps( ( *_clientIt )->getUser() ) == _modsIt->chanIt->getOps().end() ) ? printNotChanOps();
+	if ( _modsIt->chanIt->isOps( ( *_clientIt )->getUser() ) == _modsIt->chanIt->getOps().end() )
+		printNotChanOps();
 
 	bool mode = ( _modsIt->flop == '+' );
 	if ( _modsIt->chanIt->getMod() != mode )
@@ -955,7 +960,8 @@ void						IRCData::C_MODE_M( void )
 
 void						IRCData::C_MODE_T( void )
 {
-	( _modsIt->chanIt->isOps( ( *_clientIt )->getUser() ) == _modsIt->chanIt->getOps().end() ) ? printNotChanOps();
+	if ( _modsIt->chanIt->isOps( ( *_clientIt )->getUser() ) == _modsIt->chanIt->getOps().end() )
+		printNotChanOps();
 
 	bool mode = ( _modsIt->flop == '+' );
 	if ( _modsIt->chanIt->getProtecTopic() != mode )
@@ -964,7 +970,8 @@ void						IRCData::C_MODE_T( void )
 
 void						IRCData::C_MODE_N( void )
 {
-	( _modsIt->chanIt->isOps( ( *_clientIt )->getUser() ) == _modsIt->chanIt->getOps().end() ) ? printNotChanOps();
+	if ( _modsIt->chanIt->isOps( ( *_clientIt )->getUser() ) == _modsIt->chanIt->getOps().end() )
+		printNotChanOps();
 
 	bool mode = ( _modsIt->flop == '+' );
 	if ( _modsIt->chanIt->getExt() != mode )
@@ -973,7 +980,8 @@ void						IRCData::C_MODE_N( void )
 
 void						IRCData::C_MODE_O( void )
 {
-	( _modsIt->chanIt->isOps( ( *_clientIt )->getUser() ) == _modsIt->chanIt->getOps().end() ) ? printNotChanOps();
+	if ( _modsIt->chanIt->isOps( ( *_clientIt )->getUser() ) == _modsIt->chanIt->getOps().end() )
+		printNotChanOps();
 
 	strIt	  strIt;
 	//char _flop egal a plus ou moins pour savoir si je dois ban ou unban
@@ -998,7 +1006,8 @@ void						IRCData::C_MODE_O( void )
 
 void						IRCData::C_MODE_P( void )
 {
-	( _modsIt->chanIt->isOps( ( *_clientIt )->getUser() ) == _modsIt->chanIt->getOps().end() ) ? printNotChanOps();
+	if ( _modsIt->chanIt->isOps( ( *_clientIt )->getUser() ) == _modsIt->chanIt->getOps().end() )
+		printNotChanOps();
 
 	bool mode = ( _modsIt->flop == '+' );
 	if ( _modsIt->chanIt->getPriv() != mode )
@@ -1007,7 +1016,8 @@ void						IRCData::C_MODE_P( void )
 
 void						IRCData::C_MODE_S( void )
 {
-	( _modsIt->chanIt->isOps( ( *_clientIt )->getUser() ) == _modsIt->chanIt->getOps().end() ) ? printNotChanOps();
+	if ( _modsIt->chanIt->isOps( ( *_clientIt )->getUser() ) == _modsIt->chanIt->getOps().end() )
+		printNotChanOps();
 
 	bool mode = ( _modsIt->flop == '+' );
 	if ( _modsIt->chanIt->getSecret() != mode )
@@ -1016,7 +1026,8 @@ void						IRCData::C_MODE_S( void )
 
 void						IRCData::C_MODE_I( void )
 {
-	( _modsIt->chanIt->isOps( ( *_clientIt )->getUser() ) == _modsIt->chanIt->getOps().end() ) ? printNotChanOps();
+	if ( _modsIt->chanIt->isOps( ( *_clientIt )->getUser() ) == _modsIt->chanIt->getOps().end() )
+		printNotChanOps();
 
 	bool mode = ( _modsIt->flop == '+' );
 	if ( _modsIt->chanIt->getInvit() != mode )
@@ -1025,7 +1036,8 @@ void						IRCData::C_MODE_I( void )
 
 void						IRCData::C_MODE_V( void )
 {
-	( _modsIt->chanIt->isOps( ( *_clientIt )->getUser() ) == _modsIt->chanIt->getOps().end() ) ? printNotChanOps();
+	if ( _modsIt->chanIt->isOps( ( *_clientIt )->getUser() ) == _modsIt->chanIt->getOps().end() )
+		printNotChanOps();
 
 	if ( !_modsIt->arg.size() )
 	{
@@ -1100,6 +1112,7 @@ void						IRCData::execMode( void )
 void						IRCData::setListFlagCmdU( void )
 {
 	char	printedFlop = 0;
+	_flop = 0;
 	_mods.clear();
 	for( strIt flagIt = _flag.begin(); flagIt != _flag.end(); ++flagIt )
 	{
@@ -1172,9 +1185,17 @@ void						IRCData::setListFlagCmdC( channelIterator &chanIt )
 
 void						IRCData::USERMODE( void )
 {
-	clientIterator = isCli( _target );
-
-	setListFlagCmdU();
+	clientIterator clientIt = isCli( _target );
+	if ( clientIt == _clients.end() )
+	{
+		_request->clear();
+		IRCErr ircErr( "unknowned nick" );
+		sender( _sd, ":*." + _servIP + " 401 " + ( *_clientIt )->getNick() + " " + _target + " :No such nick\r\n", &ircErr );
+	}
+	if ( !_flag.size() )
+		sender( ( *_clientIt )->getSocket(), ":" + _servIP + " 324 " + ( *_clientIt )->getNick() + " " + _target + " :+" + chanIt->getFlags() + "\r\n", 0 ); //si pas de flag affiche les modes actif du channel
+	else
+		setListFlagCmdU();
 }
 
 void						IRCData::CHANMODE( void )
@@ -1183,13 +1204,13 @@ void						IRCData::CHANMODE( void )
 	if ( chanIt == _channels.end() )
 	{
 		_request->clear();
-		IRCErr ircErr( "unvalid flag" );
+		IRCErr ircErr( "unknowned channel" );
 		sender( _sd, ":*." + _servIP + " 403 " + ( *_clientIt )->getNick() + " " + _target + " :No such channel\r\n", &ircErr );
 	}
 	if ( !_flag.size() )
 		sender( ( *_clientIt )->getSocket(), ":" + _servIP + " 324 " + ( *_clientIt )->getNick() + " " + _target + " :+" + chanIt->getFlags() + "\r\n", 0 ); //si pas de flag affiche les modes actif du channel
 	else
-	{ setListFlagCmdC( chanIt ) ; }
+		setListFlagCmdC( chanIt );
 }
 
 void						IRCData::MODE( void )
