@@ -87,10 +87,8 @@ class IRCData
 	void									receveRequest( void );
 
 	
-	std::string const						getAllArg( void );
-	std::string const						getMsgArg( void );
-	std::string const						getLastArg( void );
 	std::string const						getArg( void );
+	std::string const						getLastArg( void );
 
 	void									setCmd( void );
 
@@ -113,6 +111,7 @@ class IRCData
 	void									C_MODE_S( void );
 	void									C_MODE_I( void );
 	void									C_MODE_V( void );
+	void									U_MODE_O( void );
 	void									wrongUserFlag( void );
 	void									wrongFlag( void );
 	void									execMode( void );
@@ -139,13 +138,13 @@ class IRCData
 	void									KILL( void );
 	void									OPENMSG( void );
 	void									PRIVMSG( void );
+	void									NOTICE( void );
 	void									MSG( void );
 	void									PART( void );
 	void									QUIT( void );
 	void									TOPIC( void );
 	void									INVITE( void );
 	void									MODE_GET_ARG( void );
-	void									U_MODE_O( void );
 
 
 

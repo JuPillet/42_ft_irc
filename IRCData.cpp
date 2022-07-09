@@ -41,7 +41,6 @@ void						IRCData::clearPostArgs( void )
 }
 
 void						IRCData::receveRequest( void ) {
-	std::cout << "message start" << std::endl;
 	_request = const_cast<std::string *>( ( *_clientIt )->getRequest() );
 	std::cout << _request << std::endl;
 	if ( *( --_request->end() ) == '\n' )
@@ -58,59 +57,38 @@ void						IRCData::receveRequest( void ) {
 	}
 	else
 		std::cout << std::strerror( errno ) << std::endl;
-	std::cout << "message exit" << std::endl;
 }
 
-std::string const			IRCData::getAllArg( void )
+std::string const			IRCData::getArg( void )
 {
-	std::string argTmp;
 	strIt		argIt;
-
 	for ( argIt = _request->begin(); argIt != _request->end()
-		&& *argIt != '\n' && *argIt != '\r'; ++argIt );
-	argTmp = std::string( *_request, 0, argIt - _request->begin() );
-	clearPostArgs();
-	return argTmp;
-}
-
-std::string const			IRCData::getMsgArg( void )
-{
-	std::string argTmp;
-	strIt		argIt;
-
-	if ( ( *_request )[0] == ':' )
-	{
-		for ( argIt = _request->begin(); argIt != _request->end()
-			&& *argIt != '\n' && *argIt != '\r'; ++argIt );
-		argTmp = std::string( *_request, 0, argIt - _request->begin() );
-	}
-	else
-		argTmp = ":";
-	clearPostArgs();
+		&& *argIt != '\n' && *argIt != '\r' && !std::isspace( *argIt ); ++argIt );
+	std::string argTmp = std::string( *_request, 0, argIt - _request->begin() );
+	_request->erase( 0, argIt - _request->begin() );
+	spaceTrimer();
 	return argTmp;
 }
 
 std::string const			IRCData::getLastArg( void )
 {
 	strIt		argIt;
-
-	for ( argIt = _request->begin(); argIt != _request->end()
-		&& *argIt != '\n' && *argIt != '\r' && !std::isspace( *argIt ); ++argIt );
-	std::string argTmp = std::string( *_request, 0, argIt - _request->begin() );
+	std::string argTmp;
+	
+	if ( ( *_request )[0] == ':' )
+	{
+		( *_request ).erase( ( *_request ).begin() );
+		for ( argIt = _request->begin(); argIt != _request->end()
+			&& *argIt != '\n' && *argIt != '\r'; ++argIt );
+	}
+	else
+	{
+		for ( argIt = _request->begin(); argIt != _request->end()
+			&& *argIt != '\n' && *argIt != '\r' && !std::isspace( *argIt ); ++argIt );
+	}
+	argTmp = std::string( *_request, 0, argIt - _request->begin() );
 	_request->erase( 0, argIt - _request->begin() );
 	clearPostArgs();
-	return argTmp;
-}
-
-std::string const			IRCData::getArg( void )
-{
-	strIt		argIt;
-
-	for ( argIt = _request->begin(); argIt != _request->end()
-		&& *argIt != '\n' && *argIt != '\r' && !std::isspace( *argIt ); ++argIt );
-	std::string argTmp = std::string( *_request, 0, argIt - _request->begin() );
-	_request->erase( 0, argIt - _request->begin() );
-	spaceTrimer();
 	return argTmp;
 }
 
@@ -162,7 +140,7 @@ void						IRCData::LIST( void )
 		if ( !chanIt->getSecret() )
 		{
 			_answer = ":*." + _servIP + " 322 " + ( *_clientIt )->getNick() + " " + chanIt->getName() + " :" + chanIt->getFlags();
-			if ( !chanIt->getPriv() )
+			if ( !chanIt->getPriv() && chanIt->getTopic().size() )
 				_answer +=  " " + chanIt->getTopic();
 			sender( _sd, _answer + "\r\n", 0 );
 		}
@@ -179,9 +157,7 @@ void						IRCData::WELCOME( void )
 
 void				IRCData::CAP( void )
 {
-	std::cout << *_request << std::endl;
 	clearPostArgs();
-	std::cout << *_request << std::endl;
 }
 
 void						IRCData::checkPass( void )
@@ -205,6 +181,7 @@ void						IRCData::PASS( void )
 	strIt		passIt;
 
 	passTmp = getLastArg();
+	std::cout << *_request << std::endl;
 	if ( ( *_clientIt )->getAutentification() )
 	{
 		IRCErr ircErr( ( *_clientIt )->getUser() + " try a double registration" );
@@ -285,7 +262,7 @@ void						IRCData::NICK( void )
 
 void						IRCData::USER( void )
 {
-	std::string	userTmp = getArg(), modeTmp = getArg(), hostTmp = getArg(), nameTmp;
+	std::string	userTmp = getArg(), modeTmp = getArg(), hostTmp = getArg(), nameTmp = getLastArg();
 	strIt		userIt;
 
 	if ( *_request->begin() == ':' )
@@ -352,6 +329,8 @@ void						IRCData::JOIN( void )
 		IRCErr ircErr( ( *_clientIt )->getNick() + " banned from " + _target );
 		sender( _sd, ":*." + _servIP + " 474 " + ( *_clientIt )->getNick() + " " + _channelTmp + " :you are banned from channel\r\n", &ircErr );
 	}
+	if ( chanIt->isCli( ( *_clientIt )->getNick() ) != chanIt->getCli().end() )
+	{ throw ( IRCErr("already in channel") ); }
 	if ( chanIt->getInvit() && chanIt->isGuest( ( *_clientIt )->getNick() ) == chanIt->getGuests().end() )
 	{
 		IRCErr ircErr( "isn't invited" );
@@ -449,7 +428,7 @@ void						IRCData::KICKBAN( void )
 	_target = getArg();
 	std::list<std::string> kbList = KBList( getArg() );
 	std::string reason;
-	if ( ( reason = " " + getMsgArg() ) == " :" )
+	if ( ( reason = " :" + getLastArg() ) == " :" )
 		reason.clear();
 	channelIterator chanIt = isChannel( _target );
 	if ( chanIt->isOps( ( *_clientIt )->getNick() ) == chanIt->getOps().end() )
@@ -473,27 +452,13 @@ void						IRCData::KICKBAN( void )
 		BAN( chanIt , kbList, reason );
 }
 
-void						IRCData::KILLING( clientIterator const &kickIt /*, std::string cmd, std::string const reason*/ )
-{
-	for ( channelsListIt chanIt = ( *kickIt )->getChannels().begin(); chanIt != ( *kickIt )->getChannels().end(); ++chanIt )
-	{
-		for ( constClientIterator chanCliIt = ( *chanIt )->getCli().begin(); chanCliIt != ( *chanIt )->getCli().end(); ++chanCliIt )
-		{
-
-		}
-	}
-	( *kickIt )->removeInAllChannel();
-	delete ( *kickIt );
-	_clients.erase( kickIt );
-}
-
 void						IRCData::KILL( void )
 {
 	std::string		_target = getArg();
 	std::string		reason;
 	strIt			argIt;
 	clientIterator	kickIt;
-	if ( ( reason = " " + getMsgArg() ) == " :" )
+	if ( ( reason = " :" + getLastArg() ) == " :" )
 		reason.clear();
 	if ( isOps( ( *_clientIt )->getUser() ) == _servOps.end() )
 	{
@@ -505,15 +470,17 @@ void						IRCData::KILL( void )
 	if ( kickIt == _clients.end() )
 	{
 		IRCErr ircErr( "KICK: nick target inexistant in channel" );
-		sender( _sd, ":*." + _servIP + " 401 " + ( *_clientIt )->getNick() + " " + _target + " :No such nick\r\n", &ircErr );}
-	if ( kickIt != _clients.end() )
-		KILLING( kickIt /*," KILL ", reason*/ );
+		sender( _sd, ":*." + _servIP + " 401 " + ( *_clientIt )->getNick() + " " + _target + " :No such nick\r\n", &ircErr );
+	}
+	( *kickIt )->removeInAllChannel();
+	delete ( *kickIt );
+	_clients.erase( kickIt );
 }
 
 void						IRCData::OPENMSG( void )
 {
 	channelIterator	chanIt = isChannel( _target );
-	std::string		privMsg = getMsgArg();
+	std::string		privMsg = getLastArg();
 
 	if ( chanIt == _channels.end() )
 	{
@@ -554,8 +521,8 @@ void						IRCData::OPENMSG( void )
 
 void						IRCData::PRIVMSG( void )
 {
-	std::string		privMsg = getMsgArg();
-	clientIterator userIt = isCli( _target );
+	std::string		privMsg = getLastArg();
+	clientIterator	userIt = isCli( _target );
 
 	if ( privMsg == " :" )
 	{
@@ -563,7 +530,7 @@ void						IRCData::PRIVMSG( void )
 		sender( _sd, ":*." + _servIP + " 461 " + ( *_clientIt )->getNick() + " " + _cmd + " " + _target + " :Not enough parameters given\r\n", &ircErr );
 	}
 	if ( userIt != _clients.end() )
-		sender( ( *userIt )->getSocket(), ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " " + _cmd + " " + _target + " " + privMsg + "\r\n", 0 );
+		sender( ( *userIt )->getSocket(), ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " " + _cmd + " " + _target + " :" + privMsg + "\r\n", 0 );
 }
 
 void						IRCData::MSG( void )
@@ -606,7 +573,10 @@ void						IRCData::PART( void )
 			}
 		}
 		else
+		{
+			std::cout << chanIt->getCli().size() << std::endl;
 			_channels.erase( chanIt );
+		}
 	}
 	catch ( IRCErr const &err )
 	{ throw( err ); }
@@ -614,16 +584,15 @@ void						IRCData::PART( void )
 
 void						IRCData::QUIT( void )
 {
-	std::string		quitMsg = getMsgArg();
-
-	if ( quitMsg == " :" )
-		quitMsg = " :left away";
+	std::string		quitMsg = getLastArg();
+	if ( !quitMsg.size() )
+		quitMsg = "left away";
 	for ( channelsListIt chanIt = ( *_clientIt )->getChannels().begin(); chanIt != ( *_clientIt )->getChannels().end(); ++chanIt )
 	{
 		for ( constClientIterator chanCliIt = ( *chanIt )->getCli().begin(); chanCliIt != ( *chanIt )->getCli().end(); ++chanCliIt )
 		{
 			try
-			{ sender( ( *chanCliIt )->getSocket(), ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " PART " + _target + quitMsg + "\r\n", 0 ); }
+			{ sender( ( *chanCliIt )->getSocket(), ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + ( *_clientIt )->getClIp() + " PART " + _target + " :" + quitMsg + "\r\n", 0 ); }
 			catch ( IRCErr const &err )
 			{ std::cerr << err.getError() << std::endl; }
 		}
@@ -634,10 +603,7 @@ void						IRCData::QUIT( void )
 void						IRCData::TOPIC( void )
 {
 	_target = getArg();
-	std::string topic;
-	if ( ( topic = " " + getMsgArg() ) == " :" )
-		topic.clear();
-	std::cout << _target << std::endl;
+	std::string topic = getLastArg();
 	channelIterator channelIt = isChannel( _target );
 
 	if ( channelIt == _channels.end() )
@@ -706,7 +672,6 @@ void						IRCData::closeEraseDeleteClient( void )
 {
 	//Somebody disconnected , get his details and print
 	getpeername( _sd , reinterpret_cast<struct sockaddr *>( &_address ), reinterpret_cast<socklen_t *>( &_addrlen ) ); 
-	std::cout << "Host disconnected , ip " << inet_ntoa( _address.sin_addr ) << ", port " << ntohs( _address.sin_port ) << std::endl;
 	FD_CLR( _sd, &_crntfds );
 	//Close the socket and mark as 0 in list for reuse
 	( *_clientIt )->removeInAllChannel( );
@@ -749,7 +714,7 @@ void						IRCData::initFct( void )
 	_listFctI.push_back( pairKVI( "PING", &IRCData::PONG ) );
 	_listFctI.push_back( pairKVI( "JOIN", &IRCData::JOIN ) );
 	_listFctI.push_back( pairKVI( "PRIVMSG", &IRCData::MSG ) );
-
+	_listFctI.push_back( pairKVI( "NOTICE", &IRCData::MSG ) );
 	_listFctI.push_back( pairKVI( "INVITE", &IRCData::INVITE ) );
 	_listFctI.push_back( pairKVI( "LIST", &IRCData::LIST ) );
 	_listFctI.push_back( pairKVI( "BAN", &IRCData::KICKBAN ) );
@@ -786,15 +751,11 @@ void						IRCData::init( std::string port, std::string password, char **ep )
 	_opt = 1;
 	_rejectChar = "~!@#$%&*()+=:;\"\',<.>?/";
 	_port = IRC::stoi( port, &lastchar );
-	std::cout << lastchar << std::endl;
-	std::cout << port[lastchar] << std::endl;
 	if ( port[lastchar] || _port < 0 || _port > 65535 )
 		throw( IRCErr( "Bad port value : enter port to 0 at 65 535" ) );
 	_pass = password;
 	int	var;
 	for ( var = 0; ep[var] && std::string( ep[var] ).compare( 0, 5, "USER=" ) ; ++var );
-	if ( ep[var] )
-		std::cout << ep[var] << std::endl;
 	if ( !ep[var] )
 		throw ( IRCErr( "no user found for serverOPs" ) );
 	_servOps.push_back( ep[var] + 5 );
@@ -839,12 +800,10 @@ void						IRCData::activityListener( void )
 	_activity = select( _max_sd + _clients.size() + 1, &_readfds, &_writefds, NULL, NULL );
 	if ( ( _activity < 0 ) )  
 		throw IRCErr( "select error" );
-	//std::cout << "SELECT OK" << std::endl;
 }
 
 void						IRCData::execFct( void )
 {
-	std::cout << "EXEC start" << std::endl;
 	listPairI::iterator	_listPairIt;
 
 	if ( !( *_clientIt )->getAutentification() && _cmd != "PING" && _cmd != "PONG" && _cmd != "CAP" && _cmd != "PASS" && _cmd != "NICK" && _cmd != "USER" )
@@ -856,13 +815,11 @@ void						IRCData::execFct( void )
 	for ( _listPairIt = _listFctI.begin(); _listPairIt != _listFctI.end() && _listPairIt->first != _cmd; ++_listPairIt );
 	if ( _listPairIt != _listFctI.end() )
 	{
-		std::cout << _cmd << std::endl;
 		ptrFct ptrFct = _listPairIt->second;
 		( this->*ptrFct )();
 	}
 	else
 		clearPostArgs();
-	std::cout << "EXEC exit" << std::endl;
 }
 
 void						IRCData::newClient( void )
@@ -893,7 +850,6 @@ void						IRCData::IOListener( void )
 					spaceTrimer();
 					while ( _request->size() )
 					{
-						std::cout << *_request << std::endl;
 						setCmd();
 						execFct();
 					}
@@ -1170,13 +1126,14 @@ void						IRCData::WHO( void )
 		IRCErr ircErr( "No such channel" );
 		sender( _sd, ":*." + _servIP + " 403 " + ( *_clientIt )->getNick() + " " + _target + " :No such channel\r\n", &ircErr );
 	}
-	chanIt->WHO( _clientIt, _servIP /*,isOps( ( *_clientIt )->getNick() ) != _servOps.end() */);
+	chanIt->WHO( _clientIt, _servIP );
 }
 
 void						IRCData::execMode( void )
 {
-	channelIterator chanIt;
-	std::cout << "CHANNEL MODE start" << std::endl;
+	channelIterator chanIt = isChannel( _target );
+	bool display = ( _target[0] == '#' && chanIt->isOps( ( *_clientIt )->getNick() ) != chanIt->getOps().end() ) || ( _target[0] != '#' && isOps( ( *_clientIt )->getNick() ) != _servOps.end() );
+
 	for ( _modsIt = _mods.begin(); _modsIt != _mods.end(); ++_modsIt )
 	{
 		try
@@ -1185,15 +1142,20 @@ void						IRCData::execMode( void )
 		{ std::cerr << err.getError() << std::endl; }
 	}
 	if ( _target[0] == '#' )
-		isChannel( _target )->printModifFlags( ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + _servIP + " MODE " + _target + " :" + _printedFlags + _printedArgs + "\r\n" );
+	{
+		if ( display )
+			chanIt->printModifFlags( ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + _servIP + " MODE " + _target + " :" + _printedFlags + _printedArgs + "\r\n" );
+	}
 	else
 	{
-		clientIterator targetIt = isCli( _target );
-		if ( targetIt != _clientIt )
-			sender( ( *isCli( _target ) )->getSocket() , ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + _servIP + " MODE " + _target + " :" + _printedFlags + _printedArgs + "\r\n", 0 );
-		sender( ( *_clientIt )->getSocket() , ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + _servIP + " MODE " + _target + " :" + _printedFlags + _printedArgs + "\r\n", 0 );
+		if ( display )
+		{
+			clientIterator targetIt = isCli( _target );
+			if ( targetIt != _clientIt )
+				sender( ( *isCli( _target ) )->getSocket() , ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + _servIP + " MODE " + _target + " :" + _printedFlags + _printedArgs + "\r\n", 0 );
+			sender( ( *_clientIt )->getSocket() , ":" + ( *_clientIt )->getNick() + "!~" + ( *_clientIt )->getUser() + "@" + _servIP + " MODE " + _target + " :" + _printedFlags + _printedArgs + "\r\n", 0 );
+		}
 	}
-	std::cout << "CHANNEL MODE exit" << std::endl;
 }
 
 void						IRCData::setListFlagCmdU( void )

@@ -85,15 +85,25 @@ void				Client::addChannel(std::string servIP, Channel *channel )
 		if ( *chanCliIt == this )
 		{
 			try
-			{ sender( _client_socket, ":*." + servIP + " 332 " + _nick + " " + channelName + channel->getTopic() + "\r\n", 0 ); }
+			{
+				std::string topic = channel->getTopic();
+				if ( !topic.size() )
+					sender( ( *chanCliIt )->getSocket(), ":*." + servIP + " 331 " + _nick + " " + channelName + " :No topic is set" + "\r\n", 0 );
+				else
+					sender( ( *chanCliIt )->getSocket(), ":*." + servIP + " 332 " + _nick + " " + channelName + " :" + channel->getTopic() + "\r\n", 0 );
+			}
 			catch ( IRCErr err )
 			{ std::cerr << err.getError() << std::endl; }
 			try
-			{ sender( _client_socket, ":*." + servIP + " 353 " + _nick + " = " + channelName + " :" + channel->getNickList() + "\r\n", 0 );	}
+			{
+				std::string nickList = channel->getNickList();
+				std::cout << ":*." + servIP + " 353 " + _nick + " = " + channelName + " :" + nickList + "\r\n" << std::endl;
+				sender( ( *chanCliIt )->getSocket(), ":*." + servIP + " 353 " + _nick + " = " + channelName + " :" + nickList + "\r\n", 0 );
+			}
 			catch ( IRCErr err )
 			{ std::cerr << err.getError() << std::endl; }
 			try
-			{ sender( _client_socket, ":*." + servIP + " 366 " + _nick + " = " + channelName + " :End of /NAMES list.\r\n", 0 );	}
+			{ sender( ( *chanCliIt )->getSocket(), ":*." + servIP + " 366 " + _nick + " " + channelName + " :End of NAMES list\r\n", 0 ); }
 			catch ( IRCErr err )
 			{ std::cerr << err.getError() << std::endl; }
 		}

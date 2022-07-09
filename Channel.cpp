@@ -1,4 +1,5 @@
 #include <iostream>
+#include "IRCutils.hpp"
 #include "Channel.hpp"
 
 void			Channel::setTopic ( std::string topic, std::string servIp, std::string changerNick )
@@ -63,10 +64,10 @@ void			Channel::unsetOps( std::string nick )
 strListIt		Channel::isOps( std::string nick )
 {
 	strListIt opsIt;
+	std::cout << IRC::ultostr( _chanOps.size() ) << std::endl;
 	for ( opsIt = _chanOps.begin(); opsIt != _chanOps.end() && nick != *opsIt ; ++opsIt );
 	return ( opsIt );
 }
-
 
 void			Channel::eraseCli( std::string nick )
 {
@@ -81,16 +82,16 @@ clientIterator	Channel::isCli( std::string nick )
 	return ( cliIt );
 }
 
-
 std::string		Channel::getNickList( void )
 {
 	std::string	clients;
 	for ( clientIterator clientIt = _cliCrnt.begin(); clientIt != _cliCrnt.end(); ++clientIt )
 		clients.append( ( *clientIt )->getNick() + " " );
 	if ( clients.size() )
-		clients = std::string( clients, clients.size() - 1 );
+		clients.erase( --clients.end() );
 	return clients;
 }
+
 std::string		Channel::getUserByNick( std::string &nickTarget ) 
 {
 	clientIterator clientIt;
@@ -174,7 +175,7 @@ itBan			Channel::isBan( std::string nick )
 	return banIt;
 }
 
-void			Channel::WHO( clientIterator clientIt, std::string &servIP)
+void			Channel::WHO( clientIterator clientIt, std::string &servIP )
 {
 	for ( clientIterator userIt = _cliCrnt.begin(); userIt != _cliCrnt.end(); ++userIt )
 	{
@@ -183,8 +184,6 @@ void			Channel::WHO( clientIterator clientIt, std::string &servIP)
 		if ( ( *userIt )->getNick() == _owner )
 			answer.push_back( '~' );
 		answer += ( *userIt )->getUser() + " " + servIP + " " + servIP + " ";
-//		if ( ( *clientIt )->getNick() == && isServOps )
-//			answer.push_back( '*' );
 		if ( isOps( (*userIt)->getNick() ) != _chanOps.end() )
 			answer.push_back( '@' );
 		answer += " :0 " + ( *userIt )->getName() + "\r\n";
