@@ -64,7 +64,6 @@ void			Channel::unsetOps( std::string nick )
 strListIt		Channel::isOps( std::string nick )
 {
 	strListIt opsIt;
-	std::cout << IRC::ultostr( _chanOps.size() ) << std::endl;
 	for ( opsIt = _chanOps.begin(); opsIt != _chanOps.end() && nick != *opsIt ; ++opsIt );
 	return ( opsIt );
 }
@@ -86,7 +85,12 @@ std::string		Channel::getNickList( void )
 {
 	std::string	clients;
 	for ( clientIterator clientIt = _cliCrnt.begin(); clientIt != _cliCrnt.end(); ++clientIt )
-		clients.append( ( *clientIt )->getNick() + " " );
+	{
+		if ( isOps( ( *clientIt )->getNick() ) != _chanOps.end() )
+			clients += "@";
+		if ( isVo( ( *clientIt )->getNick() ) != _cliVo.end() )
+		clients += ( ( *clientIt )->getNick() + " " );
+	}
 	if ( clients.size() )
 		clients.erase( --clients.end() );
 	return clients;

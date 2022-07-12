@@ -166,7 +166,7 @@ void						IRCData::checkPass( void )
 	{
 		IRCErr	ircErr( ( ( *_clientIt )->getUser() + " Bad password" ) );
 		try
-		{ sender( _sd, ":*." + _servIP + " 475 " + ( *_clientIt )->getNick() + " " + _target + " :Cannot join channel ( incorrect channel key )\r\n", &ircErr ); }
+		{ sender( _sd, ":*." + _servIP + " 475 " + ( *_clientIt )->getNick() + " " + _target + " :Cannot join channel ( incorrect server key or set pass in first)\r\n", &ircErr ); }
 		catch ( IRCErr err )
 		{
 			closeEraseDeleteClient();
@@ -431,15 +431,15 @@ void						IRCData::KICKBAN( void )
 	if ( ( reason = " :" + getLastArg() ) == " :" )
 		reason.clear();
 	channelIterator chanIt = isChannel( _target );
-	if ( chanIt->isOps( ( *_clientIt )->getNick() ) == chanIt->getOps().end() )
-	{
-		IRCErr ircErr( "Not channel operator" );
-		sender( ( *_clientIt )->getSocket(), ":*." + _servIP + " 481 " + ( *_clientIt )->getNick() + " :You must have channel op access or above to ban someone\r\n", &ircErr );
-	}
 	if ( chanIt == _channels.end() )
 	{
 		IRCErr ircErr( _cmd + " : channel inexistant" );
 		sender( _sd, ":*." + _servIP + " 403 " + ( *_clientIt )->getNick() + " " + _target + " :No such channel\r\n", &ircErr );
+	}
+	if ( chanIt->isOps( ( *_clientIt )->getNick() ) == chanIt->getOps().end() )
+	{
+		IRCErr ircErr( "Not channel operator" );
+		sender( ( *_clientIt )->getSocket(), ":*." + _servIP + " 481 " + ( *_clientIt )->getNick() + " :You must have channel op access or above to ban someone\r\n", &ircErr );
 	}
 	if ( !kbList.size() || ( *kbList.begin() ).front() == ':' )
 	{
@@ -670,7 +670,7 @@ void						IRCData::setAddress( void )
 
 void						IRCData::closeEraseDeleteClient( void )
 {
-	//Somebody disconnected , get his details and print
+	//	Somebody disconnected , get his details and print
 	getpeername( _sd , reinterpret_cast<struct sockaddr *>( &_address ), reinterpret_cast<socklen_t *>( &_addrlen ) ); 
 	FD_CLR( _sd, &_crntfds );
 	//Close the socket and mark as 0 in list for reuse

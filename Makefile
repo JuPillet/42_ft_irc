@@ -21,10 +21,19 @@ SRC =		Channel.cpp		\
 			IRCutils.cpp	\
 			main.cpp
 
+SRCBONUS =	bot.cpp			\
+			IRCmsg.cpp		\
+			IRCutils.cpp
+
 $(NAME):
 		$(CC) $(SRC) $(CFLAGS) -o $(NAME)
 
+
 all:		$(NAME)
+
+bonus:		
+			$(CC) $(SRCBONUS) $(CFLAGS) -o awesomebot
+
 
 exe:		all
 			./$(NAME)
