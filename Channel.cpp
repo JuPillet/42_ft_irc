@@ -6,7 +6,7 @@ void			Channel::setTopic ( std::string topic, std::string servIp, std::string ch
 {
 	_topic = topic;
 	for ( clientIterator userIt = _cliCrnt.begin(); userIt != _cliCrnt.end(); ++userIt )
-		sender( ( *userIt )->getSocket() , ":*." + servIp + " 332 " + changerNick + " " + _name + _topic + "\r\n", 0 );
+		sender( ( *userIt )->getSocket() , ":*." + servIp + " 332 " + changerNick + " " + _name +" "+ _topic + "\r\n", 0 );
 }
 
 void			Channel::addFlag( char flag )
@@ -164,7 +164,7 @@ void			Channel::unBan( std::string tmp )
 {
 	itBan tmpIt ( isBan( tmp ) );
 	if ( isBan( tmp ) == _chanBan.end() )
-		throw ( IRCErr( "User isnt banned." ) );
+		throw ( std::string( "User isnt banned." ) );
 	_chanBan.erase( tmpIt );
 }
 
@@ -194,8 +194,8 @@ void			Channel::WHO( clientIterator clientIt, std::string &servIP )
 		answer += " :0 " + ( *userIt )->getName() + "\r\n";
 		try
 		{ sender( ( *clientIt )->getSocket(), answer , 0); }
-		catch ( IRCErr &err )
-		{ std::cerr << err.getError() << std::endl; }
+		catch (std::string err)
+		{ std::cerr << err << std::endl; }
 	}
 	sender ( ( *clientIt )->getSocket(), ":*." + servIP + " 315 " + ( *clientIt )->getNick() + " " + _name + " :End of /WHO list.\r\n" , 0 );
 }

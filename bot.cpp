@@ -16,7 +16,7 @@ void	initBot( std::string servIP, int port, struct sockaddr_in *servAddr, int *s
 	struct addrinfo hints, *servInfo;
 
 	if ( ( *sockd = socket( AF_INET, SOCK_STREAM, 0 ) ) < 0 )
-		throw IRCErr( "socket() failed" );
+		throw std::string( "Error: socket() failed" );
 
 	servAddr->sin_family = AF_INET;
 	servAddr->sin_port = htons( port );
@@ -64,7 +64,7 @@ int main(int ac, char **av)
 		char			selfhost[256];
 		struct hostent	*bothost;
 		if ( ac < 5 || !isdigit( av[1][0] ) )
-			throw( IRCErr( "Please send a server pass, and channel, and  for the bot to join." ) );
+			throw( std::string( "Please send a server pass, and channel for the bot to join." ) );
 		std::string server = av[1]; // network address
 		int port = atoi( av[2]); // bot port
 		std::string nick = "NICK Awesomebot\r\n"; // NICK raw
@@ -91,56 +91,63 @@ int main(int ac, char **av)
 		bothost = gethostbyname(selfhost);
 		std::string botIP = inet_ntoa( *( reinterpret_cast<struct in_addr*>( bothost->h_addr_list[0] ) ) );
 		std::cout << botIP << std::endl;
-		//		close( 4 );
+		//close( 4 );
 		initBot( server, port, &servAddr, &sockd );
-
 
 		std::cout << "waiting connection..." << std::endl;
 		if ( connect( sockd, ( struct sockaddr * )&servAddr, sizeof( servAddr ) ) == -1 )
-			throw( IRCErr( "connection FAILED..." ) );
+			throw( std::string( "connection FAILED..." ) );
 		botExit( sockd );
 		botSignal( 0 );
+		std::string servIP = inet_ntoa( servAddr.sin_addr );
 
 		FD_ZERO( &_crntfds );
 		FD_SET( sockd,  &_crntfds );
-		std::cout << "test" << std::endl;
+		int readvalue;
+		char buff[1024];
 		sleep( 3 );
-		if( send(sockd, pass.c_str(), pass.size(), 0) == -1
-			|| send(sockd, nick.c_str(), nick.size(), 0) == -1
-			|| send(sockd, user.c_str(), user.size(), 0) == -1
-			|| sleep(3)
-			|| send(sockd, join.c_str(), join.size(), 0) == -1 )
-			throw( IRCErr( "connection FAILED..." ) );
+		if( send(sockd, pass.c_str(), pass.size(), 0) == -1 )
+			throw( std::string( "108 connection FAILED..." ) );
+		if( send(sockd, nick.c_str(), nick.size(), 0) == -1
+			|| ( readvalue = recv( sockd, buff, 1024, 0 ) ) == -1
+			|| buff != ":!~@" + servIP + " NICK :Awesomebot\r\n" )
+			throw( std::string( "110 connection FAILED..." ) );
+		if( send(sockd, user.c_str(), user.size(), 0) == -1 )
+			throw( std::string( "112 connection FAILED..." ) );
+		if( sleep(3) )
+			throw( std::string( "114 connection FAILED..." ) );
+		if( send(sockd, join.c_str(), join.size(), 0) == -1 )
+			throw( std::string( "116 connection FAILED..." ) );
 		_readfds = _writefds = _crntfds;
 		activity = select( sockd + 2, &_readfds, &_writefds, NULL, NULL );
 		if ( ( activity < 0 ) )  
-			throw( IRCErr( "connection FAILED..." ) );
-		int readvalue;
-		char buff[1024];
-		readvalue = recv( sockd, buff, 1024, 0 );
+			throw( std::string( "120 connection FAILED..." ) );
+
 		if ( readvalue == -1 )
-			throw( IRCErr( "connection FAILED..." ) );
+			throw( std::string( "125 connection FAILED..." ) );
+		readvalue = recv( sockd, buff, 1024, 0 );
 		std::string	request( buff );
-		std::string servIP = inet_ntoa( servAddr.sin_addr );
-		std::cout << request << std::endl;
-//		if ( request != ":" + servIP + " 001 Awesomebot :Welcome to the IRC_QDJ_Server Awesomebot !Awesomebot@" + botIP + "\r\n" )
-//		{
-//			std::cout << request << std::endl;
-//			throw( IRCErr( "connection FAILED..." ) );
-//		}
+		std::string test( ":" + servIP + " 001 Awesomebot :Welcome to the IRC_QDJ_Server Awesomebot!Awesomebot@" + botIP + "\r\n" );
+		
+		if ( request != test )
+		{
+			std::cout << request <<" :" << request.length()<< std::endl;
+			std::cout << test <<" :" << test.length()<< std::endl;
+			throw( std::string( "132 connection FAILED..." ) );
+		}
 
 		std::cout << "connection SUCCEED!" << std::endl;
 		while ( 1 )
 		{
 			if ( sleep(30) || send( sockd, msg.c_str(), msg.size(), 0) == -1 )
-				throw( IRCErr( "connection LOST..." ) );
+				throw( std::string( "connection LOST..." ) );
 		}
 	}
-	catch ( IRCErr &err )
+	catch ( std::string const &err )
 	{
 		if ( sockd )
 			close( sockd );
-		std::cout << err.getError() << std::endl;
+		std::cout << err << std::endl;
 	}
 	return 0;
 }

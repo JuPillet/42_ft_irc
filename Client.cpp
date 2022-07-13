@@ -80,8 +80,8 @@ void				Client::addChannel(std::string servIP, Channel *channel )
 	{
 		try
 		{ sender( ( *chanCliIt )->getSocket(), ":" + _nick + "!~" + _user + "@" + _clIp + " JOIN :" + channelName + "\r\n", 0);	}
-		catch ( IRCErr err )
-		{ std::cerr << err.getError() << std::endl; }
+		catch ( std::string const &err )
+		{ std::cerr << err << std::endl; }
 		if ( *chanCliIt == this )
 		{
 			try
@@ -92,20 +92,20 @@ void				Client::addChannel(std::string servIP, Channel *channel )
 				else
 					sender( ( *chanCliIt )->getSocket(), ":*." + servIP + " 332 " + _nick + " " + channelName + " :" + channel->getTopic() + "\r\n", 0 );
 			}
-			catch ( IRCErr err )
-			{ std::cerr << err.getError() << std::endl; }
+			catch ( std::string err )
+			{ std::cerr << err << std::endl; }
 			try
 			{
 				std::string nickList = channel->getNickList();
 				std::cout << ":*." + servIP + " 353 " + _nick + " = " + channelName + " :" + nickList + "\r\n" << std::endl;
 				sender( ( *chanCliIt )->getSocket(), ":*." + servIP + " 353 " + _nick + " = " + channelName + " :" + nickList + "\r\n", 0 );
 			}
-			catch ( IRCErr err )
-			{ std::cerr << err.getError() << std::endl; }
+			catch ( std::string const &err )
+			{ std::cerr << std::string( "353 " ) + err << std::endl; }
 			try
 			{ sender( ( *chanCliIt )->getSocket(), ":*." + servIP + " 366 " + _nick + " " + channelName + " :End of NAMES list\r\n", 0 ); }
-			catch ( IRCErr err )
-			{ std::cerr << err.getError() << std::endl; }
+			catch ( std::string const &err )
+			{ std::cerr << std::string ( "366 : " ) + err << std::endl; }
 		}
 	}
 }

@@ -23,12 +23,12 @@ class Channel
 		std::list<_pairBan>				_chanBan;
 
 	public :
-										Channel( void ) : _mod( false ), _priv( false ), _secret(false), _extMsg( false ), _invit( false ), _limit( 0 ), _name(), _flags(), _pass(), _topic(), _cliCrnt(), _chanOps(), _cliVo(), _chanBan()
+										Channel( void ) : _mod( false ), _priv( false ), _secret(false), _extMsg( false ), _invit( false ), _protecTopic( false ), _limit( 0 ), _name(), _flags(), _pass(), _topic(), _cliCrnt(), _chanOps(), _cliVo(), _chanBan()
 										{
 											_chanOps.clear();
 											return;
 										}
-										Channel( std::string name ) : _mod( false ), _priv( false ), _secret(false), _extMsg( false ), _invit( false ), _limit( 0 ), _name( name ), _flags(), _pass(), _topic(), _cliCrnt(), _chanOps(), _cliVo(), _chanBan()
+										Channel( std::string name ) : _mod( false ), _priv( false ), _secret(false), _extMsg( false ), _invit( false ), _protecTopic( false ), _limit( 0 ), _name( name ), _flags(), _pass(), _topic(), _cliCrnt(), _chanOps(), _cliVo(), _chanBan()
 										{
 											_chanOps.clear();
 											return;
