@@ -88,7 +88,8 @@ std::string		Channel::getNickList( void )
 	{
 		if ( isOps( ( *clientIt )->getNick() ) != _chanOps.end() )
 			clients += "@";
-		if ( isVo( ( *clientIt )->getNick() ) != _cliVo.end() )
+		else if ( isVo( ( *clientIt )->getNick() ) != _cliVo.end() )
+			clients += "+";
 		clients += ( ( *clientIt )->getNick() + " " );
 	}
 	if ( clients.size() )
