@@ -44,7 +44,7 @@ clean:
 			@echo "${NO_COLOR}"
 
 fclean: clean
-				@rm -f $(NAME)
+				@rm -f $(NAME) awesomebot
 				@echo "${KILL_COLOR}exec deleted"
 				@echo "${NO_COLOR}"
 

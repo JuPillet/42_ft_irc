@@ -1,6 +1,7 @@
 #pragma once
 #include <ctime>
 #include <list>
+#include <vector>
 #include <string>
 
 class	Client;
@@ -8,8 +9,8 @@ class	Channel;
 class	IRCData;
 
 typedef std::string::iterator					strIt;
-typedef	std::list<Client*>::iterator			clientIterator;
-typedef	std::list<Client*>::const_iterator		constClientIterator;
+typedef	std::vector<Client*>::iterator			clientIterator;
+typedef	std::vector<Client*>::const_iterator	constClientIterator;
 typedef std::list<Channel*>						channelsList;
 typedef channelsList::iterator					channelsListIt;
 typedef std::list<Channel>::iterator			channelIterator;

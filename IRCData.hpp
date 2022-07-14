@@ -62,7 +62,7 @@ class IRCData
 	std::string 							_target;
 
 /////	Client Info /////
-	std::list<Client*>						_clients;
+	std::vector<Client*>					_clients;
 	std::list<std::string>					_servOps;
 	clientIterator							_clientIt;
 	std::string 							_rejectChar;
@@ -149,7 +149,7 @@ class IRCData
 
 
 	void									setAddress( void );
-	void									closeEraseDeleteClient( void );
+	void									closeEraseDeleteClient( clientIterator clientIt );
 
 	public:
 											IRCData( void );

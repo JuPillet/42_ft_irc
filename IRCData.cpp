@@ -172,7 +172,7 @@ void						IRCData::checkPass( void )
 		{ sender( _sd, ":*." + _servIP + " 475 " + ( *_clientIt )->getNick() + " " + _target + " :Cannot join channel ( incorrect server key or set pass in first)\r\n", &ircErr ); }
 		catch ( std::string const &err )
 		{
-			closeEraseDeleteClient();
+			closeEraseDeleteClient( _clientIt );
 			throw err;
 		}
 	}
@@ -212,7 +212,7 @@ void						IRCData::NICK( void )
 		{ sender( _sd, ":*." + _servIP + " 432 " + nickTmp + " :Erroneous Nickname first character not an alphabetic character\r\n", &ircErr ); }
 		catch ( std::string err )
 		{
-			closeEraseDeleteClient();
+			closeEraseDeleteClient( _clientIt );
 			throw err;
 		}
 	}
@@ -230,7 +230,7 @@ void						IRCData::NICK( void )
 				{ sender( _sd, ":*." + _servIP + " 432 " + nickTmp + " :Erroneous Nickname, nick contain caracter '" + *nickIt + "'\r\n", &ircErr ); }
 				catch ( std::string err )
 				{
-					closeEraseDeleteClient();
+					closeEraseDeleteClient( _clientIt );
 					throw err;
 				}
 			}
@@ -247,7 +247,7 @@ void						IRCData::NICK( void )
 			{ sender( _sd, ":*." + _servIP + " 433 * " + nickTmp + " :Nickname already in use\r\n", &ircErr ); }
 			catch ( std::string err )
 			{
-				closeEraseDeleteClient();
+				closeEraseDeleteClient( _clientIt );
 				throw std::string( err );
 			}
 		}
@@ -283,7 +283,7 @@ void						IRCData::USER( void )
 		{ sender( _sd, ":USER command format : USER <username> <mode> <host> <:fullname>\r\n", &ircErr ); }
 		catch ( std::string err )
 		{
-			closeEraseDeleteClient();
+			closeEraseDeleteClient( _clientIt );
 			throw err;
 		}
 	}
@@ -294,7 +294,7 @@ void						IRCData::USER( void )
 		{ sender( _sd, ":*." + _servIP + " 466 " + ( *_clientIt )->getNick() + " " + _channelTmp + " :You are banned from this server", &ircErr ); }
 		catch ( std::string err )
 		{
-			closeEraseDeleteClient();
+			closeEraseDeleteClient( _clientIt );
 			throw err;
 		}
 	}
@@ -475,9 +475,7 @@ void						IRCData::KILL( void )
 		std::string ircErr( "KICK: nick target inexistant in channel" );
 		sender( _sd, ":*." + _servIP + " 401 " + ( *_clientIt )->getNick() + " " + _target + " :No such nick\r\n", &ircErr );
 	}
-	( *kickIt )->removeInAllChannel();
-	delete ( *kickIt );
-	_clients.erase( kickIt );
+	closeEraseDeleteClient( kickIt );
 }
 
 void						IRCData::OPENMSG( void )
@@ -517,10 +515,12 @@ void						IRCData::OPENMSG( void )
 			try
 			{ sender( ( *userIt )->getSocket(), _answer, 0 ); } //essaye d envoyer le message a l utilisateur
 			catch( std::string const &err )
-			{ std::cerr << err << std::endl; } //affiche ici si le message n a pas ete envoyé a un utilisateur
+			{ std::cerr << err << std::endl; } //affiche ici si le message n a pas ete envoye a un utilisateur
 		}
 	}
 }
+
+
 
 void						IRCData::PRIVMSG( void )
 {
@@ -600,7 +600,7 @@ void						IRCData::QUIT( void )
 			{ std::cerr << err << std::endl; }
 		}
 	}
-	closeEraseDeleteClient();
+	closeEraseDeleteClient( _clientIt );
 }
 
 void						IRCData::TOPIC( void )
@@ -671,19 +671,26 @@ void						IRCData::setAddress( void )
 	_address.sin_port = htons( _port );
 }
 
-void						IRCData::closeEraseDeleteClient( void )
+void						IRCData::closeEraseDeleteClient( clientIterator clientIt )
 {
 	_request->clear();
-	if ( FD_ISSET( _sd, &_crntfds ) )
-		FD_CLR( _sd, &_crntfds );
-	if ( FD_ISSET( _sd, &_readfds ) )
-		FD_CLR( _sd, &_readfds );
-	if ( FD_ISSET( _sd, &_writefds ) )
-		FD_CLR( _sd, &_writefds );
+	if ( FD_ISSET( ( *clientIt )->getSocket(), &_crntfds ) )
+		FD_CLR( ( *clientIt )->getSocket(), &_crntfds );
+	if ( FD_ISSET( ( *clientIt )->getSocket(), &_readfds ) )
+		FD_CLR( ( *clientIt )->getSocket(), &_readfds );
+	if ( FD_ISSET( ( *clientIt )->getSocket(), &_writefds ) )
+		FD_CLR( ( *clientIt )->getSocket(), &_writefds );
 	//Close the socket and mark as 0 in list for reuse
-	( *_clientIt )->removeInAllChannel( );
-	delete ( *_clientIt );
-	_clients.erase( _clientIt-- );
+	( *clientIt )->removeInAllChannel();
+	for( channelIterator chanIt = _channels.begin(); chanIt != _channels.end(); ++chanIt )
+	{
+		if (!chanIt->getCli().size() )
+			_channels.erase( chanIt );
+	}
+	delete ( *clientIt );
+	if ( clientIt <= _clientIt )
+		_clientIt--;
+	_clients.erase( clientIt );
 }
 
 int							IRCData::getMasterSocket( void ) const { return _master_socket; }
@@ -860,7 +867,7 @@ void						IRCData::IOListener( void )
 				//incoming message
 				receveRequest();
 				if ( _request->length() <= 0 )
-					closeEraseDeleteClient();
+					closeEraseDeleteClient( _clientIt );
 				else if ( *( _request->end() - 1 ) == '\n' )
 				{
 					spaceTrimer();

@@ -16,7 +16,7 @@ class Channel
 		std::string						_flags;
 		std::string						_pass;
 		std::string						_topic;
-		std::list<Client *>				_cliCrnt;
+		std::vector<Client *>			_cliCrnt;
 		std::list<std::string>			_chanOps;
 		std::list<std::string>			_cliVo;
 		std::list<std::string>			_guests;
@@ -80,7 +80,7 @@ class Channel
 		void							setCli( Client *tmp ) { _cliCrnt.push_back( tmp ); }
 		void							eraseCli( std::string nick );
 		clientIterator					isCli( std::string nick );
-		std::list<Client *> const		&getCli( void ) const { return _cliCrnt; }
+		std::vector<Client *> const		&getCli( void ) const { return _cliCrnt; }
 
 		std::string						getNickList( void );
 		std::string						getUserByNick( std::string &nickTarget );
