@@ -1,0 +1,5 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory `/Users/jpillet/Documents/42-cursus/42_ft_irc'
+clang++ Channel.cpp Client.cpp IRCData.cpp IRCmsg.cpp IRCutils.cpp main.cpp -g -Wall -Wextra -Werror -std=c++98 -o ircserv
+make: Leaving directory `/Users/jpillet/Documents/42-cursus/42_ft_irc'
+ 

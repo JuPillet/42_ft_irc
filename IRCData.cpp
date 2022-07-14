@@ -684,8 +684,8 @@ void						IRCData::closeEraseDeleteClient( clientIterator clientIt )
 	( *clientIt )->removeInAllChannel();
 	for( channelIterator chanIt = _channels.begin(); chanIt != _channels.end(); ++chanIt )
 	{
-		if (!chanIt->getCli().size() )
-			_channels.erase( chanIt );
+		if ( !chanIt->getCli().size() )
+			_channels.erase( chanIt-- );
 	}
 	delete ( *clientIt );
 	if ( clientIt <= _clientIt )
